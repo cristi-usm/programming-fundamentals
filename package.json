@@ -1,20 +1,32 @@
 {
   "name": "programming-fundamentals-lab",
+  "version": "2.0.0",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@11.20.0",
   "scripts": {
-    "build": "slidev build",
-    "dev": "slidev --open",
-    "export": "slidev export",
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "dev:hub": "node scripts/dev.mjs hub",
+    "dev:01-intro": "node scripts/dev.mjs 01-intro",
+    "dev:02-data-types": "node scripts/dev.mjs 02-data-types",
+    "dev:03-conditionals": "node scripts/dev.mjs 03-conditionals",
+    "dev:04-loops": "node scripts/dev.mjs 04-loops",
+    "dev:05-arrays": "node scripts/dev.mjs 05-arrays",
+    "dev:06-n-arrays": "node scripts/dev.mjs 06-n-arrays",
+    "dev:07-strings": "node scripts/dev.mjs 07-strings",
+    "dev:08-functions": "node scripts/dev.mjs 08-functions",
+    "dev:09-pointers": "node scripts/dev.mjs 09-pointers",
+    "dev:10-recap": "node scripts/dev.mjs 10-recap",
+    "dev:11-enum-structs-files": "node scripts/dev.mjs 11-enum-structs-files",
+    "preview": "npx serve dist",
+    "sync-headmatter": "node scripts/sync-headmatter.mjs",
     "postinstall": "./fix-cpp-runner.sh"
   },
   "dependencies": {
-    "@slidev/cli": "^52.1.0",
-    "@slidev/theme-default": "latest",
-    "@slidev/theme-seriph": "latest",
+    "@slidev/cli": "^52.19.1",
     "slidev-addon-cpp-runner": "^0.1.2",
-    "slidev-addon-excalidraw": "^1.0.4",
-    "slidev-theme-neversink": "^0.3.6",
-    "vue": "^3.5.18"
+    "slidev-theme-neversink": "^0.4.1",
+    "vue": "^3.5.42"
   }
 }

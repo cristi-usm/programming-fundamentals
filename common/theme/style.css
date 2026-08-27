@@ -1,0 +1,36 @@
+/* Common theme styles shared by every deck of the Programming Fundamentals labs. */
+
+/* Slidev hardcodes --slidev-controls-foreground: white in its vars.css, which is
+   invisible on the light neversink schemes this course uses. */
+html:not(.dark) {
+  --slidev-controls-foreground: #1e293b;
+}
+
+/* Accent used by the shared navigation components (cards, deck nav, home
+   button). Derived from the neversink scheme so changing THEME_CONFIG.scheme is
+   enough to restyle them. */
+:root {
+  --lab-accent: var(--neversink-highlight-color, #78716c);
+  --lab-surface: var(--neversink-admon-bg-color, rgba(120, 113, 108, 0.06));
+  --lab-border: var(--neversink-admon-border-color, rgba(120, 113, 108, 0.3));
+}
+
+.slidev-layout {
+  padding: 2rem;
+}
+
+.slidev-code {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tighter bullet lists — used heavily on the hub and recap slides. */
+.ns-c-tight ul,
+.ns-c-tight ol {
+  margin-block: 0.2rem;
+}
+
+.ns-c-tight li {
+  margin-block: 0.1rem;
+  line-height: 1.35;
+}

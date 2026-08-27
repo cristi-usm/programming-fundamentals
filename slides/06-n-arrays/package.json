@@ -1,0 +1,10 @@
+{
+  "name": "@programming-fundamentals-lab/n-arrays",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev slides.md --port 3036",
+    "build": "slidev build slides.md"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@programming-fundamentals-lab/enum-structs-files",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev slides.md --port 3041",
+    "build": "slidev build slides.md"
+  }
+}

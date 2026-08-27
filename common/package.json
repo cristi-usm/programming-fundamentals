@@ -1,0 +1,14 @@
+{
+  "name": "@programming-fundamentals-lab/common",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./labs": "./labs.ts",
+    "./labs.json": "./labs.json",
+    "./components/*": "./components/*",
+    "./setup/*": "./setup/*",
+    "./theme/*": "./theme/*",
+    "./vite/*": "./vite/*"
+  }
+}
