@@ -36,17 +36,21 @@ pnpm dev --lazy                 # doar cuprinsul; restul le pornești din mprocs
 | # | Lecție | Port |
 |---|---|---|
 | — | Cuprins (hub) | 3030 |
-| 1 | Introducere. Structura unui program C. Variabile | 3031 |
-| 2 | Tipuri de date. Operatori & operanzi | 3032 |
-| 3 | Instrucțiuni condiționale | 3033 |
-| 4 | Instrucțiuni ciclice | 3034 |
-| 5 | Tablouri | 3035 |
-| 6 | Tablouri multidimensionale | 3036 |
-| 7 | Șiruri de caractere | 3037 |
-| 8 | Funcții | 3038 |
-| 9 | Pointeri | 3039 |
-| 10 | Recapitulare | 3040 |
-| 11 | Enumuri, structuri și fișiere | 3041 |
+| 1 | Introducere | 3031 |
+| 2 | Tipuri de date | 3032 |
+| 3 | Input/Output *(schelet)* | 3033 |
+| 4 | Condiționale | 3034 |
+| 5 | Cicluri | 3035 |
+| 6 | Funcții și recursivitate | 3036 |
+| 7 | Debugging și bune practici *(schelet)* | 3037 |
+| 8 | Tablouri | 3038 |
+| 9 | Tablouri multidimensionale | 3039 |
+| 10 | Șiruri de caractere | 3040 |
+| 11 | Pointeri | 3041 |
+| 12 | Memorie dinamică *(schelet)* | 3042 |
+| 13 | Structuri și enum | 3043 |
+| 14 | Fișiere *(schelet)* | 3044 |
+| 15 | Proiect integrator *(schelet)* | 3045 |
 
 Lista este generată din `common/lessons.json` — acolo se adaugă o lecție nouă.
 

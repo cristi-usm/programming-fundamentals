@@ -29,23 +29,31 @@ importers:
 
   slides/02-data-types: {}
 
-  slides/03-conditionals: {}
+  slides/03-io: {}
 
-  slides/04-loops: {}
+  slides/04-conditionals: {}
 
-  slides/05-arrays: {}
+  slides/05-loops: {}
 
-  slides/06-n-arrays: {}
+  slides/06-functions: {}
 
-  slides/07-strings: {}
+  slides/07-debugging: {}
 
-  slides/08-functions: {}
+  slides/08-arrays: {}
 
-  slides/09-pointers: {}
+  slides/09-n-arrays: {}
 
-  slides/10-recap: {}
+  slides/10-strings: {}
 
-  slides/11-enum-structs-files: {}
+  slides/11-pointers: {}
+
+  slides/12-dynamic-memory: {}
+
+  slides/13-structs-enums: {}
+
+  slides/14-files: {}
+
+  slides/15-project: {}
 
 packages:
 
