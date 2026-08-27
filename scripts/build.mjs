@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * Build orchestration for the multi-deck lab site.
+ * Build orchestration for the multi-deck lesson site.
  *
  * Each deck is an independent Slidev app, so each one is built separately with
  * its own `--base`. The results are assembled into a single dist/ tree:
  *
  *   dist/                  hub (slides/00-hub)
- *   dist/01-intro/         lab 1
- *   dist/02-data-types/    lab 2
+ *   dist/01-intro/         lesson 1
+ *   dist/02-data-types/    lesson 2
  *   …
  *
  * GitHub Pages serves the site from a repository subpath, so the base path
@@ -50,7 +50,7 @@ function section(title) {
   console.log(`${'='.repeat(60)}\n`)
 }
 
-const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'common', 'labs.json'), 'utf8'))
+const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'common', 'lessons.json'), 'utf8'))
 
 /** Trailing slash removed so we can compose `${PREFIX}/${slug}/` predictably. */
 const PREFIX = (process.env.BASE_PATH || '').replace(/\/$/, '')
@@ -70,13 +70,13 @@ function discoverDecks() {
   }
   decks.push({ name: 'hub', slug: null, dir: HUB_DIR })
 
-  for (const lab of registry.labs) {
-    const dir = path.join(SLIDES_DIR, lab.slug)
+  for (const lesson of registry.lessons) {
+    const dir = path.join(SLIDES_DIR, lesson.slug)
     if (!fs.existsSync(path.join(dir, 'slides.md'))) {
-      log(`⚠️  ${lab.slug} is in the registry but has no deck — skipped`, 'yellow')
+      log(`⚠️  ${lesson.slug} is in the registry but has no deck — skipped`, 'yellow')
       continue
     }
-    decks.push({ name: lab.slug, slug: lab.slug, dir })
+    decks.push({ name: lesson.slug, slug: lesson.slug, dir })
   }
 
   return decks
@@ -109,7 +109,7 @@ function main() {
   const onlyIndex = process.argv.indexOf('--only')
   const only = onlyIndex !== -1 ? process.argv[onlyIndex + 1] : null
 
-  section('🎬 Programming Fundamentals Labs — build')
+  section('🎬 Programming Fundamentals Lessons — build')
   if (PREFIX) log(`Base path prefix: ${PREFIX}`, 'yellow')
 
   let decks = discoverDecks()

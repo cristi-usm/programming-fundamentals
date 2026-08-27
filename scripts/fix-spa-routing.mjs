@@ -25,10 +25,10 @@ const DIST = path.join(ROOT, 'dist')
 
 const BASE_PATH = (process.env.BASE_PATH || '').replace(/\/$/, '')
 
-const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'common', 'labs.json'), 'utf8'))
+const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'common', 'lessons.json'), 'utf8'))
 
 /** Every slug that *could* be a deck, per the registry. */
-const REGISTERED_SLUGS = [...registry.labs.map(l => l.slug)]
+const REGISTERED_SLUGS = [...registry.lessons.map(l => l.slug)]
 
 /**
  * Slugs that actually made it into dist/.

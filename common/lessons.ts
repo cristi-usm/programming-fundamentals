@@ -1,6 +1,6 @@
-import data from './labs.json'
+import data from './lessons.json'
 
-export interface Lab {
+export interface Lesson {
   num: number
   slug: string
   port: number
@@ -12,23 +12,23 @@ export interface Lab {
   status?: 'draft' | 'ready'
 }
 
-export interface LabModule {
+export interface LessonModule {
   id: number
   emoji: string
   title: string
 }
 
 export const REPO: string = data.repo
-export const MODULES: LabModule[] = data.modules
-export const LABS: Lab[] = data.labs as Lab[]
+export const MODULES: LessonModule[] = data.modules
+export const LESSONS: Lesson[] = data.lessons as Lesson[]
 
 /** Dev-server port of the hub deck. */
 export const HUB_PORT = 3030
 
 /** Every slug that can appear as a path segment in the built site. */
-const DECK_SLUGS = new Set<string>(LABS.map(l => l.slug))
+const DECK_SLUGS = new Set<string>(LESSONS.map(l => l.slug))
 
-const DEV_PORTS: Record<string, number> = Object.fromEntries(LABS.map(l => [l.slug, l.port]))
+const DEV_PORTS: Record<string, number> = Object.fromEntries(LESSONS.map(l => [l.slug, l.port]))
 
 /**
  * In dev each deck is a separate `slidev` server on its own port, so cross-deck
@@ -103,7 +103,7 @@ export function currentSlug(): string | null {
     if (typeof window === 'undefined') return null
     const port = Number(window.location.port)
     if (port === HUB_PORT) return null
-    return LABS.find(l => l.port === port)?.slug ?? null
+    return LESSONS.find(l => l.port === port)?.slug ?? null
   }
 
   const segments = baseSegments()
@@ -111,22 +111,22 @@ export function currentSlug(): string | null {
   return last && DECK_SLUGS.has(last) ? last : null
 }
 
-export function labBySlug(slug: string | null): Lab | undefined {
-  return LABS.find(l => l.slug === slug)
+export function lessonBySlug(slug: string | null): Lesson | undefined {
+  return LESSONS.find(l => l.slug === slug)
 }
 
-/** Previous and next lab relative to `slug`, for end-of-deck navigation. */
-export function neighbours(slug: string | null): { prev?: Lab; next?: Lab } {
-  const index = LABS.findIndex(l => l.slug === slug)
+/** Previous and next lesson relative to `slug`, for end-of-deck navigation. */
+export function neighbours(slug: string | null): { prev?: Lesson; next?: Lesson } {
+  const index = LESSONS.findIndex(l => l.slug === slug)
   if (index === -1) return {}
-  return { prev: LABS[index - 1], next: LABS[index + 1] }
+  return { prev: LESSONS[index - 1], next: LESSONS[index + 1] }
 }
 
-export function labsOfModule(moduleId: number): Lab[] {
-  return LABS.filter(l => l.module === moduleId)
+export function lessonsOfModule(moduleId: number): Lesson[] {
+  return LESSONS.filter(l => l.module === moduleId)
 }
 
 /** A deck that exists but has not been written yet. */
-export function isDraft(lab: Lab): boolean {
-  return lab.status !== 'ready'
+export function isDraft(lesson: Lesson): boolean {
+  return lesson.status !== 'ready'
 }

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { currentSlug, deckUrl } from '../labs'
+import { currentSlug, deckUrl } from '../lessons'
 
-// Slide 2 of the hub is the lab grid; the hub itself needs no button to itself.
+// Slide 2 of the hub is the lesson grid; the hub itself needs no button to itself.
 const href = computed(() => (currentSlug() === null ? null : deckUrl(null, 2)))
 </script>
 
 <template>
   <div v-if="href" class="fixed top-4 left-4 z-50">
-    <a :href="href" class="home-btn" title="Înapoi la laboratoare">
+    <a :href="href" class="home-btn" title="Înapoi la lecții">
       <mdi-home-outline />
     </a>
   </div>

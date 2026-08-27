@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Dev-server launcher for the multi-deck lab course.
+ * Dev-server launcher for the multi-deck lesson course.
  *
- * Each lab is an independent Slidev app on its own port, so cross-deck links in
+ * Each lesson is an independent Slidev app on its own port, so cross-deck links in
  * dev point at `localhost:<port>`. That means a deck you navigate *to* has to be
  * running — hence starting several at once.
  *
@@ -12,10 +12,10 @@
  * every deck is prefixed and interleaved on one stream.
  *
  * Usage:
- *   node scripts/dev.mjs               # hub + all 11 labs
+ *   node scripts/dev.mjs               # hub + all 11 lessons
  *   node scripts/dev.mjs hub           # just the hub
- *   node scripts/dev.mjs 5             # just lab 5
- *   node scripts/dev.mjs hub 5 6 7     # hub and labs 5–7
+ *   node scripts/dev.mjs 5             # just lesson 5
+ *   node scripts/dev.mjs hub 5 6 7     # hub and lessons 5–7
  *   node scripts/dev.mjs 05-arrays     # by slug
  *
  * Flags:
@@ -36,19 +36,19 @@ import { SLIDEV_BIN, childEnv } from './node-compat.mjs'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 
-const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'common', 'labs.json'), 'utf8'))
+const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'common', 'lessons.json'), 'utf8'))
 
 const HUB_PORT = 3030
 
 /** Every runnable deck, in menu order. */
 const DECKS = [
-  { name: 'hub', dir: path.join(ROOT, 'slides', '00-hub'), port: HUB_PORT, label: 'Laboratoare (hub)' },
-  ...registry.labs.map(lab => ({
-    name: lab.slug,
-    num: lab.num,
-    dir: path.join(ROOT, 'slides', lab.slug),
-    port: lab.port,
-    label: lab.title,
+  { name: 'hub', dir: path.join(ROOT, 'slides', '00-hub'), port: HUB_PORT, label: 'Lecții (hub)' },
+  ...registry.lessons.map(lesson => ({
+    name: lesson.slug,
+    num: lesson.num,
+    dir: path.join(ROOT, 'slides', lesson.slug),
+    port: lesson.port,
+    label: lesson.title,
   })),
 ]
 
@@ -93,7 +93,7 @@ function hasMprocs() {
  * Run the decks under mprocs: one pane per deck in a TUI.
  *
  * The config is generated from the deck list rather than committed, so it can
- * never go stale against common/labs.json and it honours a subset selection.
+ * never go stale against common/lessons.json and it honours a subset selection.
  * Values are emitted via JSON.stringify — YAML is a superset of JSON, so that
  * takes care of quoting.
  */

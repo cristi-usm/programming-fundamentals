@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { REPO } from '../labs'
+import { REPO } from '../lessons'
 
-/** Defaults to the repo recorded in labs.json; override with `repo`. */
+/** Defaults to the repo recorded in lessons.json; override with `repo`. */
 const props = defineProps<{ repo?: string }>()
 
 const href = props.repo ?? REPO

@@ -1,5 +1,5 @@
 import { defineAppSetup } from '@slidev/types'
-import { LABS, MODULES } from '../labs'
+import { LESSONS, MODULES } from '../lessons'
 import { THEME_CONFIG } from '../theme/config'
 
 /**
@@ -7,7 +7,7 @@ import { THEME_CONFIG } from '../theme/config'
  *
  * The components under common/components are not registered here — each deck's
  * vite.config.ts adds that directory to Slidev's auto-import dirs instead, so
- * the compiler knows the names. (Global registration alone loses `<LabGrid/>`
+ * the compiler knows the names. (Global registration alone loses `<LessonGrid/>`
  * to unplugin-icons; see the comment in any deck's vite.config.ts.)
  */
 export default defineAppSetup(({ app }) => {
@@ -29,9 +29,9 @@ export default defineAppSetup(({ app }) => {
     },
   })
 
-  // Exposed for markdown interpolation ({{ $labCount }}), so prose on the hub
+  // Exposed for markdown interpolation ({{ $lessonCount }}), so prose on the hub
   // cannot drift from the registry.
-  app.config.globalProperties.$labCount = LABS.length
+  app.config.globalProperties.$lessonCount = LESSONS.length
   app.config.globalProperties.$moduleCount = MODULES.length
 
   app.provide('themeConfig', THEME_CONFIG)

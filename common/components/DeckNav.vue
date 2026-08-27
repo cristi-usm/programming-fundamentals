@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { currentSlug, deckUrl, neighbours } from '../labs'
+import { currentSlug, deckUrl, neighbours } from '../lessons'
 
 /**
- * End-of-deck navigation: previous lab, hub, next lab.
+ * End-of-deck navigation: previous lesson, hub, next lesson.
  *
  * Placed on the last slide of every deck. Because each deck is a separate
  * Slidev app, these are real page loads — not in-deck slide transitions.
@@ -17,18 +17,18 @@ const hubHref = computed(() => deckUrl(null, 2))
 <template>
   <div class="deck-nav">
     <a v-if="around.prev" :href="deckUrl(around.prev.slug)" class="deck-nav-item prev">
-      <span class="deck-nav-dir">← Laboratorul anterior</span>
+      <span class="deck-nav-dir">← Lecția anterioară</span>
       <span class="deck-nav-title">{{ around.prev.icon }} {{ around.prev.title }}</span>
     </a>
     <span v-else class="deck-nav-spacer" />
 
-    <a :href="hubHref" class="deck-nav-hub" title="Toate laboratoarele">
+    <a :href="hubHref" class="deck-nav-hub" title="Toate lecțiile">
       <mdi-view-grid-outline />
-      <span>Toate laboratoarele</span>
+      <span>Toate lecțiile</span>
     </a>
 
     <a v-if="around.next" :href="deckUrl(around.next.slug)" class="deck-nav-item next">
-      <span class="deck-nav-dir">Laboratorul următor →</span>
+      <span class="deck-nav-dir">Lecția următoare →</span>
       <span class="deck-nav-title">{{ around.next.icon }} {{ around.next.title }}</span>
     </a>
     <span v-else class="deck-nav-spacer" />
@@ -85,7 +85,7 @@ const hubHref = computed(() => deckUrl(null, 2))
 .deck-nav-title {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--lab-accent);
+  color: var(--lesson-accent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

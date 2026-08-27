@@ -1,15 +1,15 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import { useSlideContext } from '@slidev/client'
-import { currentSlug, deckUrl } from '../labs'
+import { currentSlug, deckUrl } from '../lessons'
 
 /**
  * Page-number footer, shown on every slide of every deck.
  *
  * Ported from the single-deck `slide-bottom.vue`: the colours still follow the
  * slide's neversink `color:` frontmatter, but the counter now links back to the
- * hub's lab grid instead of slide 2 of one giant deck. Inside the hub that is a
- * same-app route, so it stays a Slidev <Link>; from a lab deck it is a real
+ * hub's lesson grid instead of slide 2 of one giant deck. Inside the hub that is a
+ * same-app route, so it stays a Slidev <Link>; from a lesson deck it is a real
  * navigation to another origin/port.
  */
 const { $slidev, $frontmatter } = useSlideContext()

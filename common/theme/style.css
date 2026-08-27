@@ -1,4 +1,4 @@
-/* Common theme styles shared by every deck of the Programming Fundamentals labs. */
+/* Common theme styles shared by every deck of the Programming Fundamentals lessons. */
 
 /* Slidev hardcodes --slidev-controls-foreground: white in its vars.css, which is
    invisible on the light neversink schemes this course uses. */
@@ -10,9 +10,9 @@ html:not(.dark) {
    button). Derived from the neversink scheme so changing THEME_CONFIG.scheme is
    enough to restyle them. */
 :root {
-  --lab-accent: var(--neversink-highlight-color, #78716c);
-  --lab-surface: var(--neversink-admon-bg-color, rgba(120, 113, 108, 0.06));
-  --lab-border: var(--neversink-admon-border-color, rgba(120, 113, 108, 0.3));
+  --lesson-accent: var(--neversink-highlight-color, #78716c);
+  --lesson-surface: var(--neversink-admon-bg-color, rgba(120, 113, 108, 0.06));
+  --lesson-border: var(--neversink-admon-border-color, rgba(120, 113, 108, 0.3));
 }
 
 .slidev-layout {

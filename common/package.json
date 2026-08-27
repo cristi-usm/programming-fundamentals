@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./labs": "./labs.ts",
-    "./labs.json": "./labs.json",
+    "./lessons": "./lessons.ts",
+    "./lessons.json": "./lessons.json",
     "./components/*": "./components/*",
     "./setup/*": "./setup/*",
     "./theme/*": "./theme/*",

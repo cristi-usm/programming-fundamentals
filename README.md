@@ -1,10 +1,10 @@
-# Fundamentele Programării — laboratoare
+# Fundamentele Programării — lecții
 
 Prezentările cursului *Fundamentele Programării* (limbajul **C**), construite cu
 [Slidev](https://github.com/slidevjs/slidev).
 
-Fiecare laborator este o **prezentare separată**, cu portul ei în dezvoltare.
-Pagina principală (*hub*) este cuprinsul din care se deschide oricare laborator.
+Fiecare lecție este o **prezentare separată**, cu portul ei în dezvoltare.
+Pagina principală (*hub*) este cuprinsul din care se deschide oricare lecție.
 
 ## Cum pornești
 
@@ -17,23 +17,23 @@ Apoi deschide <http://localhost:3030> — cuprinsul.
 
 `pnpm dev` pornește toate prezentările deodată. Dacă ai
 [mprocs](https://github.com/pvolok/mprocs) instalat, fiecare rulează în panoul
-ei; altfel output-ul este prefixat cu numele laboratorului.
+ei; altfel output-ul este prefixat cu numele lecției.
 
 Pentru mai puține servere:
 
 ```bash
 pnpm dev:hub                    # doar cuprinsul
-pnpm dev:05-arrays              # doar laboratorul 5
-node scripts/dev.mjs hub 5 6    # cuprinsul și laboratoarele 5–6
+pnpm dev:05-arrays              # doar lecția 5
+node scripts/dev.mjs hub 5 6    # cuprinsul și lecțiile 5–6
 pnpm dev --lazy                 # doar cuprinsul; restul le pornești din mprocs (tasta s)
 ```
 
-> Link-urile dintre laboratoare arată către `localhost:<port>`, deci laboratorul
+> Link-urile dintre lecții arată către `localhost:<port>`, deci lecția
 > către care navighezi trebuie să ruleze.
 
-## Laboratoare
+## Lecții
 
-| # | Laborator | Port |
+| # | Lecție | Port |
 |---|---|---|
 | — | Cuprins (hub) | 3030 |
 | 1 | Introducere. Structura unui program C. Variabile | 3031 |
@@ -48,11 +48,11 @@ pnpm dev --lazy                 # doar cuprinsul; restul le pornești din mprocs
 | 10 | Recapitulare | 3040 |
 | 11 | Enumuri, structuri și fișiere | 3041 |
 
-Lista este generată din `common/labs.json` — acolo se adaugă un laborator nou.
+Lista este generată din `common/lessons.json` — acolo se adaugă o lecție nouă.
 
 ## Editare
 
-Conținutul unui laborator este în `slides/<slug>/slides.md`.
+Conținutul unei lecții este în `slides/<slug>/slides.md`.
 
 Partea de headmatter de sub linia `# == shared: … ==` este **generată**: se
 editează în `scripts/sync-headmatter.mjs`, apoi
@@ -68,7 +68,7 @@ pnpm build     # totul în dist/
 pnpm preview
 ```
 
-Cuprinsul ajunge în `dist/`, fiecare laborator în `dist/<slug>/`.
+Cuprinsul ajunge în `dist/`, fiecare lecție în `dist/<slug>/`.
 
 ## Contribuții
 

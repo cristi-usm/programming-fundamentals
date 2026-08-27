@@ -16,7 +16,6 @@ draw:
   enabled: true
 favicon: './C.png'
 addons:
-  - slidev-addon-excalidraw
   - slidev-addon-cpp-runner
 c:
   compiler: 'g++'
@@ -51,14 +50,14 @@ align: c
 
 :: title ::
 
-# Laboratoare
+# Lecții
 
 :: content ::
 
-<LabGrid />
+<LessonGrid />
 
 <div class="mt-4 text-sm opacity-60">
-Click pe orice card pentru a deschide laboratorul. Fiecare laborator este o prezentare separată.
+Click pe orice card pentru a deschide lecția. Fiecare lecție este o prezentare separată.
 </div>
 
 ---
@@ -145,7 +144,7 @@ color: stone-light
     <div class="coursework-details">
       <div class="detail-item">Atestare 1 <span>25%</span></div>
       <div class="detail-item">Atestare 2 <span>25%</span></div>
-      <div class="detail-item">Laboratoare <span>25%</span></div>
+      <div class="detail-item">Lecții <span>25%</span></div>
       <div class="detail-item">Lucrul Individual <span>25%</span></div>
     </div>
   </div>
@@ -225,7 +224,7 @@ color: var(--neversink-admon-text-color);
 <div class="attendance-container neversink-stone-light-scheme">
 <div class="attendance-box">
 <div class="attendance-icon">🧪</div>
-<p class="attendance-title">Laboratoare</p>
+<p class="attendance-title">Lecții</p>
 </div>
 
 <div class="attendance-box">
@@ -517,7 +516,7 @@ color: var(--neversink-admon-text-color);
 <div class="eval-icon">2️⃣</div>
 <p class="eval-title">Atestare 2</p>
 <p class="eval-description">A doua evaluare semestrială.</p>
-<p>(Laborator)</p>
+<p>(Lecție)</p>
 </div>
 
 <div class="eval-box">
@@ -537,16 +536,16 @@ color: stone-light
 
 :: title ::
 
-# Scutire de Laboratoare (Opțional)
+# Scutire de Lecții (Opțional)
 
 :: content ::
 
 <div class="mt-8">
 <AdmonitionType type="info" class="text-center text-xl">
 
-# Studenții care doresc să fie scutiți de laboratoarele semestriale pot rezolva și susține **Sarcinile Suplimentare**.
+# Studenții care doresc să fie scutiți de lecțiile semestriale pot rezolva și susține **Sarcinile Suplimentare**.
 
-# Aceste sarcini sunt mai complexe și vor fi evaluate mai strict, dar finalizarea lor cu succes va înlocui nota pentru toate laboratoarele.
+# Aceste sarcini sunt mai complexe și vor fi evaluate mai strict, dar finalizarea lor cu succes va înlocui nota pentru toate lecțiile.
 
 </AdmonitionType>
 </div>
@@ -566,8 +565,8 @@ align: c
 <div class="flex flex-col items-center mt-6">
 <div class="text-left">
 
-Fiecare laborator este o prezentare separată. Navighezi între ele din pagina
-**Laboratoare**, sau cu butoanele de la finalul fiecărui laborator.
+Fiecare lecție este o prezentare separată. Navighezi între ele din pagina
+**Lecții**, sau cu butoanele de la finalul fiecărei lecții.
 
 ### Scurtături tastatură
 
@@ -583,7 +582,7 @@ Fiecare laborator este o prezentare separată. Navighezi între ele din pagina
 
 <AdmonitionType type="tip">
 
-Pentru a te întoarce la lista de laboratoare de oriunde, click pe butonul 🏠 din
+Pentru a te întoarce la lista de lecții de oriunde, click pe butonul 🏠 din
 colțul stânga-sus.
 
 </AdmonitionType>
