@@ -1,10 +1,10 @@
 {
-  "name": "@programming-fundamentals-lab/pointers",
+  "name": "@programming-fundamentals-lab/conditionals",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "slidev slides.md --port 3039",
+    "dev": "slidev slides.md --port 3034",
     "build": "slidev build slides.md"
   }
 }

@@ -2,9 +2,26 @@
   "$comment": "Single source of truth for the lesson structure. Read at build time by scripts/*.mjs and at runtime by common/lessons.ts. Adding an entry here makes the lesson appear on the hub grid and gives it a dev port.",
   "repo": "https://github.com/cristi-usm/programming-fundamentals-lab",
   "modules": [
-    { "id": 1, "emoji": "🟢", "title": "Bazele limbajului" },
-    { "id": 2, "emoji": "🟡", "title": "Tablouri și șiruri" },
-    { "id": 3, "emoji": "🔴", "title": "Funcții, pointeri, date complexe" }
+    {
+      "id": 1,
+      "emoji": "🟢",
+      "title": "Bazele limbajului"
+    },
+    {
+      "id": 2,
+      "emoji": "🔵",
+      "title": "Funcții și instrumente"
+    },
+    {
+      "id": 3,
+      "emoji": "🟡",
+      "title": "Tablouri și șiruri"
+    },
+    {
+      "id": 4,
+      "emoji": "🔴",
+      "title": "Memorie și date complexe"
+    }
   ],
   "lessons": [
     {
@@ -14,7 +31,7 @@
       "module": 1,
       "icon": "🚀",
       "title": "Lecția 1: Introducere",
-      "description": "Structura unui program C. Variabile.",
+      "description": "Ce este un program. Compilare, link, rulare.",
       "status": "ready"
     },
     {
@@ -24,98 +41,133 @@
       "module": 1,
       "icon": "🔢",
       "title": "Lecția 2: Tipuri de date",
-      "description": "Tipuri de date. Operatori & operanzi.",
+      "description": "Tipuri, literali, conversii, operatori.",
       "status": "ready"
     },
     {
       "num": 3,
-      "slug": "03-conditionals",
+      "slug": "03-io",
       "port": 3033,
       "module": 1,
+      "icon": "⌨️",
+      "title": "Lecția 3: Input/Output",
+      "description": "printf, scanf și validarea datelor citite."
+    },
+    {
+      "num": 4,
+      "slug": "04-conditionals",
+      "port": 3034,
+      "module": 1,
       "icon": "🔀",
-      "title": "Lecția 3: Condiționale",
+      "title": "Lecția 4: Condiționale",
       "description": "Instrucțiuni condiționale — if, else, switch",
       "status": "ready"
     },
     {
-      "num": 4,
-      "slug": "04-loops",
-      "port": 3034,
+      "num": 5,
+      "slug": "05-loops",
+      "port": 3035,
       "module": 1,
       "icon": "🔁",
-      "title": "Lecția 4: Cicluri",
+      "title": "Lecția 5: Cicluri",
       "description": "Instrucțiuni ciclice — while, do-while, for",
       "status": "ready"
     },
     {
-      "num": 5,
-      "slug": "05-arrays",
-      "port": 3035,
-      "module": 2,
-      "icon": "📦",
-      "title": "Lecția 5: Tablouri",
-      "description": "Tablouri (arrays) unidimensionale",
-      "status": "ready"
-    },
-    {
       "num": 6,
-      "slug": "06-n-arrays",
+      "slug": "06-functions",
       "port": 3036,
       "module": 2,
-      "icon": "🧮",
-      "title": "Lecția 6: Tablouri multidimensionale",
-      "description": "Matrice și tablouri cu mai multe dimensiuni",
+      "icon": "🧩",
+      "title": "Lecția 6: Funcții și recursivitate",
+      "description": "Parametri, scope, stiva de apeluri, recursivitate",
       "status": "ready"
     },
     {
       "num": 7,
-      "slug": "07-strings",
+      "slug": "07-debugging",
       "port": 3037,
       "module": 2,
-      "icon": "🔤",
-      "title": "Lecția 7: Șiruri de caractere",
-      "description": "Stringuri în C și funcțiile din <string.h>",
-      "status": "ready"
+      "icon": "🐞",
+      "title": "Lecția 7: Debugging și bune practici",
+      "description": "gdb, assert, testare, stil de cod."
     },
     {
       "num": 8,
-      "slug": "08-functions",
+      "slug": "08-arrays",
       "port": 3038,
       "module": 3,
-      "icon": "🧩",
-      "title": "Lecția 8: Funcții",
-      "description": "Funcții în C, parametri, domeniu de vizibilitate",
+      "icon": "📦",
+      "title": "Lecția 8: Tablouri",
+      "description": "Tablouri unidimensionale și căutarea liniară",
       "status": "ready"
     },
     {
       "num": 9,
-      "slug": "09-pointers",
+      "slug": "09-n-arrays",
       "port": 3039,
       "module": 3,
-      "icon": "📍",
-      "title": "Lecția 9: Pointeri",
-      "description": "Adrese, pointeri și memorie dinamică",
+      "icon": "🧮",
+      "title": "Lecția 9: Tablouri multidimensionale",
+      "description": "Matrice și tablouri cu mai multe dimensiuni",
       "status": "ready"
     },
     {
       "num": 10,
-      "slug": "10-recap",
+      "slug": "10-strings",
       "port": 3040,
       "module": 3,
-      "icon": "🧠",
-      "title": "Lecția 10: Recapitulare",
-      "description": "Sarcini de pregătire pentru atestare",
+      "icon": "🔤",
+      "title": "Lecția 10: Șiruri de caractere",
+      "description": "Stringuri în C și funcțiile din <string.h>",
       "status": "ready"
     },
     {
       "num": 11,
-      "slug": "11-enum-structs-files",
+      "slug": "11-pointers",
       "port": 3041,
-      "module": 3,
-      "icon": "🗂️",
-      "title": "Lecția 11: Enum, structuri, fișiere",
-      "description": "Organizarea datelor complexe și persistența",
+      "module": 4,
+      "icon": "📍",
+      "title": "Lecția 11: Pointeri",
+      "description": "Adrese, dereferențiere, pointeri ca parametri",
       "status": "ready"
+    },
+    {
+      "num": 12,
+      "slug": "12-dynamic-memory",
+      "port": 3042,
+      "module": 4,
+      "icon": "💾",
+      "title": "Lecția 12: Memorie dinamică",
+      "description": "malloc, free, memory leaks, tablouri dinamice"
+    },
+    {
+      "num": 13,
+      "slug": "13-structs-enums",
+      "port": 3043,
+      "module": 4,
+      "icon": "🗂️",
+      "title": "Lecția 13: Structuri și enum",
+      "description": "Organizarea datelor complexe",
+      "status": "ready"
+    },
+    {
+      "num": 14,
+      "slug": "14-files",
+      "port": 3044,
+      "module": 4,
+      "icon": "📄",
+      "title": "Lecția 14: Fișiere",
+      "description": "Citirea și scrierea datelor pe disc"
+    },
+    {
+      "num": 15,
+      "slug": "15-project",
+      "port": 3045,
+      "module": 4,
+      "icon": "🏗️",
+      "title": "Lecția 15: Proiect integrator",
+      "description": "Aplicație completă și pregătire pentru atestare"
     }
   ]
 }

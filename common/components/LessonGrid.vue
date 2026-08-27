@@ -27,8 +27,8 @@ const columns = computed(() =>
 <style scoped>
 .lesson-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
   align-items: start;
   text-align: left;
 }

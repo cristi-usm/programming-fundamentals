@@ -1,10 +1,10 @@
 {
-  "name": "@programming-fundamentals-lab/functions",
+  "name": "@programming-fundamentals-lab/pointers",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "slidev slides.md --port 3038",
+    "dev": "slidev slides.md --port 3041",
     "build": "slidev build slides.md"
   }
 }

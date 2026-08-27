@@ -74,7 +74,7 @@ const href = computed(() => {
   background: rgba(120, 113, 108, 0.06);
   border: 1px solid rgba(120, 113, 108, 0.25);
   border-radius: 8px;
-  padding: 0.7rem 1rem;
+  padding: 0.55rem 0.7rem;
   transition: all 0.2s ease;
   height: 100%;
   max-width: 100%;
@@ -113,10 +113,10 @@ const href = computed(() => {
 }
 
 .lesson-card-icon {
-  font-size: 1.8rem;
-  margin-right: 0.9rem;
+  font-size: 1.4rem;
+  margin-right: 0.55rem;
   flex-shrink: 0;
-  width: 2.4rem;
+  width: 1.7rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,7 +131,7 @@ const href = computed(() => {
 .lesson-card h3 {
   color: var(--lesson-accent);
   margin-bottom: 0.1rem;
-  font-size: 1rem;
+  font-size: 0.82rem;
   line-height: 1.2;
   font-weight: 600;
   white-space: nowrap;
@@ -145,7 +145,7 @@ const href = computed(() => {
 
 .lesson-card p {
   opacity: 0.85;
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   line-height: 1.25;
   margin: 0;
   white-space: nowrap;
