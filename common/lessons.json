@@ -30,8 +30,8 @@
       "port": 3031,
       "module": 1,
       "icon": "🚀",
-      "title": "Lecția 1: Introducere",
-      "description": "Ce este un program. Compilare, link, rulare.",
+      "title": "Lecția 1: Introducere în Programare",
+      "description": "Ce face un computer, algoritmi, compilare, primul program",
       "status": "ready"
     },
     {
