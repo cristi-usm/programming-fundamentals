@@ -5,3 +5,6 @@ dist
 .vite-inspect
 .remote-assets
 components.d.ts
+
+# mprocs debug log (written to CWD by the dev TUI)
+mprocs.log
