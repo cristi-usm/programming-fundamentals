@@ -1,5 +1,6 @@
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
+import { componentDirs } from '../../common/vite/component-dirs.ts'
 import { multiPublicPlugin } from '../../common/vite/multi-public-plugin.ts'
 
 const COMMON = resolve(import.meta.dirname, '../..', 'common')
@@ -13,15 +14,8 @@ export default defineConfig({
 
   slidev: {
     components: {
-      // Auto-import the shared components (<LessonGrid/>, <DeckNav/>, …) as if
-      // they were this deck's own.
-      //
-      // Registering them globally in setup/main.ts is not enough: the compiler
-      // never learns those names, so unplugin-icons claims them first. With the
-      // full @iconify/json set installed, `<LessonGrid/>` kebab-cases to the icon
-      // `la/b-grid` (la = Line Awesome) and the build dies on a missing icon.
-      // A directory entry is resolved before any resolver, so this wins.
-      dirs: [resolve(COMMON, 'components')],
+      // Slidev REPLACES its default dirs with this list — see componentDirs().
+      dirs: componentDirs(import.meta.dirname),
     },
   },
 

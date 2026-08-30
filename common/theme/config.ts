@@ -7,7 +7,7 @@ export const THEME_CONFIG = {
   //          red, orange, amber, yellow, lime, green, emerald, teal, cyan, sky,
   //          blue, indigo, violet, purple, fuchsia, pink, rose
   // Suffix with -light-scheme or -scheme.
-  scheme: 'neversink-stone-light-scheme' as string,
+  scheme: 'neversink-blue-light-scheme' as string,
 
   // Slug of the lesson currently being taught. Earlier lessons are marked complete on
   // the hub grid; this one is marked as active. Set to '' to mark none.
