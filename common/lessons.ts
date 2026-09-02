@@ -40,7 +40,7 @@ export const HUB_PORT = 3030
  * `slides/00-hub/slides.md` is a one-line change, not a hunt through
  * components.
  */
-export const HUB_LESSONS_SLIDE = 10
+export const HUB_LESSONS_SLIDE = 11
 
 /** Every slug that can appear as a path segment in the built site. */
 const DECK_SLUGS = new Set<string>(LESSONS.map(l => l.slug))

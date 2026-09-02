@@ -47,22 +47,22 @@ align: c
 
 :: title ::
 
-# Laboratoare, Seminare, Cursuri
+# Tipuri de Lecții
 
 :: content ::
 
 <div class="grid grid-cols-3 gap-6 mt-10 neversink-blue-light-scheme">
   <div class="p-8 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] flex flex-col items-center gap-4">
-    <span class="i-ph-flask-duotone w-12 h-12 text-[var(--neversink-highlight-color)]" />
-    <div class="text-3xl font-bold">Laboratoare</div>
+    <span class="i-ph-chalkboard-teacher-duotone w-12 h-12 text-[var(--neversink-highlight-color)]" />
+    <div class="text-3xl font-bold">Cursuri</div>
   </div>
   <div class="p-8 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] flex flex-col items-center gap-4">
     <span class="i-ph-clipboard-text-duotone w-12 h-12 text-[var(--neversink-highlight-color)]" />
     <div class="text-3xl font-bold">Seminare</div>
   </div>
   <div class="p-8 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] flex flex-col items-center gap-4">
-    <span class="i-ph-chalkboard-teacher-duotone w-12 h-12 text-[var(--neversink-highlight-color)]" />
-    <div class="text-3xl font-bold">Cursuri</div>
+    <span class="i-ph-flask-duotone w-12 h-12 text-[var(--neversink-highlight-color)]" />
+    <div class="text-3xl font-bold">Laboratoare</div>
   </div>
 </div>
 
@@ -122,7 +122,7 @@ color: blue-light
 
 :: title ::
 
-# Atestări și Examen
+# Teste
 
 :: content ::
 
@@ -163,32 +163,26 @@ color: blue-light
 <div class="max-w-4xl mx-auto text-left neversink-blue-light-scheme">
 
 <p class="text-lg">
-La finalul semestrului susțineți un <strong>colocviu</strong>: singura probă care
-acoperă tot ce am parcurs, dintr-o dată.
+La finalul semestrului susțineți un <strong>colocviu</strong>.
 </p>
 
 <div class="grid grid-cols-3 gap-4 mt-6">
   <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
     <span class="i-ph-chat-teardrop-text-duotone block w-7 h-7 text-[var(--neversink-highlight-color)]" />
     <div class="text-base font-bold mt-2">Întrebări teoretice</div>
-    <p class="text-sm mt-1 opacity-80">Nu definiții pe de rost — de ce funcționează lucrurile așa.</p>
+    <p class="text-sm mt-1 opacity-80">Nu definiții pe de rost.</p>
   </div>
   <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
     <span class="i-ph-code-duotone block w-7 h-7 text-[var(--neversink-highlight-color)]" />
     <div class="text-base font-bold mt-2">Sarcini practice</div>
-    <p class="text-sm mt-1 opacity-80">Cod scris pe loc, pornind de la o cerință nouă.</p>
+    <p class="text-sm mt-1 opacity-80">Sarcini de a scri cod live.</p>
   </div>
   <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
     <span class="i-ph-books-duotone block w-7 h-7 text-[var(--neversink-highlight-color)]" />
     <div class="text-base font-bold mt-2">Toate temele</div>
-    <p class="text-sm mt-1 opacity-80">Tot materialul semestrului, de la primul laborator la ultimul.</p>
+    <p class="text-sm mt-1 opacity-80">Include material din tot semestrul.</p>
   </div>
 </div>
-
-<p class="text-base mt-6 opacity-80">
-Pregătirea se face pe parcurs: fiecare laborator dus la capăt este o bucată din
-colocviu rezolvată din timp.
-</p>
 
 </div>
 
@@ -230,10 +224,8 @@ Suplimentare</strong> în locul laboratoarelor semestriale.
 <div class="flex items-center gap-3 mt-7 p-4 rounded-lg bg-[var(--neversink-bg-color)] border border-[var(--neversink-border-color)]">
   <span class="i-ph-file-pdf-duotone w-7 h-7 flex-none text-[var(--neversink-highlight-color)]" />
   <div>
-    <div class="font-bold">Enunțurile sarcinilor suplimentare</div>
-    <!-- Când PDF-ul e pe Moodle: înlocuiește linia de mai jos cu
-         <a href="URL" target="_blank" rel="noopener">Descarcă PDF-ul (Moodle)</a> -->
-    <div class="text-sm opacity-70">PDF pe Moodle — linkul se publică la începutul semestrului.</div>
+    <div class="font-bold">Link către Sarcinile Suplimentare</div>
+    <a class="text-sm underline" href="https://elearning.usm.md/pluginfile.php/727573/mod_resource/content/3/Sarcini%20Suplimentare.pdf" target="_blank" rel="noopener">Descarcă PDF-ul</a>
   </div>
 </div>
 
@@ -257,11 +249,13 @@ color: blue-light
     <span class="i-ph-calendar-check-duotone block w-9 h-9 text-[var(--neversink-highlight-color)]" />
     <div class="text-2xl font-bold mt-3">Termene limită</div>
     <p class="text-base mt-2 opacity-85">Fiecare laborator are data lui de predare. Lucrările întârziate nu se primesc.</p>
+    <p class="text-base mt-2 opacity-85">Laboratorul nesusținut se notează cu <strong>2</strong>; la fel și absențele nemotivate.</p>
   </div>
   <div class="p-6 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
     <span class="i-ph-shield-warning-duotone block w-9 h-9 text-[var(--neversink-highlight-color)]" />
     <div class="text-2xl font-bold mt-3">Integritate</div>
-    <p class="text-base mt-2 opacity-85">Toleranță zero pentru plagiat. Codul pe care îl predați trebuie să fie al vostru și să știți să-l explicați.</p>
+    <p class="text-base mt-2 opacity-85">Toleranță zero pentru plagiat. Folosirea AI este <strong>strict interzisă</strong>.</p>
+    <p class="text-base mt-2 opacity-85">Codul pe care îl predați trebuie să fie al vostru și să știți să-l explicați.</p>
   </div>
 </div>
 
@@ -280,8 +274,8 @@ align: c
 <div class="flex flex-col items-center mt-6">
 <div class="text-left">
 
-Fiecare laborator este o prezentare separată. Ajungi la ele din lista
-**Laboratoare**, sau cu butoanele de la finalul fiecărei prezentări.
+Fiecare curs este o prezentare separată. Ajungi la ele din lista
+**Cursuri**, sau cu butoanele de la finalul fiecărei prezentări.
 
 ### Scurtături tastatură
 
@@ -298,54 +292,11 @@ Fiecare laborator este o prezentare separată. Ajungi la ele din lista
 <AdmonitionType type="tip">
 
 Butonul <span class="i-ph-house-duotone inline-block w-4 h-4 align-text-bottom" /> din colțul
-stânga-sus te întoarce oricând la lista laboratoarelor.
+stânga-sus te întoarce oricând la lista cu cursuri.
 
 </AdmonitionType>
 
 </div>
-</div>
-
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Fișele Laboratoarelor
-
-:: content ::
-
-Enunțul fiecărui laborator — sarcinile de rezolvat — se publică pe **Moodle**, ca PDF:
-
-<div class="mt-6 neversink-blue-light-scheme">
-
-<LabSheets />
-
-</div>
-
-<div class="mt-6 text-sm opacity-70">
-Prezentarea de la laborator explică materia; fișa spune ce aveți de predat.
-</div>
-
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Laboratoare
-
-:: content ::
-
-<LessonGrid />
-
-<div class="mt-4 text-sm opacity-60">
-Se deschid pe rând, pe măsură ce înaintăm prin semestru. Cele cu
-<span class="i-ph-lock-simple-duotone inline-block w-3.5 h-3.5 align-text-bottom" /> nu sunt încă disponibile.
 </div>
 
 ---
@@ -366,11 +317,10 @@ color: blue-light
   <div class="p-6 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
     <span class="i-ph-user-circle-duotone block w-9 h-9 text-[var(--neversink-highlight-color)]" />
     <div class="text-xl font-bold mt-3">Crudu Cristian</div>
-    <div class="text-xs uppercase tracking-wider opacity-60 mt-1">Laborator</div>
     <div class="mt-4 flex flex-col gap-2 text-sm">
-      <a class="contact-line" href="mailto:cristian.crudu@usm.md">
+      <a class="contact-line" href="mailto:cristicrudu2002@gmail.com">
         <span class="i-ph-envelope-simple-duotone" />
-        <span>cristian.crudu@usm.md</span>
+        <span>cristicrudu2002@gmail.com</span>
       </a>
       <a class="contact-line" href="tel:+37367277471">
         <span class="i-ph-phone-duotone" />
@@ -379,15 +329,13 @@ color: blue-light
     </div>
   </div>
 
-  <!-- TODO: numele și adresa celui de-al doilea profesor. -->
   <div class="p-6 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
     <span class="i-ph-user-circle-duotone block w-9 h-9 text-[var(--neversink-highlight-color)]" />
-    <div class="text-xl font-bold mt-3">Nume Prenume</div>
-    <div class="text-xs uppercase tracking-wider opacity-60 mt-1">Curs și seminar</div>
+    <div class="text-xl font-bold mt-3">Donu Alexandru</div>
     <div class="mt-4 flex flex-col gap-2 text-sm">
-      <a class="contact-line" href="mailto:nume.prenume@usm.md">
+      <a class="contact-line" href="mailto:alexandru.donu@usm.md">
         <span class="i-ph-envelope-simple-duotone" />
-        <span>nume.prenume@usm.md</span>
+        <span>alexandru.donu@usm.md</span>
       </a>
     </div>
   </div>
@@ -420,3 +368,48 @@ color: blue-light
   outline-offset: 3px;
 }
 </style>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Laboratoare
+
+:: content ::
+
+<div class="neversink-blue-light-scheme">
+
+<div class="mt-6">
+
+<LabSheets />
+
+</div>
+
+</div>
+
+<div class="mt-5 text-sm opacity-70">
+De regulă, în fiecare săptămână veți avea de îndeplinit un laborator.
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Cursuri
+
+:: content ::
+
+<LessonGrid />
+
+<div class="mt-4 text-sm opacity-60">
+Se deschid pe rând, pe măsură ce înaintăm prin semestru. Cele cu
+<span class="i-ph-lock-simple-duotone inline-block w-3.5 h-3.5 align-text-bottom" /> nu sunt încă disponibile.
+</div>

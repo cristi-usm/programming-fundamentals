@@ -37,8 +37,9 @@ const sheets = computed(() =>
         :class="{ pending: !sheet.sheet }"
       >
         <span class="lab-sheet-num">{{ sheet.num }}</span>
-        <!-- Empty for an unreleased lab; the row still holds its place in the list. -->
-        <span class="lab-sheet-title">{{ sheet.title }}</span>
+        <span v-if="sheet.sheet" class="lab-sheet-title">{{ sheet.title }}</span>
+        <!-- A placeholder bar for an unreleased lab; the row still holds its place. -->
+        <span v-else class="lab-sheet-title lab-sheet-bar" />
         <span v-if="sheet.sheet" class="lab-sheet-mark i-ph-file-pdf-duotone" />
         <span v-else class="lab-sheet-soon">în curând</span>
       </component>
@@ -118,5 +119,43 @@ a.lab-sheet:focus-visible {
 
 .lab-sheet.pending .lab-sheet-title {
   opacity: 0.6;
+}
+
+.lab-sheet-bar {
+  height: 0.45rem;
+  align-self: center;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--neversink-highlight-color) 12%, transparent) 0%,
+    color-mix(in srgb, var(--neversink-highlight-color) 28%, transparent) 50%,
+    color-mix(in srgb, var(--neversink-highlight-color) 12%, transparent) 100%
+  );
+  background-size: 200% 100%;
+  animation: sheet-sweep 2.4s ease-in-out infinite;
+}
+
+/* Offset the rows so the list ripples instead of blinking as one block. */
+.lab-sheets li:nth-child(even) .lab-sheet-bar {
+  animation-delay: 0.5s;
+}
+
+.lab-sheets li:nth-child(3n) .lab-sheet-bar {
+  animation-delay: 1s;
+}
+
+@keyframes sheet-sweep {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -20% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-sheet-bar {
+    animation: none;
+  }
 }
 </style>

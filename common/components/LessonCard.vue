@@ -40,9 +40,13 @@ const icon = computed(() => {
   return lesson.value?.icon ?? 'i-ph-question-duotone'
 })
 
+/**
+ * A locked card shows nothing but skeleton bars — no subject, no description.
+ * The grid says how many lessons there are and how far we've got, not what is
+ * coming. `title` is therefore only ever read for an open card.
+ */
 const title = computed(() => {
   if (props.title) return props.title
-  if (!open.value) return lesson.value ? `Laboratorul ${lesson.value.num}` : 'În curând'
   return lesson.value?.title ?? 'În curând'
 })
 
@@ -73,11 +77,19 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
     :class="{ complete: isCompleted, current: isCurrent, locked: !href }"
     :aria-disabled="href ? undefined : 'true'"
   >
-    <span class="lesson-card-icon" :class="icon" />
-    <div class="lesson-card-content">
+    <span v-if="open" class="lesson-card-icon" :class="icon" />
+    <!-- The number is all a locked card gives away — it keeps the rows countable. -->
+    <span v-else class="lesson-card-num">{{ lesson?.num ?? '·' }}</span>
+
+    <div v-if="open" class="lesson-card-content">
       <h3>{{ title }}</h3>
       <!-- Kept even when empty, so a locked card is the same height as an open one. -->
       <p>{{ description }}</p>
+    </div>
+    <!-- Same box, same height — only the content is a placeholder. -->
+    <div v-else class="lesson-card-content lesson-card-skeleton" aria-label="Se deschide mai târziu">
+      <span class="skeleton-bar skeleton-title" />
+      <span class="skeleton-bar skeleton-desc" />
     </div>
     <span v-if="isCompleted && open" class="lesson-card-status i-ph-check-circle-fill" />
     <span v-else-if="isCurrent && open" class="lesson-card-status i-ph-play-circle-fill" />
@@ -129,14 +141,77 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
 
 /* Locked cards still read as part of the semester — just not openable yet. */
 .lesson-card.locked {
-  background: color-mix(in srgb, var(--neversink-admon-bg-color) 45%, #fff);
+  background: color-mix(in srgb, var(--neversink-admon-bg-color) 30%, #fff);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--neversink-admon-border-color) 70%, transparent);
   cursor: default;
 }
 
-.lesson-card.locked .lesson-card-icon,
-.lesson-card.locked h3,
-.lesson-card.locked p {
-  opacity: 0.55;
+.lesson-card-num {
+  width: 1.25rem;
+  margin-right: 0.6rem;
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  opacity: 0.35;
+}
+
+/* Placeholder bars stand in for the title and the description. */
+.lesson-card-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.12rem 0;
+}
+
+.skeleton-bar {
+  display: block;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--neversink-highlight-color) 12%, transparent) 0%,
+    color-mix(in srgb, var(--neversink-highlight-color) 26%, transparent) 50%,
+    color-mix(in srgb, var(--neversink-highlight-color) 12%, transparent) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 2.4s ease-in-out infinite;
+}
+
+.skeleton-title {
+  width: 78%;
+}
+
+.skeleton-desc {
+  width: 52%;
+  height: 0.4rem;
+  opacity: 0.7;
+}
+
+/* Stagger the columns a little so the grid breathes instead of pulsing as one block. */
+.lesson-card:nth-child(even) .skeleton-bar {
+  animation-delay: 0.6s;
+}
+
+.lesson-card:nth-child(3n) .skeleton-bar {
+  animation-delay: 1.1s;
+}
+
+@keyframes skeleton-sweep {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -20% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-bar {
+    animation: none;
+  }
 }
 
 .lesson-card.complete {
