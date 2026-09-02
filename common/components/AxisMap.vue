@@ -8,9 +8,9 @@
  * insert cost, editors by power and learning curve.
  *
  *   <AxisMap
- *     x-label="Tipare" x-min="dinamic" x-max="strict"
+ *     x-label="Tipizare" x-min="dinamică" x-max="strictă"
  *     y-label="Nivel"  y-min="jos"     y-max="înalt"
- *     :zones="['ușor de scris', 'sigur și abstract', 'verificat de compiler', 'aproape de mașină']"
+ *     :zones="['ușor de scris', 'sigur și abstract', 'verificat de compilator', 'aproape de mașină']"
  *     :items="[
  *       { x: 60, y: 18, label: 'C', highlight: true },
  *       { x: 30, y: 90, label: 'Python' },
@@ -109,7 +109,7 @@ withDefaults(
   width: 100%;
   /* Left and bottom gutters hold the frame captions, so nothing that names an
      axis ever shares space with an item. */
-  padding: 0.5rem 1rem 3.4rem 5.2rem;
+  padding: 0.5rem 4.5rem 3.4rem 5.2rem;
 }
 
 .ns-axismap__plot {
@@ -146,14 +146,14 @@ withDefaults(
 /* Each caption hugs the corner furthest from the crossing point. */
 .ns-axismap__zone-label {
   position: absolute;
-  max-width: 46%;
-  font-size: 0.72rem;
+  max-width: 42%;
+  font-size: 0.68rem;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--neversink-text-color);
-  opacity: 0.6;
+  opacity: 0.45;
 }
 
 .ns-axismap__zone--0 .ns-axismap__zone-label {

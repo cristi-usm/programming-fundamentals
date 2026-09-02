@@ -74,13 +74,24 @@ color: blue-light
 
 <Definition term="Programare" source="DEX">
 
-- Acțiunea de a programa și rezultatul ei.
-- Alcătuire a unei succesiuni de instrucțiuni care permit unui calculator să
-  rezolve o problemă dată, plecând de la datele inițiale.
+<ul>
+<li>Acțiunea de <mark>a programa</mark> și rezultatul ei.</li>
+<li v-click>Alcătuire a unei succesiuni de instrucțiuni care permit unui calculator să rezolve o problemă dată, plecând de la datele inițiale.</li>
+</ul>
 
 </Definition>
 
 </div>
+
+<!--
+Primul sens este circular: „programare = acțiunea de a programa". Lăsați clasa
+să observe asta. De aceea „a programa" este marcat. Abia al doilea sens spune
+ceva, și el apare la click ca răspuns la cuvântul marcat.
+
+Lista este scrisă ca HTML, nu ca listă markdown, pentru că v-click trebuie pus
+pe UN singur element. În lecțiile arhivate reveal-ul dispare și ambele sensuri
+se văd deodată (vezi CLAUDE.md §4).
+-->
 
 ---
 layout: top-title
@@ -90,7 +101,7 @@ color: blue-light
 
 :: title ::
 
-# Ce Înseamnă Pe Scurt
+# Mai pe Scurt
 
 :: content ::
 
@@ -98,7 +109,7 @@ color: blue-light
 
 <Definition term="Programare" source="Pe scurt" emphasis>
 
-A face computerul să execute exact ce vrem noi **fără greșeli**.
+A transforma o idee în pași pe care computerul îi poate executa.
 
 </Definition>
 
@@ -112,32 +123,58 @@ color: blue-light
 
 :: title ::
 
-# Un Exemplu: Media a Trei Note
+# Media a Trei Note
 
 :: content ::
 
 <div class="grid grid-cols-2 gap-6 mt-8">
   <div class="p-6 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Ce spunem noi</h3>
-    <p class="text-xl mt-4">„Media notelor 8, 9 și 10."</p>
+    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Sarcina pentru Om</h3>
+    <p class="text-xl mt-4">"Media notelor 8, 9 și 10."</p>
   </div>
-  <div class="p-6 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Ce trebuie să-i spunem</h3>
+  <div v-click="1" class="p-6 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Sarcina pentru Computer</h3>
     <div class="ns-c-tight text-base mt-4">
-
-1. Ține minte 8, 9, 10.
-2. Adună primul cu al doilea.
-3. Adună rezultatul cu al treilea.
-4. Împarte la 3.
-5. Afișează rezultatul.
-
+<ol class="list-decimal list-inside space-y-2">
+<li v-click="2">Ține minte 8, 9, 10.</li>
+<li v-click="3">Adună primul cu al doilea.</li>
+<li v-click="4">Adună rezultatul cu al treilea.</li>
+<li v-click="5">Împarte la 3.</li>
+<li v-click="6">Afișează rezultatul.</li>
+</ol>
 </div>
+    <AverageMachine :values="[8, 9, 10]" :first-click="2" />
   </div>
 </div>
 
-<div class="text-center text-lg mt-8">
+<div v-click="7" class="mt-10">
+
+<AdmonitionType type="important" title="Ordinea nu este o sugestie">
+
 Niciun pas nu poate fi sărit. Și niciunul mutat din loc.
+
+</AdmonitionType>
+
 </div>
+
+<!--
+Ritmul slide-ului: stânga se vede din start. Citiți propoziția și întrebați
+clasa cum i-ar spune asta unui computer. Lăsați-i să încerce ÎNAINTE de primul
+click; de-aia dreapta e goală la început.
+
+Apoi click: apare cardul din dreapta, gol, și pașii vin unul câte unul. Fiecare
+click este un pas pe care cineva din clasă l-a spus (sau l-a uitat). Sub listă,
+<AverageMachine> execută pasul: tile-urile se aprind, suma urcă 17 → 27, apoi
+apare media. Ultimul click aduce concluzia.
+
+Arătați suma URCÂND, nu rezultatul gata calculat. Asta e diferența dintre „27"
+și „computerul a adunat 8 cu 9, apoi a adăugat 10".
+
+Lista e HTML, nu markdown, pentru ca v-click sa poata sta pe fiecare <li>.
+Numerele din v-click="N" sunt obligatorii aici: pasii sunt IMBRICATI in cardul
+care are si el v-click, iar fara numere ordinea clickurilor nu urmeaza ordinea
+vizuala, iar unele clickuri nu schimba nimic pe ecran.
+-->
 
 ---
 layout: top-title
@@ -147,19 +184,20 @@ color: blue-light
 
 :: title ::
 
-# Cunoaștere Declarativă vs Imperativă
+# Abordare Declarativă vs Imperativă
 
 :: content ::
 
-Vrem rădăcina pătrată a lui `x`. Există două moduri complet diferite de a
-"ști" ce este ea.
+Vrem cel mai mare număr dintr-o listă. Există două moduri complet diferite de a
+"ști" care este.
 
 <div class="grid grid-cols-2 gap-6 mt-6">
   <div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-5 rounded-lg border border-[var(--neversink-admon-border-color)]">
-    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Declarativă — <em>ce</em> este</h3>
+    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Declarativă: <em>ce</em> este</h3>
     <div class="text-sm mt-3">
 
-> Rădăcina pătrată a lui `x` este acel număr `y ≥ 0` pentru care `y · y = x`.
+> Cel mai mare număr din listă este acela față de care **niciun altul nu este
+> mai mare**.
 
 Este un **enunț de fapt**. Ne spune cum recunoaștem răspunsul corect dacă
 cineva ni-l arată.
@@ -168,24 +206,20 @@ cineva ni-l arată.
 </div>
   </div>
   <div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-5 rounded-lg border border-[var(--neversink-admon-border-color)]">
-    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Imperativă — <em>cum</em> se obține</h3>
+    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Imperativă: <em>cum</em> se obține</h3>
     <div class="text-sm mt-3">
 
-> 1. Ghicește o valoare `g`.
-> 2. Dacă `g · g` este destul de aproape de `x`, oprește-te.
-> 3. Altfel, înlocuiește `g` cu media dintre `g` și `x / g`.
-> 4. Repetă de la pasul 2.
+> 1. Ține minte primul număr din listă.
+> 2. Treci la următorul.
+> 3. Dacă este mai mare decât cel ținut minte, ține-l minte pe acesta.
+> 4. Repetă până se termină lista.
 
-Este o **rețetă**. Nu descrie răspunsul — descrie *drumul* către el.
+Este o **rețetă**. Nu descrie răspunsul, dar descrie *calea* către el.
 </div>
   </div>
 </div>
 
 <br/>
-
-<div class="text-center text-lg">
-Un computer poate executa doar cunoaștere <strong>imperativă</strong>.
-</div>
 
 ---
 layout: top-title
@@ -199,30 +233,34 @@ color: blue-light
 
 :: content ::
 
-Să urmărim rețeta pentru `x = 25`, pornind de la ghicirea `g = 3`:
+Aceeași rețetă, urmată pas cu pas pe o listă concretă:
 
-<div class="grid grid-cols-2 gap-6 mt-4">
-<div>
+<MaxScan class="mt-6" :values="[4, 9, 2, 12, 7]" :first-click="1" />
 
-| pas | `g` | `g · g` |
-|---|---|---|
-| 0 | 3.0000 | 9.0000 |
-| 1 | 5.6667 | 32.1111 |
-| 2 | 5.0392 | 25.3934 |
-| 3 | 5.0002 | 25.0015 |
-| 4 | 5.0000 | 25.0000 |
+<div v-click="6" class="mt-8">
 
-</div>
-<div class="text-sm">
+<AdmonitionType type="note" title="Un singur număr, la orice moment">
 
-Fiecare pas aplică aceeași regulă simplă: `g = (g + x / g) / 2`.
+Computerul nu vede lista așa cum o vedem noi. La orice moment ține minte
+**un singur număr** și îl compară cu cel la care a ajuns.
 
-Nimeni nu "știe" răspunsul la niciun pas. Răspunsul **apare** din repetare.
-
-Exact asta face un computer: pași mărunți, mulți, foarte repede.
+</AdmonitionType>
 
 </div>
-</div>
+
+<!--
+Un click = un număr. Cele cinci clickuri plimbă cursorul prin listă, iar al
+șaselea încheie parcurgerea și aduce concluzia. Mergeți în ritmul în care
+vorbiți: la fiecare număr întrebați clasa „ține minte sau merge mai departe?".
+
+Întrebarea de pus la final: „de ce nu se uită pur și simplu la toată lista?"
+Răspunsul: nu are ochi, are un singur loc în care ține minte ceva. Asta
+pregătește slide-urile despre ce face și ce NU face un computer.
+
+v-click="6" de pe concluzie nu este decorativ: el este cel care îi spune lui
+Slidev că slide-ul are 6 clickuri. În lecțiile arhivate transformer-ul îl șterge,
+clicksTotal devine 0, iar <MaxScan> pornește singur în buclă (vezi componenta).
+-->
 
 ---
 layout: top-title
@@ -281,7 +319,7 @@ color: blue-light
 
 :: title ::
 
-# Pseudocod — Planul Înainte de Cod
+# Pseudocod
 
 :: content ::
 
@@ -293,34 +331,39 @@ nu are sintaxa niciunui limbaj.
 <div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-5 rounded-lg border border-[var(--neversink-admon-border-color)]">
 <div class="text-xs uppercase tracking-wider opacity-70 mb-2">pseudocod</div>
 
-```text
+```pseudocod
+citește n
 citește x
-g ← 3
-cât timp |g·g − x| > 0.0001
-    g ← (g + x / g) / 2
-afișează g
+max ← x
+repetă de n−1 ori
+    citește x
+    dacă x > max
+        max ← x
+afișează max
 ```
 </div>
 <div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-5 rounded-lg border border-[var(--neversink-admon-border-color)]">
 <div class="text-xs uppercase tracking-wider opacity-70 mb-2">C</div>
 
 ```c
+int n;
+double x, max;
+
+scanf("%d", &n);
 scanf("%lf", &x);
-double g = 3.0;
-while (fabs(g*g - x) > 0.0001) {
-    g = (g + x / g) / 2;
+max = x;
+for (int i = 1; i < n; i++) {
+    scanf("%lf", &x);
+    if (x > max) {
+        max = x;
+    }
 }
-printf("%.4f\n", g);
+printf("%.2f\n", max);
 ```
 </div>
 </div>
 
 <br/>
-
-<div class="text-center text-sm opacity-80">
-Aceeași gândire, două notații. Partea grea este coloana din stânga —
-traducerea în dreapta este mecanică.
-</div>
 
 ---
 layout: top-title
@@ -339,8 +382,8 @@ color: blue-light
     <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">1. Face calcule</h3>
     <div class="text-sm mt-2">
 
-Adunări, comparații, mutări de date. Operații **simple**, dar foarte multe:
-miliarde pe secundă.
+Adunări, comparații, mutări de date și salturi la altă instrucțiune. Operații
+**simple**, dar foarte multe: miliarde pe secundă.
 </div>
   </div>
   <div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)]">
@@ -357,10 +400,51 @@ accesibile în nanosecunde.
 
 <AdmonitionType type="important" title="Atât.">
 
-Tot ce vedeți pe un ecran — un joc, un browser, o rețea neuronală — este
+Tot ce apare pe un ecran fie un joc, un browser, o rețea neuronală este
 construit **exclusiv** din aceste două lucruri, repetate de foarte multe ori.
 
 </AdmonitionType>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Memoria: Un Șir Uriaș de Cutii
+
+:: content ::
+
+Un computer *ține minte* într-un singur fel: memoria (RAM) este o înșiruire de
+cutii, fiecare cu numărul ei, acest număr este **adresa**.
+
+<MemoryCells class="mt-4" :size="80"
+  :cells="[
+    { addr: '…04', value: '?' },
+    { addr: '…05', value: '8', name: 'nota', highlight: true },
+    { addr: '…06', value: '?' },
+    { addr: '…07', value: '?' },
+  ]"
+  caption="int nota = 8; valoarea ajunge într-o cutie anume"
+/>
+
+<div class="grid grid-cols-3 gap-4 mt-5 text-sm text-left">
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Adresa este poziția</div>
+    <div class="mt-1">Ca numărul unui apartament: nu spune ce e înăuntru.</div>
+  </div>
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Voi dați nume</div>
+    <div class="mt-1">Voi scrieți <code>nota</code>; adresa o ține minte compilatorul.</div>
+  </div>
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Cutia rămâne</div>
+    <div class="mt-1">O valoare nouă o înlocuiește pe cea veche, în același loc.</div>
+  </div>
+</div>
+
 
 ---
 layout: top-title
@@ -377,8 +461,8 @@ color: blue-light
 <div class="ns-c-tight text-lg mt-4">
 
 - **Nu știe** nimic. Nu are cunoștințe proprii, nu are intuiție, nu "își dă seama".
-- **Nu ghicește** ce ați vrut să spuneți. Execută exact ce i-ați scris.
-- **Nu completează** un pas uitat și nu schimbă ordinea. Execută lista așa cum e.
+- **Nu ghicește** ce a vrut să spună programatorul. Execută exact ce i s-a scris.
+- **Nu completează** un pas uitat și nu schimbă ordinea. Execută pașii așa cum sunt.
 - **Nu inventează** operații noi. Are un set fix de operații de bază.
 
 </div>
@@ -388,10 +472,10 @@ color: blue-light
 <div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)]">
 <p class="text-xl text-center">
 Un computer este <span class="font-bold text-[var(--neversink-text-color)]">rapid</span> și
-<span class="font-bold text-[var(--neversink-text-color)]">ascultător</span> — nu deștept.
+<span class="font-bold text-[var(--neversink-text-color)]">ascultător</span> - nu deștept.
 </p>
 <p class="text-center text-sm mt-2 opacity-80">
-Inteligența este în listă, nu în mașină. Adică vine de la voi.
+Inteligența vine din scrierea instrucțiunilor, adică vine de la codul scris de voi.
 </p>
 </div>
 
@@ -403,24 +487,29 @@ color: blue-light
 
 :: title ::
 
-# Dar Nici Lista Aceasta Nu O Înțelege
+# Realitatea Tristă
 
 :: content ::
 
-Procesorul nu înțelege româna. Nici engleza, nici măcar `C`. Doar **cod mașină**
-— numere în binar.
+Procesorul nu înțelege româna, nici engleza, nici măcar `C`. Doar **cod mașină**, adică numere în binar.
 
 <FlowSteps class="mt-10" :size="1.15" :steps="[
-  { label: '„Adună 8 cu 9”', sub: 'noi' },
+  { label: 'Adună 8 cu 9', sub: 'noi' },
   { label: '10111000 00001000', sub: 'procesorul', kind: 'file', emphasis: true },
 ]" caption="între cele două nu există nicio limbă comună" />
 
-<AdmonitionType type="important" title="Deci avem două probleme." class="mt-8">
+<div class="mt-8">
+<div class="mt-8">
 
-Să spargem sarcina în pași destul de mici. Și să-i traducem în ceva ce mașina
-poate executa.
+<AdmonitionType type="important" title="Deci avem două probleme." class="ns-c-tight">
+
+1. Să separăm sarcina în pași destul de mici pentru a putea fi executați. 
+2. Și să-i traducem instrucțiunile în ceva ce mașina poate executa.
 
 </AdmonitionType>
+
+</div>
+</div>
 
 ---
 layout: top-title
@@ -436,19 +525,29 @@ color: blue-light
 
 Teoretic, am putea scrie chiar noi codul mașină. Practic, nu.
 
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-5 rounded-lg border border-[var(--neversink-admon-border-color)] mt-6 text-center font-mono text-sm">
-01010101 01001000 10001001 11100101 10111000 00000000
-</div>
-
-<div class="text-center text-xs opacity-70 mt-2">atât înseamnă începutul unei funcții</div>
+<BinaryWall class="mt-6" :first-click="1" />
 
 <div class="ns-c-tight text-lg mt-6">
 
-- Un program obișnuit are **milioane** de asemenea cifre.
-- O singură cifră greșită strică tot — și nu o vede nimeni cu ochiul.
-- Codul mașină diferă de la un procesor la altul.
+<ul>
+<li v-click="2">Un program obișnuit are <strong>milioane</strong> de asemenea cifre.</li>
+<li v-click="3">O singură cifră greșită strică tot, iar nimeni nu o vede cu ochiul.</li>
+<li v-click="4">Codul mașină diferă de la un procesor la altul.</li>
+</ul>
 
 </div>
+
+<!--
+click 1: apare peretele de cod mașină
+click 2: badge-ul „× 1.000.000" și peretele continuă dincolo de margine
+click 3: un 0 devine 1, roșu. ÎNTREBAȚI clasa care s-a schimbat înainte să
+          arătați; faptul că nu se vede ESTE argumentul
+click 4: același început de funcție, alt procesor: peretele se rescrie
+
+v-click="4" de pe ultimul punct este și cel care îi spune lui Slidev că slide-ul
+are 4 clickuri. În lecțiile arhivate dispare, clicksTotal devine 0, iar
+<BinaryWall> rulează singur în buclă.
+-->
 
 ---
 layout: top-title
@@ -462,18 +561,32 @@ color: blue-light
 
 :: content ::
 
-Un limbaj de programare este un set de cuvinte și reguli pe care le scriem noi,
-dar care pot fi **traduse mecanic** în cod mașină.
+<div class="max-w-4xl mx-auto">
 
-<FlowSteps class="mt-10" :size="1.15" :steps="[
+<Definition term="Limbaj de programare">
+
+Cuvinte și reguli atât de precise încât traducerea în binar se poate face
+**fără ca cineva să ghicească** ceva.
+
+</Definition>
+
+</div>
+
+<FlowSteps class="mt-8" :size="1.15" :steps="[
   { label: 'română', sub: 'noi' },
   { label: 'limbajul C', sub: 'la mijloc', emphasis: true },
   { label: 'binar', sub: 'procesorul', kind: 'file' },
 ]" />
 
-<div class="text-center text-lg mt-8">
-Nici română, nici binar — exact la mijloc. Destul de strict cât să fie tradus de
-o mașină, destul de citibil cât să fie scris de un om.
+<div class="mt-8">
+
+<AdmonitionType type="tip" title="Exact la mijloc">
+
+Nici română, nici binar. Destul de strict cât să fie tradus de o mașină, destul
+de citibil cât să fie scris de un om.
+
+</AdmonitionType>
+
 </div>
 
 ---
@@ -484,16 +597,25 @@ color: blue-light
 
 :: title ::
 
-# Ce Face un Compiler
+# Ce Face un Compilator
 
 :: content ::
 
-Procesorul nu înțelege litere. Înțelege numere — cod mașină. **Compilatorul**
-este programul care traduce textul vostru în acele numere.
+<div class="max-w-4xl mx-auto">
 
-<FlowSteps class="mt-8" :size="1.1" :steps="[
+<Definition term="Compilator">
+
+Un program care verifică tot codul sursă și, dacă regulile sunt respectate,
+produce un executabil. O linie de C devine **mai multe instrucțiuni** în cod
+mașină.
+
+</Definition>
+
+</div>
+
+<FlowSteps class="mt-6" :size="1.1" :steps="[
   { label: 'hello.c', sub: 'text scris de om', kind: 'file' },
-  { label: 'compiler (gcc)', sub: 'traducere', emphasis: true },
+  { label: 'compilator (gcc)', sub: 'traducere', emphasis: true },
   { label: 'hello', sub: 'cod mașină executabil', kind: 'file', highlight: true },
 ]" />
 
@@ -501,10 +623,10 @@ este programul care traduce textul vostru în acele numere.
 
 <div class="ns-c-tight text-sm">
 
-- Traducerea se face **o singură dată**, înainte de rulare.
-- Executabilul rezultat nu mai are nevoie de compilator ca să ruleze.
-- Dacă modificați codul sursă, trebuie să **recompilați** — altfel rulați
-  în continuare versiunea veche.
+- Se compilează **o singură dată**, înainte de rulare.
+- O regulă încălcată înseamnă **erori**, nu executabil.
+- Executabilul rulează singur astfel compilatorul nu mai e necesar.
+- Codul modificat trebuie **recompilat** înainte de următoarea rulare.
 
 </div>
 
@@ -520,55 +642,17 @@ color: blue-light
 
 :: content ::
 
-„Compilarea" din comanda `gcc` este, de fapt, un lanț de patru transformări.
-Fiecare etapă primește un fișier și produce altul:
+<CompilePipeline class="mt-4" />
 
-<FlowSteps class="mt-14" :size="0.95" :steps="[
-  { label: 'hello.c', sub: 'sursă', kind: 'file' },
-  { label: 'hello.i', sub: 'C „umflat”', kind: 'file', via: 'Preprocessing' },
-  { label: 'hello.s', sub: 'assembly', kind: 'file', via: 'Compilare' },
-  { label: 'hello.o', sub: 'obiect', kind: 'file', via: 'Asamblare' },
-  { label: 'hello', sub: 'executabil', kind: 'file', highlight: true, via: 'Linking', viaNote: '+ biblioteci' },
-]" caption="gcc le rulează pe toate patru dintr-o singură comandă — de aceea par una singură" />
 
----
-layout: top-title
-align: c
-color: blue-light
----
+<!--
+Slide-ul nu predă etapele, ci arată că „compilarea" e o mașinărie, nu un pas.
+Nu citiți diagrama pe rând; lăsați-o să ruleze 10–15 secunde și spuneți doar
+că fiecare fișier .c trece singur prin tot lanțul, iar bibliotecile se lipesc
+abia la final.
 
-:: title ::
-
-# Cele Patru Etape
-
-:: content ::
-
-<div class="ns-c-tight text-sm mt-2">
-
-- **Preprocessing** — se rezolvă liniile care încep cu `#`. `#include <stdio.h>`
-  este înlocuit cu conținutul acelui fișier. Rezultatul este tot cod C, doar
-  mai lung.
-
-- **Compilare** — codul C este tradus în assembly, limbajul mașinii scris în
-  cuvinte. Aici sunt raportate erorile de sintaxă.
-
-- **Asamblare** — assembly devine cod mașină binar: un **fișier obiect**.
-  Este cod real, dar incomplet: nu știe încă unde se află `printf`.
-
-- **Linking** — fișierele obiect se leagă între ele și de bibliotecile
-  standard. Acum `printf` are o adresă. Rezultă **executabilul**.
-
-</div>
-
-<br/>
-
-<AdmonitionType type="tip" title="De ce contează distincția">
-
-O eroare la compilare arată o linie din codul vostru. O eroare la linking sună
-altfel — `undefined reference to 'sqrt'` — și înseamnă de obicei că lipsește o
-bibliotecă, nu că ați greșit sintaxa.
-
-</AdmonitionType>
+Detaliile revin în lecția 7, când erorile de linking chiar contează.
+-->
 
 ---
 layout: top-title
@@ -578,7 +662,7 @@ color: blue-light
 
 :: title ::
 
-# Un Limbaj pentru Fiecare Fel de Muncă
+# Multe limbaje de programare
 
 :: content ::
 
@@ -612,10 +696,6 @@ problemă.
   </div>
 </div>
 
-<div class="text-center text-base mt-6 opacity-80">
-Sisteme de operare, drivere, microcontrolere — acolo trăiește C. De aceea
-începem cu el.
-</div>
 
 ---
 layout: top-title
@@ -629,20 +709,60 @@ color: blue-light
 
 :: content ::
 
-<div class="grid grid-cols-2 gap-6 mt-10">
+Ca să comparăm limbajele, avem nevoie de două întrebări pe care le putem pune
+oricăruia dintre ele.
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+
   <div class="p-6 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <div class="text-xs uppercase tracking-widest opacity-70">axa verticală</div>
-    <h3 class="text-2xl font-bold text-[var(--neversink-text-color)] mt-1">Nivel</h3>
-    <p class="text-base mt-3">Cât de mult ascunde limbajul detaliile mașinii.</p>
-    <p class="text-sm mt-2 opacity-75"><strong>Jos</strong>: lucrați cu memoria și cu instrucțiunile procesorului. <strong>Înalt</strong>: lucrați cu noțiuni abstracte.</p>
+    <div class="flex items-center gap-3">
+      <div class="i-ph-arrows-vertical-duotone text-3xl text-[var(--neversink-text-color)]"></div>
+      <div>
+        <div class="text-xs uppercase tracking-widest opacity-70">axa verticală</div>
+        <h3 class="text-2xl font-bold text-[var(--neversink-text-color)] leading-tight">Nivel</h3>
+      </div>
+    </div>
+    <p class="text-base mt-4">Cât de mult ascunde limbajul detaliile mașinii?</p>
+    <div class="mt-4 text-sm">
+      <div><strong>Jos</strong>: programatorul gestionează explicit memoria și lucrează aproape de instrucțiunile procesorului.</div>
+      <div class="mt-1"><strong>Înalt</strong>: limbajul gestionează memoria automat și oferă noțiuni abstracte.</div>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4 text-sm opacity-90">
+      <Chip>Assembly</Chip> <Chip icon="c" emphasis>C</Chip>
+      <span class="opacity-60">──→</span>
+      <Chip>Java</Chip> <Chip>Python</Chip>
+    </div>
   </div>
+
   <div class="p-6 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <div class="text-xs uppercase tracking-widest opacity-70">axa orizontală</div>
-    <h3 class="text-2xl font-bold text-[var(--neversink-text-color)] mt-1">Tipare</h3>
-    <p class="text-base mt-3">Cât de strict verifică limbajul ce fel de date puneți unde.</p>
-    <p class="text-sm mt-2 opacity-75"><strong>Dinamic</strong>: vă lasă și verifică abia la rulare. <strong>Strict</strong>: refuză să compileze dacă nu se potrivesc.</p>
+    <div class="flex items-center gap-3">
+      <div class="i-ph-arrows-horizontal-duotone text-3xl text-[var(--neversink-text-color)]"></div>
+      <div>
+        <div class="text-xs uppercase tracking-widest opacity-70">axa orizontală</div>
+        <h3 class="text-2xl font-bold text-[var(--neversink-text-color)] leading-tight">Tipizare</h3>
+      </div>
+    </div>
+    <p class="text-base mt-4">Cât de strict verifică limbajul ce fel de date utilizăm?</p>
+    <div class="mt-4 text-sm">
+      <div><strong>Dinamică</strong>: tipurile sunt verificate la rulare; nepotrivirile apar ca erori în timpul execuției.</div>
+      <div class="mt-1"><strong>Strictă</strong>: tipurile sunt verificate la compilare; nepotrivirile opresc compilarea.</div>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 mt-4 text-sm opacity-90">
+      <Chip>Python</Chip> <Chip>JavaScript</Chip>
+      <span class="opacity-60">──→</span>
+      <Chip icon="c" emphasis>C</Chip> <Chip>Rust</Chip>
+    </div>
   </div>
+
 </div>
+
+<!--
+Nu insistați pe definiții: axele există doar ca să aibă sens harta de pe
+slide-ul următor.
+
+Pentru „tipizare" ajunge un exemplu spus cu voce: în Python puteți atribui un
+text unei variabile care ținea un număr; în C, compilatorul respinge programul.
+-->
 
 ---
 layout: top-title
@@ -658,7 +778,7 @@ color: blue-light
 
 <AxisMap
   y-label="Nivel" y-min="jos" y-max="înalt"
-  x-label="Tipare" x-min="dinamic" x-max="strict"
+  x-label="Tipizare" x-min="dinamică" x-max="strictă"
   :zones="[
     'abstract · verificat la rulare',
     'abstract · verificat la compilare',
@@ -667,16 +787,16 @@ color: blue-light
   ]"
   :height="400"
   :items="[
-    { x: 26, y: 16, label: 'Assembly', icon: false },
-    { x: 58, y: 20, label: 'C', highlight: true },
-    { x: 76, y: 36, label: 'C++' },
-    { x: 88, y: 52, label: 'Rust' },
-    { x: 70, y: 64, label: 'Go' },
-    { x: 86, y: 80, label: 'Java' },
-    { x: 56, y: 84, label: 'TypeScript' },
-    { x: 68, y: 92, label: 'Haskell' },
-    { x: 30, y: 90, label: 'Python' },
-    { x: 14, y: 72, label: 'JavaScript' },
+    { x: 28, y: 18, label: 'Assembly', icon: false },
+    { x: 64, y: 20, label: 'C', highlight: true },
+    { x: 80, y: 34, label: 'C++' },
+    { x: 90, y: 60, label: 'Rust' },
+    { x: 68, y: 58, label: 'Go' },
+    { x: 86, y: 76, label: 'Java' },
+    { x: 60, y: 84, label: 'TypeScript' },
+    { x: 66, y: 94, label: 'Haskell' },
+    { x: 30, y: 80, label: 'Python' },
+    { x: 16, y: 64, label: 'JavaScript' },
   ]"
 />
 
@@ -688,30 +808,38 @@ color: blue-light
 
 :: title ::
 
-# Și Mai Sunt Câteva Mii
+# Multeeeeeeeeeeee Limbaje
 
 :: content ::
 
 <LogoWall
-  :size="52"
+  :size="48"
   :names="[
     'python', 'javascript', 'typescript', 'java', 'go', 'rust', 'ruby', 'php',
     'swift', 'kotlin', 'scala', 'perl', 'lua', 'r', 'julia', 'erlang',
     'clojure', 'dart', 'fsharp', 'ocaml', 'zig', 'elm', 'crystal', 'fortran',
-    'bash', 'haskell', 'solidity', 'c-sharp', 'c-plusplus', 'c',
+    'bash', 'haskell', 'solidity', 'nim', 'gleam', 'haxe', 'coffeescript',
+    'purescript', 'reasonml', 'vlang', 'webassembly', 'postgresql',
+    'c-sharp', 'c-plusplus', 'c',
   ]"
 />
 
 <div class="text-lg mt-8">
 
 Aproape orice limbaj de aici poate rezolva aproape orice problemă. Diferă cât de
-**comod** vă este să o rezolvați în el.
+**comod** este de rezolvat în fiecare.
 
 </div>
 
-<div class="text-base mt-3 opacity-80">
-Nu trebuie să le știți. Cu experiența, veți descoperi singuri care vă place — și
-al doilea limbaj se învață mult mai repede decât primul.
+<div class="mt-4">
+
+<Admonition title="Nu trebuie știute toate" color="blue-light" width="100%">
+
+Cu experiența se vede care i se potrivește fiecăruia, iar al doilea limbaj se
+învață mult mai repede decât primul.
+
+</Admonition>
+
 </div>
 
 ---
@@ -726,43 +854,48 @@ color: blue-light
 
 :: content ::
 
-<div class="grid grid-cols-2 gap-6">
-<div class="text-sm">
+<Timeline
+  class="mt-4"
+  :items="[
+    { year: '1972', label: 'Apare C', note: 'Dennis Ritchie, Bell Labs' },
+    { year: '1978', label: 'Cartea K&R', note: 'Kernighan & Ritchie' },
+    { year: '1989', label: 'Primul standard', note: 'C89' },
+    { year: '2024', label: 'C23', note: 'standardul de la curs', highlight: true },
+  ]"
+/>
 
-### Scurt istoric
+<div class="text-base mt-8">
 
-- **1972** — Dennis Ritchie creează C la Bell Labs, ca să poată rescrie
-  sistemul de operare **UNIX** într-un limbaj care nu e assembly.
-- **1978** — apare *The C Programming Language* (Kernighan & Ritchie), cartea
-  care a definit limbajul pentru o generație.
-- **1989** — standardizare ANSI: **C89**. Urmează **C99**, **C11**, **C17**,
-  **C23**.
-
-Peste 50 de ani și limbajul este încă în primele locuri ca utilizare.
-
-</div>
-<div class="text-sm">
-
-### De ce îl învățăm
-
-- **Fundație** — sintaxa lui se regăsește în C++, Java, C#, JavaScript, Go.
-  Îl învățați o dată, recunoașteți jumătate din limbajele moderne.
-- **Transparență** — C nu ascunde memoria. Veți vedea *cum* funcționează un
-  program, nu doar *că* funcționează.
-- **Relevanță** — kernelul Linux, bazele de date, driverele și microcon-
-  trollerele sunt scrise în C.
+Peste 50 de ani și C este încă printre cele mai folosite limbaje. Îl învățăm
+însă pentru ce vă oferă **la primul limbaj**:
 
 </div>
+
+<div class="grid grid-cols-3 gap-4 mt-5 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Limbaj mic</div>
+    <div class="mt-2">Câteva tipuri și câteva instrucțiuni — atât. Atenția rămâne la problemă, nu la limbaj.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Nimic pe ascuns</div>
+    <div class="mt-2">Se vede <em>cum</em> funcționează programul, nu doar <em>că</em> funcționează.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Bază pentru ce urmează</div>
+    <div class="mt-2">C++, Java, C#, JavaScript și Go i-au împrumutat sintaxa.</div>
+  </div>
 </div>
 
-<br/>
+<div class="mt-5">
 
 <AdmonitionType type="warning" title="Prețul transparenței">
 
-C vă lasă să faceți greșeli pe care alte limbaje le-ar opri. De asta este un
-limbaj excelent de **învățat**: greșelile devin vizibile și inteligibile.
+C permite greșeli pe care alte limbaje le-ar opri. Tocmai de asta este bun de
+**învățat**: greșelile devin vizibile și pot fi înțelese.
 
 </AdmonitionType>
+
+</div>
 
 ---
 layout: top-title
@@ -772,12 +905,12 @@ color: blue-light
 
 :: title ::
 
-# Cum Scriem, de Fapt, Cod
+# Cum Scriem Cod
 
 :: content ::
 
-Codul este text simplu, scris într-un fișier. Dar nu orice text — fiecare
-limbaj are **regulile lui**, iar compilerul nu iartă nimic.
+Codul este text simplu, scris într-un fișier. Dar nu orice text: fiecare
+limbaj are **regulile lui**.
 
 <div class="grid grid-cols-2 gap-6 mt-6">
   <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border border-[var(--neversink-admon-border-color)]">
@@ -787,7 +920,7 @@ limbaj are **regulile lui**, iar compilerul nu iartă nimic.
 Afișează media notelor 8, 9 și 10.
 ```
 
-  <div class="text-sm opacity-75">Un fișier text perfect valid. Pentru compiler, fără sens.</div>
+  <div class="text-sm opacity-75">Un fișier text perfect valid. Pentru compilator, fără sens.</div>
   </div>
   <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
     <div class="text-sm font-bold text-[var(--neversink-text-color)]">Așa cere limbajul C</div>
@@ -802,7 +935,65 @@ printf("%.2f", (8 + 9 + 10) / 3.0);
 
 <div class="text-center text-base mt-6">
 Aceste reguli se numesc <strong>sintaxă</strong>. Un singur caracter lipsă și
-programul nu compilează.
+programul nu se compilează.
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Aceeași Problemă, Trei Limbaje
+
+:: content ::
+
+Media notelor 8, 9 și 10 — aceiași pași, în trei limbaje diferite.
+
+<div class="grid grid-cols-3 gap-4 mt-5 text-left">
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-admon-border-color)]">
+    <div class="mb-2"><Chip icon="c" emphasis>C</Chip></div>
+
+```c
+int s = 8 + 9 + 10;
+printf("%.2f", s / 3.0);
+```
+
+  <div class="text-xs mt-2 opacity-75">Tipul se scrie explicit, iar afișarea cere formatul <code>%.2f</code>.</div>
+  </div>
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="mb-2"><Chip>JavaScript</Chip></div>
+
+```js
+let s = 8 + 9 + 10;
+console.log(s / 3);
+```
+
+  <div class="text-xs mt-2 opacity-75">Un keyword în locul tipului, dar aceiași pași.</div>
+  </div>
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="mb-2"><Chip>Python</Chip></div>
+
+```python
+s = 8 + 9 + 10
+print(s / 3)
+```
+
+  <div class="text-xs mt-2 opacity-75">Nici tip, nici punct-virgulă, dar aceeași ordine a pașilor.</div>
+  </div>
+</div>
+
+<div class="mt-5">
+
+<Admonition title="Algoritmul este identic în toate trei" color="blue-light" width="100%">
+
+Diferă doar **regulile de scriere**, iar fiecare limbaj le impune pe ale lui,
+fără excepții.
+
+</Admonition>
+
 </div>
 
 ---
@@ -817,21 +1008,25 @@ color: blue-light
 
 :: content ::
 
-Un **IDE** (*integrated development environment*) este un editor de text care
-știe ce limbaj scrieți și vă ajută activ.
+<Definition term="IDE" source="integrated development environment">
 
-<div class="grid grid-cols-2 gap-4 mt-5 text-base">
+Un program care adună la un loc tot ce trebuie ca să scrieți cod: editorul,
+compilatorul, rularea și debugger-ul.
+
+</Definition>
+
+<div class="grid grid-cols-2 gap-3 mt-4 text-sm">
   <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <strong>Vă arată greșelile</strong> — subliniate imediat, înainte de compilare.
+    <strong>Vă arată greșelile</strong>: subliniate imediat, înainte de compilare.
   </div>
   <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <strong>Completează ce scrieți</strong> — nume de funcții, argumente, structuri.
+    <strong>Completează codul scris</strong>: nume de funcții, argumente, structuri.
   </div>
   <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <strong>Colorează sintaxa</strong> — vedeți dintr-o privire ce e keyword și ce e text.
+    <strong>Colorează sintaxa</strong>: se vede dintr-o privire ce e keyword și ce e text.
   </div>
   <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <strong>Ține proiectul la un loc</strong> — fișiere, compilare, rulare, debugger.
+    <strong>Ține proiectul la un loc</strong>: fișiere, compilare, rulare, debugger.
   </div>
 </div>
 
@@ -839,7 +1034,8 @@ Un **IDE** (*integrated development environment*) este un editor de text care
   :names="['vscode', 'clion', 'jetbrains', 'eclipse', 'xcode', 'sublimetext', 'neovim', 'emacs']" />
 
 <div class="text-center text-sm mt-3 opacity-75">
-La laborator folosim Visual Studio Code — gratuit, pe orice sistem de operare.
+Eu vă recomand <strong>Visual Studio Code</strong>, gratuit, pe orice sistem de
+operare. Puteți lucra însă în oricare dintre ele.
 </div>
 
 ---
@@ -904,12 +1100,12 @@ color: blue-light
 </div>
 
 <div class="grid grid-cols-3 gap-x-6 gap-y-1 mt-4 text-sm text-left">
-  <div><strong>1. Bara de activități</strong> — fișiere, căutare, debugger, extensii.</div>
-  <div><strong>2. Explorer</strong> — fișierele proiectului.</div>
-  <div><strong>3. Taburi</strong> — fișierele deschise acum.</div>
-  <div><strong>4. Editorul</strong> — codul, colorat și verificat în timp real.</div>
-  <div><strong>5. Terminalul</strong> — aici compilați și rulați.</div>
-  <div><strong>6. Bara de stare</strong> — limbaj, poziția cursorului, erori.</div>
+  <div><strong>1. Bara de activități</strong>: fișiere, căutare, debugger, extensii.</div>
+  <div><strong>2. Explorer</strong>: fișierele proiectului.</div>
+  <div><strong>3. Taburi</strong>: fișierele deschise acum.</div>
+  <div><strong>4. Editorul</strong>: codul, colorat și verificat în timp real.</div>
+  <div><strong>5. Terminalul</strong>: aici se compilează și se rulează.</div>
+  <div><strong>6. Bara de stare</strong>: limbaj, poziția cursorului, erori.</div>
 </div>
 
 <style>
@@ -997,124 +1193,78 @@ color: blue-light
 
 :: title ::
 
-# Ca și Cum Ați Învăța o Limbă Străină
-
-:: content ::
-
-<div class="grid grid-cols-2 gap-6 mt-6 text-base">
-  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <div class="font-bold text-[var(--neversink-text-color)]">O limbă vorbită</div>
-    <div class="mt-2">Cuvinte, gramatică, ordinea cuvintelor în propoziție.</div>
-    <div class="mt-2 opacity-75">Un om vă înțelege și dacă greșiți un acord.</div>
-  </div>
-  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <div class="font-bold text-[var(--neversink-text-color)]">Un limbaj de programare</div>
-    <div class="mt-2">Keywords, <strong>sintaxă</strong>, ordinea în care se scriu instrucțiunile.</div>
-    <div class="mt-2 opacity-75">Compilerul nu vă înțelege deloc dacă greșiți o virgulă.</div>
-  </div>
-</div>
-
-<div class="ns-c-tight text-lg mt-6">
-
-- Fiecare limbaj are **sintaxa lui** — nu există una comună tuturor.
-- Limbajele înrudite seamănă între ele, ca româna cu italiana: cine știe C
-  recunoaște multe în C++, Java sau JavaScript.
-- Al doilea limbaj se învață mult mai repede decât primul.
-
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-
-:: title ::
-
-# Aceeași Idee, Trei Sintaxe
-
-:: content ::
-
-Ținem minte numărul 8 sub numele `nota`. Aceeași intenție, scrisă diferit.
-
-<div class="grid grid-cols-3 gap-4 mt-6 text-left">
-  <div>
-    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">C</div>
-
-```c
-int nota = 8;
-```
-
-  <div class="text-xs mt-1 opacity-75">Tipul se scrie explicit. Punct-virgulă obligatoriu.</div>
-  </div>
-  <div>
-    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">JavaScript</div>
-
-```js
-let nota = 8;
-```
-
-  <div class="text-xs mt-1 opacity-75">Un keyword în loc de tip. Tipul e dedus.</div>
-  </div>
-  <div>
-    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Python</div>
-
-```python
-nota = 8
-```
-
-  <div class="text-xs mt-1 opacity-75">Nici tip, nici punct-virgulă.</div>
-  </div>
-</div>
-
-<div class="text-center text-base mt-6">
-Ideea este identică. Ce diferă sunt <strong>regulile de scriere</strong> — și
-fiecare limbaj le impune pe ale lui, fără excepții.
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-
-:: title ::
-
 # Erorile de Sintaxă
 
 :: content ::
 
-O eroare de sintaxă înseamnă că ați scris ceva ce limbajul nu recunoaște. Nu
-este o greșeală de gândire — este o greșeală de **scriere**.
+O eroare de sintaxă înseamnă că s-a scris ceva ce limbajul nu recunoaște. Nu
+este o greșeală de gândire, ci una de **scriere**.
 
-<div class="grid grid-cols-2 gap-6 mt-5 text-left">
+<div class="grid grid-cols-2 gap-6 mt-4 text-left">
   <div>
-    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Ce ați scris</div>
+    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Ce s-a scris (main.c)</div>
 
-```c
+```c {*}{lines:true,startLine:4}
 int nota = 8
 printf("%d", nota);
 ```
 
+  <div class="text-xs mt-2 opacity-75">Lipsește punct-virgula la finalul liniei 4.</div>
   </div>
   <div>
-    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Ce vă răspunde compilerul</div>
+    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Ce răspunde compilatorul</div>
 
-<div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] font-mono text-xs mt-1">
-main.c:5:15: error:<br/>expected ';' before 'printf'
+<div class="ns-diag mt-1">
+<div><span class="ns-diag__where">main.c:4:13</span><span class="ns-diag__err"> error:</span> expected ';' before 'printf'</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;4 | int nota = 8</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ns-diag__caret">^</span></div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ns-diag__fix">;</span></div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;5 | printf("%d", nota);</div>
 </div>
 
-  <div class="text-xs mt-2 opacity-75">Lipsește un singur caracter. Programul nu se compilează deloc.</div>
   </div>
 </div>
 
-<AdmonitionType type="tip" title="Vestea bună" class="mt-6">
+<div class="grid grid-cols-3 gap-3 mt-4 text-xs">
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <strong>main.c:4:13</strong> — fișierul, linia și coloana unde s-a oprit compilatorul.
+  </div>
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <strong>expected ';'</strong> — ce aștepta limbajul în locul acela.
+  </div>
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <strong>^ și ;</strong> — compilatorul arată exact poziția și ce trebuie pus acolo.
+  </div>
+</div>
 
-Sunt cele mai ușoare erori: compilerul vă spune **fișierul, linia și coloana**.
-Citiți mesajul de sus în jos și reparați prima eroare — de multe ori dispar și
-celelalte.
+<div class="mt-4">
+
+<AdmonitionType type="tip" title="Vestea bună">
+
+Mesajul spune singur unde și ce. Se citește de sus în jos și se repară **prima**
+eroare.După rezolvarea acesteia de multe ori dispar și celelalte.
 
 </AdmonitionType>
+
+</div>
+
+<style>
+.ns-diag {
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  font-family: var(--slidev-code-font-family, monospace);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  white-space: pre;
+  overflow-x: auto;
+}
+.ns-diag__where { color: #cdd6f4; font-weight: 700; }
+.ns-diag__err { color: #f38ba8; font-weight: 700; }
+.ns-diag__caret,
+.ns-diag__fix { color: #a6e3a1; font-weight: 700; }
+</style>
 
 ---
 layout: top-title
@@ -1124,17 +1274,17 @@ color: blue-light
 
 :: title ::
 
-# Patru Feluri de a Greși
+# Feluri de a Greși
 
 :: content ::
 
-Cu cât o eroare este prinsă mai devreme, cu atât e mai ușor de reparat:
+Cu cât o eroare este mai ușor de observat, cu atât e mai ușor de reparat:
 
 <ErrorKinds class="mt-6" />
 
 <div class="text-center text-base mt-6">
-Regula generală: <strong>cu cât eroarea tace mai mult, cu atât e mai gravă</strong>.
-Compilerul care țipă la voi este prietenul vostru.
+Regula generală: <strong>cea mai periculoasă eroare este cea care nu se
+observă</strong>. Un compilator care semnalează problema vă ajută, nu vă încurcă.
 </div>
 
 ---
@@ -1149,24 +1299,40 @@ color: blue-light
 
 :: content ::
 
-<div class="grid grid-cols-2 gap-6 mt-6 text-base">
+<div class="grid grid-cols-2 gap-6 mt-8 text-base">
   <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <div class="font-bold text-[var(--neversink-text-color)]">GUI — cu mouse-ul</div>
-    <div class="text-xs opacity-70">graphical user interface</div>
-    <div class="mt-2">Ferestre, butoane, iconițe. Ușor de învățat: vedeți ce puteți apăsa.</div>
-    <div class="mt-2 opacity-75">Dar puteți face doar ce a prevăzut cineva ca buton.</div>
+    <div class="flex items-center gap-3">
+      <div class="i-ph-cursor-click-duotone text-3xl text-[var(--neversink-text-color)]"></div>
+      <div>
+        <div class="font-bold text-[var(--neversink-text-color)]">GUI — cu mouse-ul</div>
+        <div class="text-xs opacity-70">graphical user interface</div>
+      </div>
+    </div>
+    <div class="mt-3">Ferestre, butoane, iconițe. Se vede ce se poate apăsa.</div>
+    <div class="mt-2 opacity-75">Se poate face doar ce a prevăzut cineva ca buton.</div>
   </div>
   <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <div class="font-bold text-[var(--neversink-text-color)]">TUI / consolă — cu text</div>
-    <div class="text-xs opacity-70">text user interface</div>
-    <div class="mt-2">Scrieți o comandă, primiți un răspuns. Totul este text.</div>
-    <div class="mt-2 opacity-75">Mai greu la început, dar puteți cere <strong>orice</strong>.</div>
+    <div class="flex items-center gap-3">
+      <div class="i-ph-terminal-window-duotone text-3xl text-[var(--neversink-text-color)]"></div>
+      <div>
+        <div class="font-bold text-[var(--neversink-text-color)]">Consolă — cu text</div>
+        <div class="text-xs opacity-70">command line interface</div>
+      </div>
+    </div>
+    <div class="mt-3">O comandă scrisă, un răspuns primit. Totul este text.</div>
+    <div class="mt-2 opacity-75">Mai greu la început, dar se poate cere <strong>orice</strong>.</div>
   </div>
 </div>
 
-<div class="text-center text-lg mt-8">
-În acest curs lucrăm în <strong>consolă</strong>. Programele voastre nu vor avea
-ferestre și butoane — vor citi și vor scrie text.
+<div class="mt-8">
+
+<Admonition title="La curs lucrăm în consolă" color="blue-light" width="100%">
+
+Programele noastre nu vor avea ferestre și butoane: vor **citi** text și vor
+**scrie** text.
+
+</Admonition>
+
 </div>
 
 ---
@@ -1181,12 +1347,11 @@ color: blue-light
 
 :: content ::
 
-Consola este o fereastră de text cu două sensuri: programul **scrie** în ea și
-**citește** din ea.
+Consola merge în două sensuri: programul **scrie** în ea și **citește** din ea.
 
 <div class="grid grid-cols-2 gap-6 mt-5 text-left">
-  <div>
-    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Programul scrie — <code>printf</code></div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Scrie — <code>printf</code></div>
 
 ```c
 printf("Media este %.2f\n", 9.0);
@@ -1194,8 +1359,8 @@ printf("Media este %.2f\n", 9.0);
 
   <div class="text-xs mt-1 opacity-75">Tot ce vede utilizatorul apare așa.</div>
   </div>
-  <div>
-    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Programul citește — <code>scanf</code></div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Citește — <code>scanf</code></div>
 
 ```c
 scanf("%d", &nota);
@@ -1205,11 +1370,30 @@ scanf("%d", &nota);
   </div>
 </div>
 
-<div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] font-mono text-sm mt-6 text-left">
-$ ./medie<br/>
-Introduceți nota: <strong>8</strong><br/>
-Media este 8.00
+<div class="ns-term mt-6 text-left">
+<div><span class="ns-term__prompt">$</span> ./medie</div>
+<div>Introduceți nota: <span class="ns-term__in">8</span></div>
+<div>Media este 8.00</div>
 </div>
+
+<div class="text-center text-sm mt-3 opacity-75">
+Deocamdată contează doar ideea:
+un program primește date și dă un rezultat.
+</div>
+
+<style>
+.ns-term {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  font-family: var(--slidev-code-font-family, monospace);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.ns-term__prompt { color: #89b4fa; font-weight: 700; margin-right: 0.4rem; }
+.ns-term__in { color: #a6e3a1; font-weight: 700; }
+</style>
 
 ---
 layout: top-title
@@ -1223,98 +1407,38 @@ color: blue-light
 
 :: content ::
 
-Consola vă însoțește tot cursul — și toată cariera. Acolo compilați, rulați și
-vedeți ce a mers prost.
+Consola nu este doar locul unde rulează programele voastre este locul de unde
+se lucrează.
 
-<div class="ns-c-tight text-lg mt-6">
+<div class="grid grid-cols-3 gap-4 mt-6 text-sm text-left">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Compilezi și rulezi</div>
 
-- Compilați și rulați: `gcc medie.c -o medie`, apoi `./medie`.
-- Citiți erorile compilerului — cu fișier, linie și coloană.
-- Puneți un `printf` ca să vedeți ce valoare are, de fapt, o variabilă.
+```bash
+gcc medie.c -o medie
+./medie
+```
 
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Citești erorile</div>
+    <div class="mt-2">Mesajele compilatorului apar tot aici, cu fișier, linie și coloană.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Vezi ce face programul</div>
+    <div class="mt-2">Un <code>printf</code> pus temporar arată ce valoare are, de fapt, o variabilă.</div>
+  </div>
 </div>
 
-<AdmonitionType type="note" title="Utilizatorul final nu vede niciodată consola" class="mt-8">
+<div class="mt-6">
+
+<AdmonitionType type="note" title="Utilizatorul final nu vede niciodată consola">
 
 Pe telefon sau într-o aplicație cu ferestre, ea nu există. Rămâne unealta
-voastră de lucru — de aceea un `printf` pus ca să vă lămuriți se șterge când ați
-terminat.
+programatorulu!
 
 </AdmonitionType>
 
----
-layout: top-title
-align: c
-color: blue-light
----
-
-:: title ::
-
-# Tot Ce Știe să Facă un Procesor
-
-:: content ::
-
-Lista completă de operații de bază încape pe un slide. Chiar atât de puțin
-știe să facă.
-
-<div class="grid grid-cols-2 gap-4 mt-6 text-base">
-  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <strong>Aritmetică</strong> — adună, scade, înmulțește, împarte numere întregi.
-  </div>
-  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <strong>Comparații</strong> — este mai mare? sunt egale? este zero?
-  </div>
-  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <strong>Mutări de date</strong> — ia din memorie, pune în memorie.
-  </div>
-  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <strong>Salturi</strong> — continuă de la altă instrucțiune, eventual doar dacă o comparație a ieșit adevărată.
-  </div>
-</div>
-
-<div class="text-center text-lg mt-8">
-Un joc, un browser, o rețea neuronală — toate sunt <strong>doar acestea</strong>,
-repetate de miliarde de ori pe secundă.
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-
-:: title ::
-
-# Memoria: Un Șir Uriaș de Cutii
-
-:: content ::
-
-Memoria (RAM) este o înșiruire de cutii de aceeași mărime. Fiecare cutie ține un
-**byte** și are un număr propriu — **adresa** ei.
-
-<MemoryCells class="mt-8"
-  :cells="[
-    { addr: '…04', value: '00' },
-    { addr: '…05', value: '08' },
-    { addr: '…06', value: 'ff' },
-    { addr: '…07', value: '2a' },
-    { addr: '…08', value: '00' },
-    { addr: '…09', value: '7c' },
-  ]"
-  caption="fiecare cutie: un byte de conținut, o adresă fixă"
-/>
-
-<div class="ns-c-tight text-base mt-8">
-
-- Adresa este **poziția**, nu conținutul — ca numărul unui apartament.
-- Procesorul nu caută niciodată „unde am pus nota?". Merge direct la adresă.
-- Conținutul se schimbă oricând; adresa cutiei, nu.
-
-</div>
-
-<div class="text-center text-sm mt-6 opacity-80">
-Deocamdată rețineți doar imaginea: cutii numerotate, în care programul pune și
-din care ia. Revenim la ele în detaliu în lecțiile următoare.
 </div>
 
 ---
@@ -1336,19 +1460,24 @@ color: blue-light
 
 :: content ::
 
-Apăsați **Run** — codul se compilează și rulează chiar aici, în slide.
+Primul program al oricărui programator: afișează un text și se oprește.
 
 ```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
-int main(void) {
+int main() {
     printf("Salut, lume!\n");
     return 0;
 }
 ```
 
-<div class="text-sm mt-4 opacity-80 text-center">
-Încercați să modificați textul dintre ghilimele și să rulați din nou.
+<div class="grid grid-cols-2 gap-4 mt-4 text-sm text-left">
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <strong>Apăsați Run</strong> — codul se compilează și rulează chiar aici, în slide. Ar trebui să apară <code>Salut, lume!</code>.
+  </div>
+  <div class="p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <strong>Încercați</strong> — schimbați textul dintre ghilimele și rulați din nou. Apoi ștergeți un <code>;</code> și vedeți ce spune compilatorul.
+  </div>
 </div>
 
 ---
@@ -1363,110 +1492,60 @@ color: blue-light
 
 :: content ::
 
-<div class="flex items-center gap-6">
+<div class="grid grid-cols-2 gap-6 items-start mt-2">
+<div>
 
-<div class="ns-c-tight text-sm flex-1">
-
-- **`#include <stdio.h>`** — cerem preprocesorului să aducă aici biblioteca
-  standard de input/output. Fără ea, `printf` nu ar exista.
-
-- **`int main(void)`** — funcția principală. **Execuția oricărui program C
-  începe de aici.** `void` înseamnă că nu primește argumente.
-
-- **`{ }`** — acoladele delimitează corpul funcției: unde începe și unde se
-  termină.
-
-- **`printf("Salut, lume!\n");`** — afișează textul. `\n` înseamnă „treci pe
-  linie nouă". `;` marchează sfârșitul instrucțiunii — este **obligatoriu**.
-
-- **`return 0;`** — anunță sistemul de operare că programul s-a terminat cu
-  succes. Prin convenție, `0` înseamnă „totul a fost bine".
-
-</div>
-
-<div class="flex-1">
-
-```c{*|1|3|4|5|3-6}
+```c {*|1|3|4|5|3-6|*}
 #include <stdio.h>
 
-int main(void) {
+int main() {
     printf("Salut, lume!\n");
     return 0;
 }
 ```
 
-</div>
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-
-:: title ::
-
-# Compilare și Rulare în Terminal
-
-:: content ::
-
-Câteva comenzi de orientare, apoi compilarea propriu-zisă:
-
-```bash
-ls                      # ce fișiere sunt aici
-cd nume-director        # intră în director
-cd ..                   # urcă un nivel
-pwd                     # unde mă aflu
-```
-
-Salvați codul într-un fișier `hello.c`, apoi:
-
-```bash
-gcc hello.c -o hello
-```
-
-<div class="ns-c-tight text-sm">
-
-- `gcc` — compilatorul
-- `hello.c` — fișierul sursă, ce ați scris voi
-- `-o hello` — numele executabilului care va rezulta
-
-</div>
-
-Dacă nu apare niciun mesaj, compilarea a reușit. Acum rulați programul:
-
-```bash
-./hello
-```
-
-```text
-Salut, lume!
-```
-
-<AdmonitionType type="note" title="`./` nu este decorativ">
-
-Îi spune shell-ului să caute programul **în directorul curent**, nu printre
-comenzile sistemului.
-
-</AdmonitionType>
-
----
-layout: center
-color: blue-light
----
-
-<div class="text-center">
-
-<div class="text-5xl font-bold">Asta a fost tot pentru azi</div>
-
-<div class="text-lg mt-4 opacity-75">
-Întrebări acum — apoi laboratorul, unde scriem primul program de la zero.
+<div class="text-xs mt-3 opacity-75 text-left">
+Orice program C are aceeași formă: importă ce îi trebuie, apoi execută pașii din
+<code>main</code>, de sus în jos.
 </div>
 
 </div>
+<div class="text-left text-sm">
 
-<div class="mt-14">
-
-<DeckNav />
+  <div class="fp-line" :class="$clicks === 0 || $clicks >= 6 ? '' : ($clicks === 1 ? 'fp-on' : 'fp-off')">
+    <code>#include &lt;stdio.h&gt;</code> — importă în program funcțiile de intrare/ieșire. Fără el, <code>printf</code> nu există.
+  </div>
+  <div class="fp-line" :class="$clicks === 0 || $clicks >= 6 ? '' : ($clicks === 2 ? 'fp-on' : 'fp-off')">
+    <code>int main()</code> — funcția principală. <strong>Aici începe execuția</strong> oricărui program C.
+  </div>
+  <div class="fp-line" :class="$clicks === 0 || $clicks >= 6 ? '' : ($clicks === 3 ? 'fp-on' : 'fp-off')">
+    <code>printf("…\n");</code> — afișează textul. <code>\n</code> trece pe linie nouă, iar <code>;</code> încheie instrucțiunea.
+  </div>
+  <div class="fp-line" :class="$clicks === 0 || $clicks >= 6 ? '' : ($clicks === 4 ? 'fp-on' : 'fp-off')">
+    <code>return 0;</code> — anunță sistemul de operare că programul s-a terminat cu bine.
+  </div>
+  <div class="fp-line" :class="$clicks === 0 || $clicks >= 6 ? '' : ($clicks === 5 ? 'fp-on' : 'fp-off')">
+    <code>{ }</code> — acoladele arată unde începe și unde se termină corpul funcției.
+  </div>
 
 </div>
+</div>
+
+<style>
+.fp-line {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--neversink-admon-border-color);
+  border-radius: 10px;
+  background: var(--neversink-admon-bg-color);
+  transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.fp-line + .fp-line { margin-top: 0.5rem; }
+/* Follows the code block: the line being highlighted lights its explanation. */
+.fp-line.fp-off { opacity: 0.3; }
+.fp-line.fp-on {
+  opacity: 1;
+  transform: translateX(4px);
+  border-color: var(--neversink-fg-color);
+  box-shadow: 0 8px 20px -14px var(--neversink-fg-color);
+}
+</style>

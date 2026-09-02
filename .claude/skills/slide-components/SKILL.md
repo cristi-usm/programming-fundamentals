@@ -36,6 +36,41 @@ Type-driven colors and icon.
 `AdmonitionType` props: `type` — `info` | `important` | `tip` | `warning` | `caution` —
 and `width`.
 
+### ⚠️ Spacing goes on a wrapper, not on the admonition
+
+A margin utility written on the component **does nothing**:
+
+```markdown
+<AdmonitionType type="tip" title="…" class="mt-8">   <!-- ❌ no gap appears -->
+```
+
+`Admonition`'s root carries scoped styles that set `margin` four times
+(`margin: 10px; margin-left: 0; margin-top: 2px; margin-bottom: 5px`). Scoped CSS compiles
+to `.markdown-alert[data-v-…]` — one class plus one attribute — which outranks a
+single-class UnoCSS utility like `.mt-8`. The class does land on the element; it simply
+loses.
+
+Wrap it instead:
+
+```markdown
+<div class="mt-8">
+
+<AdmonitionType type="tip" title="…">
+
+Text.
+
+</AdmonitionType>
+
+</div>
+```
+
+The blank lines are required — without them the markdown inside is not processed.
+
+If the admonition is revealed, **`v-click` goes on the wrapper**, since the wrapper is what
+should appear. Non-margin classes (`ns-c-tight`) can stay on the component. The same
+specificity trap applies to any Neversink component whose scoped styles set the property
+you are trying to override.
+
 ```vue
 <StickyNote color="amber-light" width="180px" title="Reminder" devOnly>
 Hidden from builds and exports.

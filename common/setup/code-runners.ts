@@ -101,16 +101,23 @@ function buildCmd(config: RunnerConfig, lang: Lang, stdinLines: string[]): strin
     ? `cat > stdin.txt <<'__FP_STDIN__'\n${stdinLines.join('\n')}\n__FP_STDIN__\n`
     : '> stdin.txt\n'
 
-  // The run: stdin gets the collected input, then stays OPEN (sleep) so a
-  // program needing more blocks instead of reading EOF; `timeout` kills it
+  // The run: stdin is a FIFO the shell itself holds open on fd 3, so a program
+  // that wants more input blocks instead of reading EOF; `timeout` kills it
   // there (exit 124 = "waiting for input") and `stdbuf -o0` makes sure the
   // partial-line prompt it printed was flushed and captured.
+  //
+  // The fd matters for speed: holding the FIFO open with a `sleep` writer left
+  // that sleeper alive after the program exited, and Coliru only answers once
+  // the whole script is done — every run paid the full sleep (~3.5s) even when
+  // the program never read stdin. An fd owned by the shell costs nothing and
+  // is closed the moment we are done with it.
   const extra = config.extraCommands ? `; ${config.extraCommands}` : ''
   return (
     `${writeStdin}${compile} 2>&1 | sed 's/main\\.cpp/program.c/g'; `
     + `if [ -x a.out ]; then echo ${RUN_MARKER}; `
-    + `timeout 2 stdbuf -o0 -e0 ./a.out < <(cat stdin.txt; sleep 4) 2>&1; `
-    + `printf '${EXIT_MARKER.replace('\n', '\\n')}%s\\n' "$?"${extra}; `
+    + `mkfifo in.fifo; exec 3<>in.fifo; cat stdin.txt >&3; `
+    + `timeout 2 stdbuf -o0 -e0 ./a.out < in.fifo 2>&1; RC=$?; exec 3>&-; `
+    + `printf '${EXIT_MARKER.replace('\n', '\\n')}%s\\n' "$RC"${extra}; `
     + `else printf '${EXIT_MARKER.replace('\n', '\\n')}FAIL\\n'; fi`
   )
 }
@@ -124,8 +131,27 @@ async function coliru(cmd: string, src: string): Promise<string> {
   return await response.text()
 }
 
+/** The pulsing "se compilează…" caption, injected once per page. */
+function ensureStyles(): void {
+  const id = 'fp-runner-styles'
+  if (document.getElementById(id))
+    return
+  const style = document.createElement('style')
+  style.id = id
+  style.textContent = `
+    .fp-runner-status { animation: fp-runner-pulse 1.1s ease-in-out infinite; }
+    @keyframes fp-runner-pulse { 0%, 100% { opacity: 0.35 } 50% { opacity: 0.9 } }
+    @media (prefers-reduced-motion: reduce) {
+      .fp-runner-status { animation: none }
+    }
+  `
+  document.head.appendChild(style)
+}
+
 function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunnerOutput {
   const autoInputs = config.stdin != null ? config.stdin.split('\n') : []
+
+  ensureStyles()
 
   const root = document.createElement('div')
   root.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, monospace'
@@ -159,6 +185,23 @@ function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunner
   })
   root.appendChild(input)
 
+  // While Coliru is compiling/running there is nothing to show and a slide that
+  // sits blank for two seconds looks broken in front of a class. A pulsing
+  // caption says which step we are on.
+  const status = document.createElement('span')
+  status.className = 'fp-runner-status'
+  status.style.display = 'none'
+  status.style.opacity = '0.75'
+  root.appendChild(status)
+
+  const showStatus = (text: string) => {
+    status.textContent = text
+    status.style.display = 'inline'
+  }
+  const hideStatus = () => {
+    status.style.display = 'none'
+  }
+
   const print = (text: string) => {
     out.textContent += text
   }
@@ -174,8 +217,10 @@ function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunner
 
   const round = async () => {
     input.style.display = 'none'
+    showStatus(firstRound ? 'se compilează…' : 'rulează…')
     try {
       const resp = await coliru(buildCmd(config, lang, inputs), code)
+      hideStatus()
 
       const markPos = resp.lastIndexOf(EXIT_MARKER)
       if (markPos < 0) {
@@ -223,6 +268,7 @@ function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunner
       }
     }
     catch (error) {
+      hideStatus()
       print(`\n[runner] ${error instanceof Error ? error.message : String(error)}\n`)
     }
   }

@@ -119,6 +119,26 @@ const classes = computed(() => [
   color: var(--neversink-fg-color);
 }
 
+/* <mark> as a marker pen: a tint band over the lower half of the line plus an
+   accent underline. The text keeps its own colour, so the word stays as
+   readable as the rest of the sentence — the highlight points at it, it does
+   not recolour it. box-decoration-break keeps the band intact when the phrase
+   wraps across two lines. */
+.ns-definition__body :deep(mark) {
+  background: linear-gradient(
+    to top,
+    var(--neversink-admon-bg-color) 0.72em,
+    transparent 0.72em
+  );
+  box-shadow: inset 0 -2px 0 var(--neversink-border-color);
+  color: inherit;
+  font-weight: 700;
+  padding: 0 0.15em;
+  border-radius: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
 /* A dictionary entry with several senses is a list. Markers are drawn in the
    accent colour so they tie back to the rail without tinting the text. */
 .ns-definition__body :deep(ul) {

@@ -163,6 +163,41 @@ In the headmatter: `lineNumbers: true`, `monaco: true | 'dev' | 'build'`,
 `monacoTypesSource: 'local' | 'cdn' | 'none'`, `codeCopy`, and the Shiki config
 (themes and languages).
 
+## `pseudocod` — the course's own language
+
+Romanian pseudocode has no upstream grammar, so `common/setup/shiki.ts` registers one
+(re-exported by every deck's `setup/shiki.ts`). Fence it as `pseudocod`, not `text`:
+
+````markdown
+```pseudocod
+citește n
+max ← x
+repetă de n−1 ori
+    dacă x > max
+        max ← x
+afișează max
+```
+````
+
+It colours three groups and deliberately leaves variable names plain, so the eye lands on
+the algorithm's shape: control flow (`dacă`, `altfel`, `cât timp`, `repetă`, `pentru`,
+`până`), I/O (`citește`, `afișează`, `scrie`, `returnează`), and the assignment arrow `←`
+— kept in a different scope from `=`, because C's `=` vs `==` is lesson 4's problem and the
+colours can start teaching it early.
+
+⚠️ **`langs` REPLACES Slidev's auto-detected list**, the same trap as `components.dirs`
+(CLAUDE.md §7). Every language used anywhere in the course must be listed in
+`common/setup/shiki.ts` by hand, or its blocks silently render as grey plain text with no
+error. After adding a fence in a new language, re-check with:
+
+```bash
+grep -rhoE '^```[a-z]+' slides/*/slides.md | sort -u
+```
+
+Adding a keyword to the grammar: word boundaries must be written as
+`(?<![\p{L}\p{N}_])…(?![\p{L}\p{N}_])`. Oniguruma's `\b` does not treat `ă â î ș ț` as
+word characters, so `\bciteșteb` would break at the `ș`.
+
 ## Guidance for teaching decks
 
 - Show complete, compilable programs in runnable blocks — students copy them verbatim, so

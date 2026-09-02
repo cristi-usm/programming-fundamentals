@@ -2,12 +2,12 @@
 /**
  * A horizontal pipeline: labelled nodes joined by animated arrows.
  *
- * Reused wherever a transformation is drawn — text → compiler → executabil,
+ * Reused wherever a transformation is drawn — text → compilator → executabil,
  * sursă → preprocessor → … → linker, input → program → output.
  *
  *   <FlowSteps :steps="[
  *     { label: 'hello.c', sub: 'text scris de om', kind: 'file' },
- *     { label: 'compiler (gcc)', kind: 'stage', emphasis: true },
+ *     { label: 'compilator (gcc)', kind: 'stage', emphasis: true },
  *     { label: 'hello', sub: 'cod mașină', kind: 'file', highlight: true },
  *   ]" />
  *

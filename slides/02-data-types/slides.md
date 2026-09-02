@@ -112,7 +112,7 @@ color: blue-light
 
 <Definition term="Tip de date" source="Pe scurt" emphasis>
 
-Regula care îi spune compilerului **câte cutii** ocupă o valoare și **cum se
+Regula care îi spune compilatorului **câte cutii** ocupă o valoare și **cum se
 interpretează** biții din ele.
 
 </Definition>
@@ -120,7 +120,7 @@ interpretează** biții din ele.
 </div>
 
 <div class="text-center text-base mt-8 opacity-80">
-De aceea fiecare variabilă se declară cu un tip: fără el, compilerul nu știe
+De aceea fiecare variabilă se declară cu un tip: fără el, compilatorul nu știe
 nici cât spațiu să rezerve, nici ce înseamnă conținutul.
 </div>
 
@@ -291,13 +291,17 @@ printf("%.17f\n", suma);   // 0.30000000000000004
   </div>
 </div>
 
-<AdmonitionType type="warning" title="De reținut de pe acum" class="mt-6">
+<div class="mt-6">
+
+<AdmonitionType type="warning" title="De reținut de pe acum">
 
 Nu comparați niciodată două numere reale cu `==` — aproximările fac egalitatea
 nesigură. Am văzut asta deja în lecția 1: rețeta rădăcinii pătrate se oprea la
 „destul de aproape", nu la „egal".
 
 </AdmonitionType>
+
+</div>
 
 ---
 layout: top-title
@@ -312,7 +316,7 @@ color: blue-light
 :: content ::
 
 Mărimile diferă de la un sistem la altul. Operatorul `sizeof` întreabă
-compilerul direct — rulați și verificați pe ce mașină rulează Coliru:
+compilatorul direct — rulați și verificați pe ce mașină rulează Coliru:
 
 ```c {monaco-run} {autorun:false}
 #include <stdio.h>
@@ -498,12 +502,16 @@ printf("%d\n", nota);     // orice — 0, -843215, 32767…
   caption="? = gunoi: ce a lăsat acolo ultimul program care a folosit cutiile"
 />
 
-<AdmonitionType type="important" title="Regula" class="mt-6">
+<div class="mt-6">
+
+<AdmonitionType type="important" title="Regula">
 
 **Inițializați la declarare**: `int nota = 0;`. Un program care citește gunoi
 merge „de obicei" — și crapă exact la prezentare.
 
 </AdmonitionType>
+
+</div>
 
 ---
 layout: top-title
@@ -517,7 +525,7 @@ color: blue-light
 
 :: content ::
 
-`const` marchează o valoare fixată o dată pentru totdeauna — compilerul refuză
+`const` marchează o valoare fixată o dată pentru totdeauna — compilatorul refuză
 orice încercare de modificare:
 
 <div class="grid grid-cols-2 gap-6 mt-6 items-center">
@@ -536,7 +544,7 @@ TVA = 0.19;   // error: assignment of
 
 - Numele spune **ce înseamnă** numărul — `NOTA_MAXIMA`, nu un `10` rătăcit
   prin cod.
-- Compilerul devine paznic: modificarea accidentală e o eroare de compilare,
+- Compilatorul devine paznic: modificarea accidentală e o eroare de compilare,
   nu un bug ascuns.
 - Convenție: numele constantelor se scriu cu MAJUSCULE.
 
@@ -580,13 +588,17 @@ scanf("%lf", &medie);
 </div>
 </div>
 
-<AdmonitionType type="note" title="De ce &? Deocamdată: regulă" class="mt-6">
+<div class="mt-6">
+
+<AdmonitionType type="note" title="De ce &? Deocamdată: regulă">
 
 Explicația completă vine în lecția despre pointeri. Până atunci: la `scanf`,
 variabilele simple primesc `&` în față. Fără el — comportament imprevizibil și
 un warning de care ascultați.
 
 </AdmonitionType>
+
+</div>
 
 ---
 layout: top-title
@@ -688,7 +700,7 @@ color: blue-light
 
 :: content ::
 
-O expresie mare este făcută din expresii mai mici — compilerul o evaluează
+O expresie mare este făcută din expresii mai mici — compilatorul o evaluează
 dinăuntru spre în afară:
 
 <div class="max-w-3xl mx-auto mt-8">
@@ -867,12 +879,16 @@ anunță.
 </div>
 </div>
 
-<AdmonitionType type="tip" title="Regula practică" class="mt-6">
+<div class="mt-6">
+
+<AdmonitionType type="tip" title="Regula practică">
 
 Nu memorați tabelul de precedență. Când o expresie are mai mult de doi
 operatori, **puneți paranteze** — ele documentează intenția.
 
 </AdmonitionType>
+
+</div>
 
 ---
 layout: top-title
@@ -1000,19 +1016,23 @@ printf("%d\n", mare + 1);  // -2147483648
 
 - `INT_MAX` este cel mai mare `int` posibil — plus 1 și semnul se
   răstoarnă.
-- Compilerul **nu vă avertizează** la rulare: este eroarea tăcută din
+- Compilatorul **nu vă avertizează** la rulare: este eroarea tăcută din
   lecția 1.
 - Suspectați overflow când un calcul cu numere mari dă brusc negativ.
 
 </div>
 </div>
 
-<AdmonitionType type="tip" title="Apărarea simplă" class="mt-6">
+<div class="mt-6">
+
+<AdmonitionType type="tip" title="Apărarea simplă">
 
 Alegeți un tip cu rezervă de spațiu: pentru numărători și sume mari, `long`
 în loc de `int`. Un byte în plus e mai ieftin decât un bug invizibil.
 
 </AdmonitionType>
+
+</div>
 
 ---
 layout: top-title

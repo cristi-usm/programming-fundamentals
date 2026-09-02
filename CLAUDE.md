@@ -19,11 +19,37 @@ file covers only what is true of **this repository** and the rules that always a
 - ✅ Code comments in Romanian, for educational clarity
 - ✅ All technical terms in **English** — never translate them
 
-**Never translate**: array, pointer, string, struct, enum, header, compiler, linker,
+**Never translate**: array, pointer, string, struct, enum, header, linker,
 debugger, loop, `if`, `else`, `switch`, `while`, `for`, `break`, `continue`, `return`,
 stack, heap, buffer, overflow, scope, cast, segmentation fault, `int`, `char`, `float`,
 `double`, `void`, `size_t`, `unsigned`, `printf`, `scanf`, `malloc`, `free`, `fopen`,
 `strlen`, `stdin`, `stdout`.
+
+### No dashes in slide prose
+
+Em dashes and en dashes are banned in anything a student reads. They are a way of avoiding
+a grammatical decision, and the decision is usually the clearer sentence. Use the
+punctuation the sentence actually calls for:
+
+| instead of | write |
+|---|---|
+| `**Fundație** — sintaxa lui se regăsește în C++` | `**Fundație**: sintaxa lui se regăsește în C++` |
+| `nu este o greșeală de gândire — este una de scriere` | `nu este o greșeală de gândire, ci una de scriere` |
+| `se vede din start — citiți propoziția` | `se vede din start. Citiți propoziția` |
+| `sintaxa lui — nu există una comună` | `sintaxa lui, iar una comună nu există` |
+
+A label followed by its explanation takes a colon. Two contrasted clauses take `ci` or
+`iar`. A new thought takes a full stop. Parentheses are fine when the aside really is an
+aside.
+
+The exceptions are strings that are not prose: the generated headmatter (`info:` from
+`lessons.json`, the `# == shared: … ==` marker that `sync-headmatter.mjs` searches for),
+code blocks, terminal output, and simulated UI such as an editor title bar.
+
+**Exception (`compilator`):** this one *is* translated in slide prose, because Romanian CS
+literature uses it and students will meet it in every course. The English `compiler` stays
+only where it is an identifier: the `compiler:` key in the generated headmatter and
+`alwaysShowCompilerOutput`.
 
 ````markdown
 ## De ce indexarea începe de la 0?
@@ -54,7 +80,34 @@ the generated frontmatter `title` / `info`, which drive the browser tab and the 
 
 - ✅ `color: blue-light` and `align: c` on every content slide
 - ✅ `layout: top-title` for most content slides
-- ❌ **No `v-click` / `v-clicks`** — show content directly
+- ✅ `v-click` / `v-clicks` are allowed — see *Clicks* below
+
+### Clicks disappear once a lesson is past
+
+A lecture wants reveals: the class sees one idea at a time and cannot read ahead. An
+archived lesson wants the opposite — a student revisiting lesson 3 in week 9 should see
+the whole slide at once, not press Space through it.
+
+Both come from the same source. `common/setup/transformers.ts` (re-exported by each deck's
+`setup/transformers.ts`) **strips** `v-click`, `v-clicks` and `v-after` from the markdown of
+every deck whose slug is not `currentLesson` in `common/theme/config.ts`. It is a markdown
+transformer, so the archived deck has zero click steps — not hidden content: hiding with CSS
+would leave the click *count* intact and a five-reveal slide would still swallow five presses
+of Space.
+
+It is a build/dev-time switch — advancing `currentLesson` and restarting is what flattens the
+previous lesson. To preview either form without touching the config:
+
+```bash
+FP_CLICKS=strip pnpm dev:01-intro   # what students will see later
+```
+
+`FP_CLICKS=keep` forces the lecture form. Matches inside fenced code blocks are left alone,
+so a slide may show `v-click` as an example. `v-mark` is not touched.
+
+- ✅ Reveals carry the *pacing* of the explanation — one per step you actually stop on
+- ❌ Don't rely on click order for meaning; the archived deck shows everything at once
+- ⚠️ Nested reveals need explicit numbers (`v-click="2"`) — see the `slide-reveals` skill
 
 ```markdown
 ---
@@ -271,7 +324,8 @@ A slide can pre-feed input — `c: { stdin: '9 8' }` in the **slide's own frontm
    description. Leave `status` off until the deck is written; it then shows as a *schelet*
    in the hub grid.
 2. Create `slides/<slug>/` with `slides.md`, copying `package.json`, `vite.config.ts`,
-   `setup/main.ts`, `setup/unocss.ts`, `setup/code-runners.ts`, `global-bottom.vue` and
+   `setup/main.ts`, `setup/unocss.ts`, `setup/code-runners.ts`, `setup/transformers.ts`,
+   `setup/shiki.ts`, `global-bottom.vue` and
    `slide-bottom.vue` from a neighbouring deck (adjust the package name and port).
 3. Add a `dev:<slug>` script to the root `package.json`.
 4. `pnpm install` (registers the workspace), then `pnpm sync-headmatter`.
@@ -296,7 +350,8 @@ Ports: `3030` hub, `3030 + lesson number` for lessons. Cross-deck links point at
 Editing `slides.md` or a component hot-reloads; `vite.config.ts` needs a restart.
 
 The lesson currently being taught is `currentLesson` (a slug) in `common/theme/config.ts` —
-earlier lessons show ✅ in the hub grid, this one ▶️.
+earlier lessons show ✅ in the hub grid, this one ▶️, and this is the only deck that keeps
+its `v-click` reveals (§4).
 
 > **Node**: on Node 25 the global `localStorage` breaks a transitive Slidev dependency at
 > import time; `scripts/node-compat.mjs` applies the workaround to every spawned process.
@@ -329,6 +384,23 @@ from the deck's auto-import `dirs` (§7). Use `componentDirs()`; don't override 
 **"Icon `xx/…` not found" for a component you wrote** — unplugin-icons claimed the tag.
 Make sure the component's directory is in the deck's `slidev.components.dirs` (§7).
 
+**An admonition ignores `class="mt-8"`** — `Admonition`'s scoped styles set `margin` and
+`.markdown-alert[data-v-…]` outranks a one-class UnoCSS utility. Wrap it in
+`<div class="mt-8">` (blank lines inside) and put any `v-click` on the wrapper. See the
+`slide-components` skill.
+
+**Several clicks change nothing, then everything appears at once** — reveals are nested
+inside a reveal and the ids were handed out in registration order, not visual order. Number
+them explicitly. See the `slide-reveals` skill.
+
+**A code block renders grey with no highlighting** — its language is missing from `langs`
+in `common/setup/shiki.ts`. That array *replaces* Slidev's auto-detected list, so every
+language used in any deck must be listed there.
+
+**A `v-click` does nothing** — the deck is not `currentLesson`, so its reveals were
+stripped (§4). `FP_CLICKS=keep pnpm dev:<slug>` to work on them anyway; the setup file is
+read at server start, so changing either needs a restart.
+
 **"Entry file … does not exist"** — a dev server still points at an old deck path after a
 rename. Kill it and restart, then `pnpm install` to relink the workspace.
 
@@ -355,7 +427,8 @@ Slidev and Neversink reference material is in `.claude/skills/`, loaded on deman
 |---|---|
 | `slide-layouts` | layouts, slots, columns, the `align` notation, colour schemes |
 | `slide-components` | Neversink and Slidev components, icons, `v-mark`, `ns-c-*` classes |
-| `slide-code-blocks` | highlighting, Monaco, `monaco-run`, magic-move, snippets |
+| `slide-code-blocks` | highlighting, Monaco, `monaco-run`, magic-move, snippets, `pseudocod` |
+| `slide-reveals` | `v-click` policy, nested-click numbering, animated components |
 | `cpp-runner` | the C/C++ runner addon: Coliru backend, compiler flags, config scope |
 | `slide-diagrams` | Mermaid (with examples per diagram type), PlantUML, LaTeX |
 | `slide-presenting` | presenter mode, notes, drawing, timer, export, hosting |
@@ -374,7 +447,7 @@ Upstream: [Slidev](https://sli.dev/) ·
 - [ ] Slide content in **Romanian**, technical terms in **English**
 - [ ] Slide titles carry **only the title** — no `Lecția N`, no numbering
 - [ ] `color: blue-light` and `align: c` on every content slide
-- [ ] No `v-click` / `v-clicks`
+- [ ] `v-click` used for pacing only — the deck must still read with every reveal removed
 - [ ] Runnable C examples compile clean and are complete programs
 - [ ] Lesson metadata changed in `common/lessons.json`, not in the deck
 - [ ] Shared headmatter changed in `scripts/sync-headmatter.mjs`, then `pnpm sync-headmatter`
