@@ -73,6 +73,43 @@ Un array este o zonă **continuă** de memorie care ține mai multe valori de
 același tip.
 ```
 
+### Discussion questions — always a `<SpeechBubble>`
+
+A slide that asks the class something — not a section title, not a rhetorical lead-in, but a
+question you stop and collect answers on — is a centred `<SpeechBubble>` on `layout: center`.
+The bubble is the signal: students learn that a bubble means *you are being asked*, and it
+sets a plain question apart from the surrounding explanation.
+
+```markdown
+---
+layout: center
+color: blue-light
+---
+
+<div class="flex justify-center">
+
+<SpeechBubble position="b" color="blue-light" shape="round" animation="float" maxWidth="800px" textAlign="center" borderWidth="2px">
+
+<div class="text-6xl font-bold py-4">
+
+Ce este programarea?
+
+</div>
+
+</SpeechBubble>
+
+</div>
+```
+
+- ✅ **One question, nothing else** — no sub-questions, no instructions to the class
+  ("fără termeni tehnici"), no hints. The slide is a prompt, not a paragraph
+- ✅ `text-6xl font-bold` rather than `#` — it must read from the back of the room
+- ✅ `color` matches the deck scheme, so the bubble is tinted, not white-on-white
+- ✅ The `flex justify-center` wrapper — `maxWidth` makes the bubble a fixed-width block
+  that would otherwise sit left
+- ❌ Presenter reminders on the slide — those belong in `<!-- -->` notes or a `devOnly`
+  `<StickyNote>`
+
 ⚠️ `align` arity differs per layout: `top-title` takes one letter (`align: c`), but
 `top-title-two-cols` and `two-cols-title` need three parts (`align: c-lt-lt`). Passing
 `align: c` there renders a red *"invalid layout params"* slide. See the `slide-layouts`
@@ -114,11 +151,24 @@ base. `common/lessons.ts` (`deckUrl`) is the only place that knows the differenc
 
 ### `common/lessons.json` is the single source of truth ⭐
 
-Lesson number, slug, port, module, icon, title and description all live in this one file.
+Lesson number, slug, port, module, icon, title, description, `published` and the
+Moodle `sheet` URL all live in this one file.
 `scripts/*.mjs` read it at build time; `common/lessons.ts` reads it at runtime. The hub
 grid, the prev/next `<DeckNav>` and the generated deck titles all derive from it.
 
 **Never hardcode** a lesson title, port or neighbour link in a deck — edit the registry.
+
+`icon` is an **UnoCSS icon class** (`i-ph-…`), not an emoji — drawn icons only,
+one family (Phosphor duotone), everywhere. UnoCSS never scans `.json`, so those
+classes would generate nothing; `common/setup/unocss.ts` safelists them and every
+deck re-exports it from its own `setup/unocss.ts`. That file's default export is
+**called** by Slidev, so it must be a function returning a config, not a config.
+
+`published: true` is what makes a lesson clickable on the hub grid. Everything
+else stays visible but locked — the semester walks the flag forward. The hub
+slide the 🏠 button and `<DeckNav>` link to is `HUB_LESSONS_SLIDE` in
+`common/lessons.ts`; move the grid in `slides/00-hub/slides.md` and that constant
+moves with it.
 
 ## 6. Headmatter is generated
 
@@ -159,6 +209,16 @@ In `common/components/`, auto-imported in every deck — **no import needed** in
 | `<HomeButton />` | 🏠 back to the hub; rendered on every slide via `global-bottom.vue` |
 | `<GithubLink />` | Repository link icon (repo URL comes from `lessons.json`) |
 | `<SlideBottom />` | Page counter footer; rendered via each deck's `slide-bottom.vue` |
+| `<Definition term="…" source="…" [emphasis] />` | A definition card — term, attribution, text |
+| `<Chip>C</Chip>` | A pill with an auto-resolved language/tool logo |
+| `<AxisMap :items :zones … />` | A 2D map: two axes crossing, four named zones |
+| `<LogoWall :names />` | A collage of logos from `common/public/icons/` |
+| `<MemoryCells :cells />` | A strip of memory boxes: name, content, address |
+| `<LabSheets />` | The list of lab sheets (PDF pe Moodle), one row per lesson |
+
+Props, the slide patterns each one belongs in, and how to write a new one: the
+**`course-components`** skill. Read it before using `<Definition>` or adding anything to
+`common/components/`.
 
 They are wired in through each deck's `vite.config.ts`, which adds `common/components` to
 Slidev's auto-import dirs. **That directory entry is load-bearing** — registering a shared
@@ -185,6 +245,17 @@ Deck-local components go in `slides/<deck>/components/`. Neversink components
 connection at presentation time. Never let a runnable block carry a point you must land;
 keep the expected output visible too. See the `cpp-runner` skill.
 
+The runners themselves are **ours**, not the addon's: `common/setup/code-runners.ts`
+(re-exported by each deck's `setup/code-runners.ts`) replaces the addon's runners — and
+the addon is deliberately absent from the generated `addons:` list, or it would shadow
+ours. The output is a **faithful local-terminal simulation**: `$ gcc program.c -o
+program`, diagnostics, `$ ./program`, then the program's real output — and when it
+blocks on `scanf`, an inline caret exactly where the local cursor would be (same line
+if the prompt has no `\n`). Each typed line costs one Coliru round trip (the program is
+re-run with accumulated input), so runnable input examples must be **deterministic**.
+A slide can pre-feed input — `c: { stdin: '9 8' }` in the **slide's own frontmatter**
+(headmatter reaches slide 1 only), one line per read. See the `cpp-runner` skill.
+
 - ✅ Use `{monaco-run}` only when *running and editing it live* is the point
 - ✅ Plain ` ```c ` blocks for syntax, comparisons and short fragments
 - ⚠️ Runnable blocks load Monaco — a handful per deck, not every example
@@ -200,8 +271,8 @@ keep the expected output visible too. See the `cpp-runner` skill.
    description. Leave `status` off until the deck is written; it then shows as a *schelet*
    in the hub grid.
 2. Create `slides/<slug>/` with `slides.md`, copying `package.json`, `vite.config.ts`,
-   `setup/main.ts`, `global-bottom.vue` and `slide-bottom.vue` from a neighbouring deck
-   (adjust the package name and port).
+   `setup/main.ts`, `setup/unocss.ts`, `setup/code-runners.ts`, `global-bottom.vue` and
+   `slide-bottom.vue` from a neighbouring deck (adjust the package name and port).
 3. Add a `dev:<slug>` script to the root `package.json`.
 4. `pnpm install` (registers the workspace), then `pnpm sync-headmatter`.
 
@@ -290,6 +361,7 @@ Slidev and Neversink reference material is in `.claude/skills/`, loaded on deman
 | `slide-presenting` | presenter mode, notes, drawing, timer, export, hosting |
 | `slide-theming` | setup hooks, custom layouts/components, styles, UnoCSS, addons |
 | `slide-deck-config` | headmatter/frontmatter options, directory structure, CLI |
+| `course-components` | **our own** components: `<Definition>`, `<LessonGrid>`, `<DeckNav>`, … |
 
 Upstream: [Slidev](https://sli.dev/) ·
 [Neversink](https://gureckis.github.io/slidev-theme-neversink/) ·

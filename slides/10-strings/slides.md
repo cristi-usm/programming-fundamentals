@@ -15,13 +15,14 @@ lineNumbers: true
 draw:
   enabled: true
 favicon: './C.png'
-addons:
-  - slidev-addon-cpp-runner
+# The c/cpp runners come from common/setup/code-runners.ts (adds stdin support),
+# NOT from slidev-addon-cpp-runner — keep the addon out of this list, or its
+# runner can win over ours depending on setup load order.
 c:
   compiler: 'g++'
   standard: 'c2x'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -29,7 +30,7 @@ cpp:
   compiler: 'g++'
   standard: 'c++17'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -216,7 +217,7 @@ color: blue-light
 
 Pentru a afișa un șir de caractere, folosim specificatorul de format **`%s`**. `printf` va începe să afișeze caractere de la adresa dată, până când întâlnește caracterul nul `\0`.
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {
@@ -388,7 +389,7 @@ Funcția `strlen` (string length) returnează lungimea unui șir de caractere.
 
 </div>
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h>
 
@@ -433,7 +434,7 @@ Nu putem copia șiruri folosind operatorul `=`. Trebuie să folosim `strcpy` (st
 
 </AdmonitionType>
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h>
 
@@ -477,7 +478,7 @@ Funcția `strcat` (string concatenate) adaugă un șir la sfârșitul altui șir
 
 </AdmonitionType>
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h>
 
@@ -522,7 +523,7 @@ align: c
 color: blue-light
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h>
 
@@ -602,7 +603,7 @@ Ambele funcții returnează un pointer la caracterul găsit sau `NULL` dacă car
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h>
 
@@ -664,7 +665,7 @@ Este utilă pentru a verifica dacă un text conține un anumit cuvânt sau o anu
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h>
 
@@ -721,7 +722,7 @@ Poate fi folosită pentru a valida formatul datelor de la începutul unui șir.
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h>
 
@@ -777,7 +778,7 @@ Funcția `strtok` (string token) este folosită pentru a împărți un șir în 
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h>
 

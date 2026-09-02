@@ -56,6 +56,15 @@ Hello, I'm a **speech bubble**.
 `shape` (`''`/`round`/`circle`), `animation` (`''`/`pop`/`float`), `color` (`red-light`),
 `textAlign`, `maxWidth`, `borderWidth`.
 
+⚠️ `color` is a **scheme name**, not a CSS color: it becomes the class
+`neversink-<color>-scheme`. A `-light` scheme fills the bubble with the 100 shade, so
+`color="blue-light"` reads on a white slide; a raw hex silently produces no scheme class
+and leaves the bubble unstyled. (The Kawaii characters are the opposite — their `color`
+*is* a hex.)
+
+**In this course**, a question put to the class is always a centred `SpeechBubble` on
+`layout: center` — see §4 of `CLAUDE.md` for the exact block and the rules around it.
+
 ## Shapes and annotations
 
 | Component | Key props |

@@ -16,7 +16,7 @@ const columns = computed(() =>
   <div class="lesson-grid">
     <div v-for="column in columns" :key="column.module.id" class="lesson-column">
       <div class="lesson-column-head">
-        <span class="lesson-column-emoji">{{ column.module.emoji }}</span>
+        <span class="lesson-column-icon" :class="column.module.icon" />
         <span class="lesson-column-title">{{ column.module.title }}</span>
       </div>
       <LessonCard v-for="lesson in column.lessons" :key="lesson.slug" :slug="lesson.slug" />
@@ -46,11 +46,15 @@ const columns = computed(() =>
   gap: 0.4rem;
   padding-bottom: 0.25rem;
   margin-bottom: 0.1rem;
-  border-bottom: 1px solid rgba(120, 113, 108, 0.25);
+  border-bottom: 1px solid var(--neversink-admon-border-color);
 }
 
-.lesson-column-emoji {
-  font-size: 0.9rem;
+.lesson-column-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: none;
+  align-self: center;
+  color: var(--neversink-highlight-color);
 }
 
 .lesson-column-title {

@@ -5,16 +5,25 @@ export interface Lesson {
   slug: string
   port: number
   module: number
+  /** UnoCSS icon class, e.g. `i-ph-rocket-launch-duotone`. */
   icon: string
   title: string
   description: string
   /** Absent means the deck is still a scaffold. Set to 'ready' once written. */
   status?: 'draft' | 'ready'
+  /**
+   * Whether the deck is released to students. Unpublished lessons still appear
+   * on the hub grid, but locked — the semester walks this flag forward.
+   */
+  published?: boolean
+  /** Moodle URL of the lab sheet (PDF). Absent while the sheet is not up yet. */
+  sheet?: string
 }
 
 export interface LessonModule {
   id: number
-  emoji: string
+  /** UnoCSS icon class, e.g. `i-ph-cube-duotone`. */
+  icon: string
   title: string
 }
 
@@ -24,6 +33,14 @@ export const LESSONS: Lesson[] = data.lessons as Lesson[]
 
 /** Dev-server port of the hub deck. */
 export const HUB_PORT = 3030
+
+/**
+ * Slide number of the lesson grid inside the hub deck — where 🏠 and the
+ * end-of-deck nav send you. Kept here so moving the grid in
+ * `slides/00-hub/slides.md` is a one-line change, not a hunt through
+ * components.
+ */
+export const HUB_LESSONS_SLIDE = 10
 
 /** Every slug that can appear as a path segment in the built site. */
 const DECK_SLUGS = new Set<string>(LESSONS.map(l => l.slug))
@@ -129,4 +146,12 @@ export function lessonsOfModule(moduleId: number): Lesson[] {
 /** A deck that exists but has not been written yet. */
 export function isDraft(lesson: Lesson): boolean {
   return lesson.status !== 'ready'
+}
+
+/**
+ * A lesson students can open. Everything else is visible but locked, so the
+ * hub shows the whole semester without handing out decks we haven't taught.
+ */
+export function isPublished(lesson: Lesson | undefined): boolean {
+  return !!lesson?.published
 }

@@ -15,13 +15,14 @@ lineNumbers: true
 draw:
   enabled: true
 favicon: './C.png'
-addons:
-  - slidev-addon-cpp-runner
+# The c/cpp runners come from common/setup/code-runners.ts (adds stdin support),
+# NOT from slidev-addon-cpp-runner — keep the addon out of this list, or its
+# runner can win over ours depending on setup load order.
 c:
   compiler: 'g++'
   standard: 'c2x'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -29,810 +30,1034 @@ cpp:
   compiler: 'g++'
   standard: 'c++17'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
 ---
 
-### Tipuri de Date. Operatori & Operanzi.
+### Tipuri de Date
+#### Aceleași cutii, interpretate diferit
 
+---
+layout: center
+color: blue-light
+---
+
+<div class="flex justify-center">
+
+<SpeechBubble position="b" color="blue-light" shape="round" animation="float" maxWidth="800px" textAlign="center" borderWidth="2px">
+
+<div class="text-6xl font-bold py-4">
+
+Ce înseamnă 01000001?
+
+</div>
+
+</SpeechBubble>
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Aceiași Biți, Trei Înțelesuri
+
+:: content ::
+
+Byte-ul `01000001` nu înseamnă nimic de unul singur. Sensul lui depinde de cum
+alegem să-l **interpretăm**:
+
+<div class="max-w-xs mx-auto mt-6 p-3 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)] font-mono text-2xl text-center">
+01000001
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-6 text-center">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70">citit ca număr</div>
+    <div class="text-3xl font-bold mt-2 font-mono">65</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70">citit ca text</div>
+    <div class="text-3xl font-bold mt-2 font-mono">'A'</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70">citit ca fragment</div>
+    <div class="text-2xl font-bold mt-2 font-mono">dintr-un float</div>
+  </div>
+</div>
+
+<div class="text-center text-lg mt-8">
+Memoria ține doar biți. <strong>Cine decide ce înseamnă?</strong>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Tipul de Date Decide
+
+:: content ::
+
+<div class="max-w-4xl mx-auto mt-10">
+
+<Definition term="Tip de date" source="Pe scurt" emphasis>
+
+Regula care îi spune compilerului **câte cutii** ocupă o valoare și **cum se
+interpretează** biții din ele.
+
+</Definition>
+
+</div>
+
+<div class="text-center text-base mt-8 opacity-80">
+De aceea fiecare variabilă se declară cu un tip: fără el, compilerul nu știe
+nici cât spațiu să rezerve, nici ce înseamnă conținutul.
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Cutiile de Săptămâna Trecută
+
+:: content ::
+
+Săptămâna trecută: memoria este un șir de cutii numerotate, câte un **byte**
+fiecare. Tipul spune câte cutii formează împreună **o singură valoare**:
+
+<MemoryCells class="mt-8"
+  :cells="[
+    { addr: '…03', value: '61', name: 'litera' },
+    { addr: '…04', value: '00', name: 'nota', highlight: true },
+    { addr: '…05', value: '00', highlight: true },
+    { addr: '…06', value: '00', highlight: true },
+    { addr: '…07', value: '08', highlight: true },
+  ]"
+  caption="un char ocupă o cutie; un int ocupă patru, citite împreună"
+/>
+
+<div class="ns-c-tight text-base mt-8">
+
+- `litera` este un `char`: **1 byte**, interpretat ca un cod de caracter.
+- `nota` este un `int`: **4 bytes**, interpretați ca un singur număr întreg.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Familia de Tipuri, la Scară
+
+:: content ::
+
+<TypeSizes class="mt-4" />
+
+<div class="text-center text-base mt-6">
+Nu memorați cifrele — rețineți <strong>ordinea mărimilor</strong>. Iar pentru
+acest curs, două tipuri acoperă aproape tot: <code>int</code> și <code>double</code>.
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Tipurile Întregi
+
+:: content ::
+
+Mai multe mărimi pentru aceeași idee — un număr fără parte zecimală:
+
+| tip | mărime uzuală | interval |
+|---|---|---|
+| `short` | 2 bytes | −32.768 … 32.767 |
+| `int` | 4 bytes | −2.147.483.648 … 2.147.483.647 |
+| `long` | 8 bytes | ±9,2 · 10¹⁸ |
+| `unsigned int` | 4 bytes | 0 … 4.294.967.295 |
+
+<div class="ns-c-tight text-base mt-6">
+
+- `unsigned` renunță la semn și mută tot intervalul peste zero.
+- Cutia are mărime **fixă** — un `int` nu crește dacă numărul nu încape.
+  Ce se întâmplă atunci vedem la finalul lecției.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Caracterele Sunt Numere
+
+:: content ::
+
+Un `char` ține **un cod numeric**, nu un desen de literă. Tabelul ASCII este
+convenția care leagă codurile de caractere:
+
+<div class="grid grid-cols-4 gap-4 mt-6 text-center">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-3xl font-bold font-mono">'A'</div>
+    <div class="text-sm mt-2 opacity-75 font-mono">= 65</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-3xl font-bold font-mono">'a'</div>
+    <div class="text-sm mt-2 opacity-75 font-mono">= 97</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-3xl font-bold font-mono">'0'</div>
+    <div class="text-sm mt-2 opacity-75 font-mono">= 48</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-3xl font-bold font-mono">' '</div>
+    <div class="text-sm mt-2 opacity-75 font-mono">= 32</div>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 gap-6 mt-6 items-center">
+<div>
+
+```c
+char litera = 'A';
+printf("%c\n", litera);      // A
+printf("%d\n", litera);      // 65
+printf("%c\n", litera + 1);  // B
+```
+
+</div>
+<div class="text-sm">
+
+Aceeași cutie, două afișări: `%c` o citește ca **un caracter**, `%d` ca **un
+număr**. Iar pentru că este un număr, putem face aritmetică pe el — `'A' + 1`
+este `'B'`.
+
+</div>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Numerele Reale Sunt Aproximări
+
+:: content ::
+
+`float` și `double` țin numere cu parte zecimală — dar cu **precizie limitată**,
+pentru că orice număr trebuie să încapă în cutia lui:
+
+```c
+double suma = 0.1 + 0.2;
+printf("%.2f\n", suma);    // 0.30
+printf("%.17f\n", suma);   // 0.30000000000000004
+```
+
+<div class="grid grid-cols-2 gap-6 mt-6 text-base">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)] font-mono">float</div>
+    <div class="mt-2 text-sm">4 bytes, ~7 cifre de precizie. Rar necesar.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)] font-mono">double</div>
+    <div class="mt-2 text-sm">8 bytes, ~15 cifre de precizie. <strong>Alegerea implicită</strong> pentru numere reale.</div>
+  </div>
+</div>
+
+<AdmonitionType type="warning" title="De reținut de pe acum" class="mt-6">
+
+Nu comparați niciodată două numere reale cu `==` — aproximările fac egalitatea
+nesigură. Am văzut asta deja în lecția 1: rețeta rădăcinii pătrate se oprea la
+„destul de aproape", nu la „egal".
+
+</AdmonitionType>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Nu Memorați — Întrebați cu sizeof
+
+:: content ::
+
+Mărimile diferă de la un sistem la altul. Operatorul `sizeof` întreabă
+compilerul direct — rulați și verificați pe ce mașină rulează Coliru:
+
+```c {monaco-run} {autorun:false}
+#include <stdio.h>
+
+int main(void) {
+    printf("char:   %zu byte\n",  sizeof(char));
+    printf("short:  %zu bytes\n", sizeof(short));
+    printf("int:    %zu bytes\n", sizeof(int));
+    printf("long:   %zu bytes\n", sizeof(long));
+    printf("float:  %zu bytes\n", sizeof(float));
+    printf("double: %zu bytes\n", sizeof(double));
+    return 0;
+}
+```
+
+<div class="text-sm mt-4 opacity-80 text-center">
+<code>%zu</code> este specificatorul pentru rezultatul lui <code>sizeof</code> —
+revenim la specificatori peste câteva slide-uri.
+</div>
 
 ---
 layout: cover
 color: blue-light
 ---
 
-# Ce sunt Tipurile de Date?
-
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Tipuri de Date Fundamentale
-
-:: content ::
-
-Un **tip de dată** specifică ce fel de valoare poate stoca o variabilă și ce operații se pot efectua asupra acelei valori. Este o regulă pe care o impunem "cutiei" noastre (variabilei) pentru a ne asigura că stocăm în ea doar informații de un anumit fel.
-
-<br/>
-
-<div class="grid grid-cols-2 gap-4 mt-4">
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg text-center">
-    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Tipuri Întregi</h3>
-    <div class="text-sm mt-2">
-    Folosite pentru numere întregi, fără zecimale.
-    <p class="font-mono mt-2 text-[var(--neversink-fg-code-color)]">int, short, long, char</p>
-    </div>
-  </div>
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg text-center">
-    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Tipuri Reale (Floating-Point)</h3>
-    <div class="text-sm mt-2">
-    Folosite pentru numere care pot avea zecimale.
-    <p class="font-mono mt-2 text-[var(--neversink-fg-code-color)]">float, double</p>
-    </div>
-  </div>
-</div>
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)] mt-4">
-
-Alegerea corectă a tipului de dată este esențială pentru a scrie programe **eficiente** ca memorie și **corecte** din punct de vedere logic.
-</div>
-
+## Vorbim cu programul
+### printf și scanf
 
 ---
 layout: top-title
 align: c
 color: blue-light
 ---
+
 :: title ::
 
-# Tipuri de Date Întregi
+# printf: Șablon plus Valori
 
 :: content ::
 
-Acestea sunt folosite pentru a stoca numere întregi. Diferența principală constă în cantitatea de memorie pe care o ocupă și, prin urmare, intervalul de valori pe care îl pot reprezenta.
+`printf` primește un **șablon de text** cu locuri libere marcate prin `%`, apoi
+valorile care umplu locurile — în ordine:
 
-<div class="neversink-blue-light-scheme">
+```c
+printf("Studentul are nota %d si media %f\n", 9, 8.75);
+```
 
-| **Tip**       | **Dimensiune (tipică)** | **Interval de Valori (aproximativ)**                            | **Specificator `printf`/`scanf`** |
-|-----------|---------------------|-------------------------------------------------------------|-------------------------------|
-| `char`    | 1 byte              | -128 la 127 sau 0 la 255                                    | `%c` (ca și caracter)         |
-| `int`     | 4 bytes             | -2 miliarde la +2 miliarde                                  | `%d`                          |
-| `short`   | 2 bytes             | -32,768 la 32,767                                           | `%hd`                         |
-| `long`    | 4 sau 8 bytes       | Depinde de sistem                                           | `%ld`                         |
-| `long long`| 8 bytes            | -9 trilioane la +9 trilioane                                | `%lld`                        |
+| specificator | pentru tipul | exemplu afișat |
+|---|---|---|
+| `%d` | `int` | `9` |
+| `%f` | `float`, `double` | `8.750000` |
+| `%c` | `char` | `A` |
+| `%s` | string | `salut` |
+| `%zu` | rezultatul lui `sizeof` | `4` |
+
+<AdmonitionType type="warning" title="Specificatorul trebuie să se potrivească cu tipul">
+
+`printf("%d", 8.75)` compilează cu warning și afișează un nonsens — `printf`
+citește cutiile **cum îi spune specificatorul**, nu cum sunt de fapt. Aceiași
+biți, interpretarea greșită.
+
+</AdmonitionType>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Afișare cu Precizie
+
+:: content ::
+
+Între `%` și literă încap opțiuni: **lățimea** câmpului și **precizia**
+zecimalelor — de ajuns pentru tabele aliniate:
+
+<div class="grid grid-cols-2 gap-6 mt-4 items-center">
+<div>
+
+```c
+double medie = 8.7561;
+
+printf("%f\n", medie);      // 8.756100
+printf("%.2f\n", medie);    // 8.76
+printf("%8.2f\n", medie);   //     8.76
+printf("%-8.2f|\n", medie); // 8.76    |
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- `.2` — două zecimale, **rotunjite** la afișare.
+- `8` — minim 8 caractere, umplute cu spații la stânga.
+- `-` — aliniere la stânga.
+- Valoarea din memorie **nu se schimbă** — doar afișarea.
+
+</div>
+</div>
+
+<div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] font-mono text-sm mt-6 text-left">
+Produs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pret<br/>
+Paine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.50<br/>
+Lapte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12.75
+</div>
+
+<div class="text-center text-sm mt-2 opacity-75">
+un tabel aliniat, făcut doar din <code>%-10s</code> și <code>%8.2f</code>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Literalii: Valorile Scrise Direct în Cod
+
+:: content ::
+
+Felul în care **scrieți** o valoare îi decide tipul. Patru scrieri care par
+înrudite — patru lucruri complet diferite:
+
+<div class="grid grid-cols-4 gap-4 mt-6 text-center">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-3xl font-bold font-mono">42</div>
+    <div class="text-xs uppercase tracking-wider opacity-70 mt-3">int</div>
+    <div class="text-sm mt-1">un întreg</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-3xl font-bold font-mono">42.0</div>
+    <div class="text-xs uppercase tracking-wider opacity-70 mt-3">double</div>
+    <div class="text-sm mt-1">un număr real</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-3xl font-bold font-mono">'4'</div>
+    <div class="text-xs uppercase tracking-wider opacity-70 mt-3">char</div>
+    <div class="text-sm mt-1">caracterul cu codul 52</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-3xl font-bold font-mono">"42"</div>
+    <div class="text-xs uppercase tracking-wider opacity-70 mt-3">string</div>
+    <div class="text-sm mt-1">un șir de caractere</div>
+  </div>
+</div>
+
+<div class="text-center text-base mt-8">
+Ghilimelele simple și cele duble <strong>nu sunt interschimbabile</strong>:
+<code>'4'</code> este un număr (52), <code>"42"</code> este text.
+Despre stringuri, pe larg, în lecția 10.
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Gunoiul din Cutie
+
+:: content ::
+
+Declararea rezervă cutiile — dar **nu le curăță**. O variabilă neinițializată
+conține ce a rămas acolo de la programul dinainte:
+
+```c
+int nota;                 // rezervat, dar necurățat
+printf("%d\n", nota);     // orice — 0, -843215, 32767…
+```
+
+<MemoryCells class="mt-6" :size="80"
+  :cells="[
+    { addr: '…04', value: '?', name: 'nota', highlight: true },
+    { addr: '…05', value: '?', highlight: true },
+    { addr: '…06', value: '?', highlight: true },
+    { addr: '…07', value: '?', highlight: true },
+  ]"
+  caption="? = gunoi: ce a lăsat acolo ultimul program care a folosit cutiile"
+/>
+
+<AdmonitionType type="important" title="Regula" class="mt-6">
+
+**Inițializați la declarare**: `int nota = 0;`. Un program care citește gunoi
+merge „de obicei" — și crapă exact la prezentare.
+
+</AdmonitionType>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Valori Care Nu Se Schimbă
+
+:: content ::
+
+`const` marchează o valoare fixată o dată pentru totdeauna — compilerul refuză
+orice încercare de modificare:
+
+<div class="grid grid-cols-2 gap-6 mt-6 items-center">
+<div>
+
+```c
+const double TVA = 0.20;
+const int NOTA_MAXIMA = 10;
+
+TVA = 0.19;   // error: assignment of
+              // read-only variable 'TVA'
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- Numele spune **ce înseamnă** numărul — `NOTA_MAXIMA`, nu un `10` rătăcit
+  prin cod.
+- Compilerul devine paznic: modificarea accidentală e o eroare de compilare,
+  nu un bug ascuns.
+- Convenție: numele constantelor se scriu cu MAJUSCULE.
+
+</div>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# scanf: Drumul Invers
+
+:: content ::
+
+`scanf` folosește aceiași specificatori, dar în sens invers: citește text de la
+tastatură și îl depune **în cutia** unei variabile:
+
+<div class="grid grid-cols-2 gap-6 mt-4 items-center">
+<div>
+
+```c
+int nota;
+double medie;
+
+scanf("%d", &nota);
+scanf("%lf", &medie);
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- `&nota` = „**adresa** cutiei nota" — scanf trebuie să știe *unde* să scrie,
+  nu *ce valoare* e acolo.
+- La citire, `double` cere `%lf`, nu `%f` — prima capcană clasică.
+- Programul **se oprește** și așteaptă tastatura.
+
+</div>
+</div>
+
+<AdmonitionType type="note" title="De ce &? Deocamdată: regulă" class="mt-6">
+
+Explicația completă vine în lecția despre pointeri. Până atunci: la `scanf`,
+variabilele simple primesc `&` în față. Fără el — comportament imprevizibil și
+un warning de care ascultați.
+
+</AdmonitionType>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Primul Program Interactiv
+
+:: content ::
+
+Citește → calculează → afișează — scheletul oricărui program de laborator.
+Apăsați **Run**: programul pornește și **așteaptă** — scrieți două note
+(de exemplu `9 8`) și apăsați Enter:
+
+```c {monaco-run} {autorun:false}
+#include <stdio.h>
+
+int main(void) {
+    int nota1, nota2;
+
+    printf("Introduceti doua note:\n");
+    scanf("%d %d", &nota1, &nota2);
+
+    double medie = (nota1 + nota2) / 2.0;
+    printf("Media este %.2f\n", medie);
+    return 0;
+}
+```
+
+<FlowSteps class="mt-5" :size="0.8" :steps="[
+  { label: 'tastatura', sub: 'input' },
+  { label: 'nota1, nota2', kind: 'file', via: 'scanf' },
+  { label: 'medie', kind: 'file', via: '( + ) / 2.0' },
+  { label: 'ecranul', sub: 'output', via: 'printf', highlight: true },
+]" />
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Expresie și Instrucțiune
+
+:: content ::
+
+Două cuvinte pe care le veți auzi tot semestrul. Diferența este simplă:
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+  <div class="p-6 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Expresia <em>are o valoare</em></h3>
+    <div class="text-sm mt-3">
+
+Se poate calcula și rezultă **ceva**:
+
+```c
+5 + 3          // 8
+nota * 2       // un int
+(a + b) / 2.0  // un double
+```
+
+</div>
+  </div>
+  <div class="p-6 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <h3 class="text-lg font-bold text-[var(--neversink-text-color)]">Instrucțiunea <em>face ceva</em></h3>
+    <div class="text-sm mt-3">
+
+Un pas complet al programului, închis cu `;`:
+
+```c
+int nota = 8;
+suma = a + b;
+printf("%d\n", suma);
+```
+
+</div>
+  </div>
+</div>
+
+<div class="text-center text-base mt-6">
+Un program este o listă de <strong>instrucțiuni</strong>; aproape fiecare
+instrucțiune are înăuntru <strong>expresii</strong> de calculat.
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Expresiile Se Construiesc din Expresii
+
+:: content ::
+
+O expresie mare este făcută din expresii mai mici — compilerul o evaluează
+dinăuntru spre în afară:
+
+<div class="max-w-3xl mx-auto mt-8">
+
+```c
+medie = (nota1 + nota2) / 2.0;
+```
+
+</div>
+
+<FlowSteps class="mt-8" :size="0.95" :steps="[
+  { label: 'nota1 + nota2', sub: 'expresie', kind: 'file' },
+  { label: '17', sub: 'valoare', via: 'se evaluează' },
+  { label: '17 / 2.0', sub: 'expresie', kind: 'file' },
+  { label: '8.5', sub: 'valoare', via: 'se evaluează', highlight: true },
+]" caption="abia la final, instrucțiunea depune rezultatul în medie și se închide cu ;" />
+
+<div class="text-center text-base mt-6">
+De aceea contează <strong>tipul fiecărei bucăți</strong> — îl urmărim imediat
+la împărțire.
+</div>
+
+---
+layout: center
+color: blue-light
+---
+
+<div class="flex justify-center">
+
+<SpeechBubble position="b" color="blue-light" shape="round" animation="float" maxWidth="800px" textAlign="center" borderWidth="2px">
+
+<div class="text-6xl font-bold py-4">
+
+Cât face 5 / 2 în C?
+
+</div>
+
+</SpeechBubble>
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Împărțirea Întreagă
+
+:: content ::
+
+<div class="grid grid-cols-2 gap-6 mt-4 items-center">
+<div>
+
+```c
+printf("%d\n", 5 / 2);      // 2
+printf("%d\n", 5 % 2);      // 1
+printf("%f\n", 5 / 2.0);    // 2.500000
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- `int / int` rămâne `int`: partea zecimală **se aruncă**, nu se rotunjește.
+- `%` (modulo) dă **restul** împărțirii — perechea lui `/`.
+- E de ajuns ca **un singur** operand să fie real și împărțirea devine reală.
+
+</div>
+</div>
+
+<div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] mt-8 text-center">
+<p class="text-xl">
+<code>5 / 2</code> nu este o greșeală de calcul — este o <strong>regulă de tip</strong>:
+împărțirea a doi întregi produce un întreg.
+</p>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Operatorii Aritmetici
+
+:: content ::
+
+| operator | nume | exemplu | rezultat |
+|---|---|---|---|
+| `+` | adunare | `7 + 2` | `9` |
+| `-` | scădere | `7 - 2` | `5` |
+| `*` | înmulțire | `7 * 2` | `14` |
+| `/` | împărțire | `7 / 2` | `3` — întreagă între `int` |
+| `%` | modulo (rest) | `7 % 2` | `1` — doar între întregi |
+
+<div class="ns-c-tight text-base mt-6">
+
+- `%` funcționează **doar pe întregi** — `7.5 % 2` nu compilează.
+- Duo-ul `/` și `%` pe 10 extrage cifre: `385 % 10` → `5`, `385 / 10` → `38`.
+  Îl folosiți la laborator chiar azi.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Atribuirea și Rudele Ei
+
+:: content ::
+
+`=` nu înseamnă „egal" — înseamnă **„pune valoarea din dreapta în cutia din
+stânga"**. De aceea `x = x + 1` are sens perfect:
+
+<div class="grid grid-cols-2 gap-6 mt-6 items-center">
+<div>
+
+```c
+int x = 10;
+x = x + 1;   // x devine 11
+x += 5;      // pe scurt: x = x + 5
+x++;         // și mai scurt: x = x + 1
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- `+=`, `-=`, `*=`, `/=` — „modifică pe loc": mai scurt și mai greu de greșit.
+- `x++` și `x--` cresc și scad cu 1 — le veți vedea peste tot în cicluri.
+- Egalitatea de comparație este `==` — un alt operator, pentru lecția despre
+  condiționale.
+
+</div>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ordinea Operațiilor
+
+:: content ::
+
+Ca în matematică: `*`, `/`, `%` înaintea `+` și `-`, iar parantezele câștigă
+întotdeauna:
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+<div>
+
+```c
+2 + 3 * 4        // 14, nu 20
+(2 + 3) * 4      // 20
+10 - 4 - 3       // 3 — de la stânga
+nota1 + nota2 / 2   // capcană!
+```
+
+</div>
+<div class="text-sm">
+
+Ultima linie **compilează perfect** și calculează greșit: se împarte doar
+`nota2`. Exact felul de eroare „rezultat greșit" din lecția 1 — nimeni nu vă
+anunță.
+
+</div>
+</div>
+
+<AdmonitionType type="tip" title="Regula practică" class="mt-6">
+
+Nu memorați tabelul de precedență. Când o expresie are mai mult de doi
+operatori, **puneți paranteze** — ele documentează intenția.
+
+</AdmonitionType>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Conversii: Când Tipurile Se Amestecă
+
+:: content ::
+
+Când o expresie amestecă tipuri, C convertește automat spre tipul **mai
+încăpător** — iar la atribuire, spre tipul cutiei din stânga:
+
+<div class="grid grid-cols-2 gap-6 mt-8">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70 mb-3">lărgire — fără pierderi</div>
+
+```c
+int nota = 8;
+double d = nota;   // 8.0
+```
+
+  <div class="text-sm mt-3 opacity-80">Cutia mai mare încape tot. Se întâmplă tăcut și e inofensiv.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70 mb-3">îngustare — se pierde informație</div>
+
+```c
+double medie = 8.75;
+int m = medie;     // 8 — zecimalele
+                   //     se aruncă!
+```
+
+  <div class="text-sm mt-3 opacity-80">Tot tăcut — cel mult un warning. Partea zecimală dispare fără urmă.</div>
+  </div>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Cast: Conversia la Cerere
+
+:: content ::
+
+Scriind `(tip)` în fața unei expresii, cereți conversia **explicit** — și
+rezolvați cea mai frecventă greșeală din primele laboratoare:
+
+<div class="grid grid-cols-2 gap-6 mt-4">
+<div>
+
+<div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Greșit — media notelor 9 și 8</div>
+
+```c
+int nota1 = 9, nota2 = 8;
+double medie = (nota1 + nota2) / 2;
+printf("%.2f\n", medie);   // 8.00 ✗
+```
+
+<div class="text-xs mt-1 opacity-75">
+17 / 2 se face între int → 8. Abia apoi 8 devine 8.0.
+</div>
+
+</div>
+<div>
+
+<div class="text-sm font-bold text-[var(--neversink-text-color)] mb-1">Corect — două variante</div>
+
+```c
+double medie = (nota1 + nota2) / 2.0;
+
+double medie = (double)(nota1 + nota2) / 2;
+printf("%.2f\n", medie);   // 8.50 ✓
+```
+
+<div class="text-xs mt-1 opacity-75">
+Un singur operand real e de ajuns — restul se lărgește automat.
+</div>
+
+</div>
+</div>
+
+<div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] mt-8 text-center">
+<p class="text-lg">
+Conversia se decide <strong>pe fiecare operație</strong>, nu pe instrucțiune —
+contează tipurile în momentul împărțirii, nu tipul cutiei finale.
+</p>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Overflow: Marginea Cutiei
+
+:: content ::
+
+Cutia are mărime fixă — și numărul care nu mai încape **dă pe dinafară**, ca un
+kilometraj care trece de 999999:
+
+<div class="grid grid-cols-2 gap-6 mt-4 items-center">
+<div>
+
+```c
+#include <limits.h>
+
+int mare = INT_MAX;        // 2147483647
+printf("%d\n", mare);      // 2147483647
+printf("%d\n", mare + 1);  // -2147483648
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- `INT_MAX` este cel mai mare `int` posibil — plus 1 și semnul se
+  răstoarnă.
+- Compilerul **nu vă avertizează** la rulare: este eroarea tăcută din
+  lecția 1.
+- Suspectați overflow când un calcul cu numere mari dă brusc negativ.
+
+</div>
+</div>
+
+<AdmonitionType type="tip" title="Apărarea simplă" class="mt-6">
+
+Alegeți un tip cu rezervă de spațiu: pentru numărători și sume mari, `long`
+în loc de `int`. Un byte în plus e mai ieftin decât un bug invizibil.
+
+</AdmonitionType>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Luăm cu Noi
+
+:: content ::
+
+<div class="ns-c-tight text-lg mt-6 max-w-4xl mx-auto text-left">
+
+- Tipul = **câte cutii** + **cum se interpretează biții**. Aceiași biți, alt
+  tip, alt înțeles.
+- Pentru acest curs: `int` pentru întregi, `double` pentru reale, `char`
+  pentru caractere.
+- **Expresia are o valoare; instrucțiunea face ceva** și se închide cu `;`.
+- `int / int` rămâne `int` — împărțirea întreagă nu e un bug, e o regulă.
+- `printf` și `scanf` vorbesc prin specificatori: `%d`, `%f` / `%lf`, `%c` —
+  potriviți-i cu tipul.
+- Conversiile tăcute și overflow-ul sunt erori care **nu anunță** — tipul
+  potrivit le previne.
 
 </div>
 
 ---
 layout: center
----
-
-<AdmonitionType type="tip">
-
-# **`char`** este un tip întreg special. Deși stochează un număr (codul ASCII), este folosit cel mai des pentru a reprezenta un singur caracter.
-
-</AdmonitionType>
-
----
-layout: top-title
-align: c
 color: blue-light
 ---
-:: title ::
 
-# Tipuri de Date Reale
+<div class="text-center">
 
-:: content ::
+<div class="text-5xl font-bold">Asta a fost tot pentru azi</div>
 
-Aceste tipuri sunt folosite când avem nevoie de precizie zecimală.
-
-<div class="neversink-blue-light-scheme">
-
-| **Tip**       | **Dimensiune (tipică)** | **Precizie Zecimală**  | **Specificator `printf`/`scanf`** |
-|-----------|---------------------|--------------------|-------------------------------|
-| `float`   | 4 bytes             | ~7 cifre zecimale  | `%f`                          |
-| `double`  | 8 bytes             | ~15 cifre zecimale | `%lf` (doar în `scanf`) / `%f`|
-
+<div class="text-lg mt-4 opacity-75">
+Întrebări acum — apoi laboratorul, unde numerele voastre încep să vină de la
+tastatură.
 </div>
-<br/>
-<AdmonitionType type="warning">
-
-Pentru `scanf`, este important să folosim `%f` pentru `float` și `%lf` pentru `double`. Pentru `printf`, `%f` funcționează pentru ambele, deoarece `float`-urile sunt promovate automat la `double` atunci când sunt transmise funcției.
-
-</AdmonitionType>
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Formatarea Afișării cu `printf`
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Mai Mult Decât Afișare Simplă
-
-:: content ::
-
-Funcția `printf` este extrem de puternică și nu se limitează doar la afișarea textului și a variabilelor. Putem controla cu precizie **cum** arată datele noastre la afișare.
-
-Acest lucru este esențial pentru a crea un output curat, aliniat și ușor de citit, cum ar fi tabele sau rapoarte.
-
-<br/>
-
-**Putem controla:**
-<div class="ns-c-tight">
-
-- **Lățimea câmpului**: Cât de mult spațiu ocupă un număr sau un text.
-- **Precizia**: Câte zecimale să fie afișate pentru numerele reale.
-- **Alinierea**: Aliniere la stânga sau la dreapta în cadrul câmpului.
-- **Completarea cu zerouri**: Afișarea zerourilor la începutul unui număr.
 
 </div>
 
-<br/>
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)] text-center">
-Sintaxa generală a unui specificator de format este:
-<p class="font-mono text-lg mt-2 text-[var(--neversink-text-color)]">%[steaguri][lățime][.precizie]tip</p>
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Controlul Lățimii și Alinierii
-
-:: content ::
-
-Putem specifica un număr întreg după `%` pentru a rezerva un număr minim de caractere pentru afișare. Implicit, alinierea este la dreapta. Folosind steagul `-` (minus), forțăm alinierea la stânga.
-
-
----
-layout: cover
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    int numar1 = 12;
-    int numar2 = 345;
-    int numar3 = 6789;
-
-    printf("--- Aliniere la Dreapta (Implicit) ---\n");
-    // Rezerva 6 caractere pentru fiecare numar
-    printf("Numar: |%6d|\n", numar1);
-    printf("Numar: |%6d|\n", numar2);
-    printf("Numar: |%6d|\n", numar3);
-
-    printf("\n--- Aliniere la Stanga (cu '-') ---\n");
-    // Rezerva 6 caractere, aliniate la stanga
-    printf("Numar: |%-6d|\n", numar1);
-    printf("Numar: |%-6d|\n", numar2);
-    printf("Numar: |%-6d|\n", numar3);
-
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Controlul Preciziei (pentru `float`/`double`)
-
-:: content ::
-
-Pentru numerele reale, putem controla câte zecimale sunt afișate folosind `.precizie`. Implicit, `printf` afișează 6 zecimale pentru `%f`.
-
-Putem combina lățimea totală cu precizia. De exemplu, `%10.2f` înseamnă o lățime totală de 10 caractere, cu exact 2 caractere după punctul zecimal.
-
----
-layout: cover
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    double pi = 3.14159265;
-
-    // Afisare implicita (6 zecimale)
-    printf("Implicit: %f\n", pi);
-
-    // Afisare cu 2 zecimale
-    printf("Cu 2 zecimale: %.2f\n", pi);
-    
-    // Afisare cu 4 zecimale
-    printf("Cu 4 zecimale: %.4f\n", pi);
-
-    // Afisare cu 0 zecimale (rotunjit)
-    printf("Cu 0 zecimale: %.0f\n", pi);
-
-    printf("\n--- Combinat: Latime 10, Precizie 2 ---\n");
-    printf("Pret: |%10.2f|\n", 49.99);
-    printf("Pret: |%10.2f|\n", 123.50);
-
-    return 0;
-}
-```
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-
-
-## Operatori și Operanzi
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Ce sunt Operatorii?
-
-:: content ::
-
-Un **operator** este un simbol care îi spune compilatorului să efectueze o operație specifică (matematică, relațională sau logică). Valorile pe care acționează un operator se numesc **operanzi**.
-
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)] text-center">
-  <p class="text-2xl font-mono text-[var(--neversink-text-color)]">
-    <span class="font-bold text-red-500">a</span> 
-    <span class="text-3xl mx-4 text-blue-500">+</span> 
-    <span class="font-bold text-red-500">b</span>
-  </p>
-  <div class="mt-4 text-lg">
-    <p><span class="font-bold text-red-500">a</span> și <span class="font-bold text-red-500">b</span> sunt <span class="font-bold">operanzi</span>.</p>
-    <p><span class="font-bold text-blue-500">+</span> este <span class="font-bold">operatorul</span>.</p>
-  </div>
-</div>
-
-
-**Categorii principale de operatori în C:**
-<div class="ns-c-tight">
-
-- Operatori Aritmetici
-- Operatori Relaționali
-- Operatori Logici
-- Operatori de Atribuire
-- Operatori de Incrementare/Decrementare
-
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Operatori Aritmetici
-
-:: content ::
-
-Folosiți pentru operații matematice de bază.
-
-<div class="neversink-blue-light-scheme text-center grid grid-cols-5 gap-4">
-  <div class="bg-[var(--neversink-bg-code-color)] p-4 rounded"> <span class="font-mono text-2xl text-[var(--neversink-fg-code-color)]">+</span> <br/>Adunare</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-4 rounded"> <span class="font-mono text-2xl text-[var(--neversink-fg-code-color)]">-</span> <br/>Scădere</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-4 rounded"> <span class="font-mono text-2xl text-[var(--neversink-fg-code-color)]">*</span> <br/>Înmulțire</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-4 rounded"> <span class="font-mono text-2xl text-[var(--neversink-fg-code-color)]">/</span> <br/>Împărțire</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-4 rounded"> <span class="font-mono text-2xl text-[var(--neversink-fg-code-color)]">%</span> <br/>Modulo</div>
-</div>
-<br/>
-
----
-layout: cover
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    int a = 10, b = 3;
-    printf("Suma: %d\n", a + b);       // 13
-    printf("Diferenta: %d\n", a - b);  // 7
-    printf("Produsul: %d\n", a * b);    // 30
-
-    // ATENTIE la impartirea intreaga!
-    printf("Impartire intreaga: %d\n", a / b); // 3, nu 3.33
-
-    // Operatorul Modulo (%) da restul impartirii
-    printf("Restul impartirii (Modulo): %d\n", a % b); // 1
-
-    // Pentru impartire reala, cel putin un operand trebuie sa fie float/double
-    printf("Impartire reala: %f\n", (float)a / b); // 3.333333
-
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Operatori Relaționali și Logici
-
-:: content ::
-
-**Operatorii Relaționali** compară două valori și returnează `1` (adevărat) sau `0` (fals).
-<div class="neversink-blue-light-scheme text-center grid grid-cols-6 gap-2 text-sm">
-  <div class="bg-[var(--neversink-bg-code-color)] p-2 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]">==</span> <br/>Egal</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-2 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]">!=</span> <br/>Diferit</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-2 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]">></span> <br/>Mai mare</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-2 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]"><</span> <br/>Mai mic</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-2 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]">>=</span> <br/>Mai mare sau egal</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-2 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]"><=</span> <br/>Mai mic sau egal</div>
-</div>
-<br/>
-
-**Operatorii Logici** combină mai multe expresii booleene.
-<div class="neversink-blue-light-scheme text-center grid grid-cols-3 gap-2">
-  <div class="bg-[var(--neversink-bg-code-color)] p-3 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]">&&</span> <br/>ȘI Logic (AND)</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-3 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]">||</span> <br/>SAU Logic (OR)</div>
-  <div class="bg-[var(--neversink-bg-code-color)] p-3 rounded"> <span class="font-mono text-xl text-[var(--neversink-fg-code-color)]">!</span> <br/>NU Logic (NOT)</div>
-</div>
-
----
-layout: cover
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    int varsta = 20;
-    int are_bilet = true;
-
-    // Poate intra la film? (varsta >= 18 SI are_bilet)
-    int poate_intra = (varsta >= 18) && are_bilet;
-    
-    // Rezultatul unei expresii logice este 0 (fals) sau 1 (adevarat)
-    printf("Poate intra la film? (1=Da, 0=Nu): %d\n", poate_intra);
-
-    // Operatorul ! (NU) inverseaza valoarea de adevar
-    printf("NU poate intra la film?: %d\n", !poate_intra);
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Operatori de Atribuire
-
-:: content ::
-
-Folosiți pentru a asigna o valoare unei variabile.
-
-<div class="ns-c-tight">
-
-- **Atribuirea simplă (`=`)**: `x = 10;`
-- **Atribuirea compusă**: O prescurtare pentru a modifica o variabilă folosind valoarea ei curentă.
-  
-</div>
-
-<div class="neversink-blue-light-scheme grid grid-cols-2 gap-4 mt-4 text-center">
-  <div>
-    <h4 class="font-bold">Forma Lungă</h4>
-    <p class="font-mono">x = x + 5;</p>
-    <p class="font-mono">y = y * 2;</p>
-  </div>
-  <div>
-    <h4 class="font-bold">Forma Scurtă (Compusă)</h4>
-    <p class="font-mono">x += 5;</p>
-    <p class="font-mono">y *= 2;</p>
-  </div>
-</div>
-
----
-layout: cover
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    int scor = 100;
-    printf("Scor initial: %d\n", scor);
-
-    // Adauga 50 de puncte
-    scor += 50; // Echivalent cu: scor = scor + 50;
-    printf("Scor dupa bonus: %d\n", scor);
-
-    // Injumatateste scorul
-    scor /= 2; // Echivalent cu: scor = scor / 2;
-    printf("Scor dupa penalizare: %d\n", scor);
-    
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Operatori de Incrementare/Decrementare
-
-:: content ::
-
-Adaugă sau scade `1` dintr-o variabilă. Au două forme: **prefixată** și **postfixată**.
-
-<div class="neversink-blue-light-scheme grid grid-cols-2 gap-8 mt-4 text-center">
-  <div>
-    <h3 class="text-xl font-bold text-[var(--neversink-text-color)]">Prefixat: `++x` sau `--x`</h3>
-    <p class="mt-2">
-      <span class="font-bold">1. Modifică</span> valoarea variabilei.<br/>
-      <span class="font-bold">2. Returnează</span> noua valoare.
-    </p>
-  </div>
-  <div>
-    <h3 class="text-xl font-bold text-[var(--neversink-text-color)]">Postfixat: `x++` sau `x--`</h3>
-    <p class="mt-2">
-      <span class="font-bold">1. Returnează</span> valoarea curentă.<br/>
-      <span class="font-bold">2. Modifică</span> valoarea variabilei.
-    </p>
-  </div>
-</div>
-
----
-layout: cover
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    int a = 5, b = 5;
-
-    // Forma postfixata: y primeste valoarea veche a lui 'a' (5)
-    int y = a++; 
-    printf("a = %d, y = %d (dupa y = a++)\n", a, y);
-
-    // Forma prefixata: z primeste valoarea noua a lui 'b' (6)
-    int z = ++b;
-    printf("b = %d, z = %d (dupa z = ++b)\n", b, z);
-
-    return 0;
-}
-```
-
-<AdmonitionType type="warning">
-Diferența dintre formele prefixată și postfixată este vizibilă doar atunci când rezultatul operației este folosit într-o expresie mai mare (ca o atribuire).
-</AdmonitionType>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Depășirea Tipului de Date (Overflow)
-
-:: content ::
-
-Ce se întâmplă când încercăm să punem o valoare prea mare într-o "cutie" (variabilă) care este prea mică? Acest fenomen se numește **overflow** (depășire).
-
-Imaginați-vă un contor de kilometraj al unei mașini vechi, care are doar 5 cifre. Când ajunge la `99999`, următorul kilometru îl va reseta la `00000`. În programare, comportamentul este similar, dar poate fi mai puțin previzibil.
-
-<br/>
-
----
-layout: cover
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    // 'signed char' poate stoca valori de la -128 la 127
-    signed char numar = 127;
-
-    printf("Valoarea initiala: %d\n", numar);
-
-    // Ce se intampla daca adaugam 1?
-    numar = numar + 1; // 127 + 1
-    
-    // Valoarea "sare" la capatul opus al intervalului!
-    printf("Dupa overflow: %d\n", numar); // Va afisa -128
-
-    return 0;
-}
-```
-
-<AdmonitionType type="warning">
-
-**Overflow** este o sursă majoră de bug-uri, uneori cu consecințe grave de securitate. Compilatorul, de obicei, **nu vă avertizează** despre asta! Este responsabilitatea programatorului să aleagă tipuri de date suficient de mari pentru valorile pe care le va stoca.
-
-</AdmonitionType>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Lumea Caracterelor: `char` și ASCII
-
-:: content ::
-
-Cum stochează un computer litere, simboluri și cifre? Răspunsul este: **nu le stochează**. Un computer poate stoca doar numere.
-
-**ASCII** (American Standard Code for Information Interchange) este un tabel standard care asociază fiecărui caracter (ex: 'A', 'b', '?', '7') un număr întreg unic.
-
-<div class="ns-c-tight">
-
-- Variabila de tip `char` stochează, de fapt, un număr mic (de obicei între 0 și 127).
-- Când folosim `%c` în `printf`, computerul se uită în tabelul ASCII și afișează caracterul corespunzător acelui număr.
-- Când folosim `%d`, afișează numărul corespunzător.
-
-</div>
-
----
-layout: cover
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    char caracter = 'A';
-
-    // Afisam variabila 'caracter' in doua moduri diferite
-    printf("Afisat ca si caracter (%%c): %c\n", caracter);
-    printf("Afisat ca si numar (%%d): %d\n", caracter);
-
-    // Putem face si operatii aritmetice!
-    // 'B' este urmatorul caracter in tabelul ASCII
-    char urmatorul_caracter = caracter + 1;
-    printf("Caracterul urmator este: %c\n", urmatorul_caracter);
-    printf("Codul sau ASCII este: %d\n", urmatorul_caracter);
-    
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Conversii de Tip: Schimbarea Regulilor
-
-:: content ::
-
-Uneori, avem nevoie ca o valoare de un anumit tip să fie tratată temporar ca fiind de alt tip. De exemplu, pentru a efectua o împărțire reală între două numere întregi. Acest proces se numește **conversie de tip** (type casting).
-
-Există două tipuri de conversii:
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">Conversie Implicită</h3>
-    <div class="text-sm mt-2">
-
-  Făcută automat de compilator, de obicei când se promovează un tip "mai mic" la unul "mai mare" pentru a nu pierde informație (ex: `int` la `double`).
-
-  </div>
-  </div>
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">Conversie Explicită</h3>
-    <div class="text-sm mt-2">
-
-  Forțată de programator prin specificarea noului tip în paranteze `(tip_nou)`. Acest lucru îi spune clar compilatorului: "Știu ce fac, tratează această valoare ca și cum ar fi de acest tip".
-
-  </div>
-  </div>
-</div>
-
----
-layout: cover
-color: blue-light
----
-
-```c {monaco-run}
-#include <stdio.h>
-
-int main() {
-    int a = 10;
-    int b = 4;
-    
-    // Fara conversie: compilatorul vede int / int si face impartire intreaga.
-    // Rezultatul este 2, nu 2.5
-    float rezultat_intreg = a / b;
-    printf("Rezultatul impartirii intregi: %f\n", rezultat_intreg);
-
-    // Conversie explicita: (float)a
-    // 'a' este tratat temporar ca un float (10.0).
-    // Compilatorul vede float / int, promoveaza 'b' la float si face impartire reala.
-    float rezultat_real = (float)a / b;
-    printf("Rezultatul impartirii reale: %f\n", rezultat_real);
-
-    // Conversie implicita:
-    double d = 5.5;
-    int i = 2;
-    // 'i' este promovat automat la double (2.0) inainte de adunare.
-    double suma = d + i; 
-    printf("Suma (conversie implicita): %f\n", suma);
-
-    return 0;
-}
-```
-
----
-layout: center
----
-
-<AdmonitionType type="danger">
-
-# Atenție la conversiile de la un tip mai mare la unul mai mic (ex: `double` la `int`). Acestea pot duce la **pierderea de informație** (trunchierea părții zecimale).
-
-`int x = (int)9.99;` // x va avea valoarea 9
-
-</AdmonitionType>
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-# Sarcini de Practica
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 1 (Ușor)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care convertește o temperatură dată din grade Celsius în grade Fahrenheit.
-
-### Formula:
-`Fahrenheit = (Celsius * 9 / 5) + 32`
-
-<br/>
-
-<div class="ns-c-tight">
-
-1. Definiți o variabilă `float` pentru temperatura în Celsius.
-2. Cereți utilizatorului să introducă o valoare.
-3. Calculați și afișați rezultatul.
-
-</div>
-<br/>
-
-### Exemplu de interacțiune:
-
-```text
-Introduceti temperatura in Celsius: 20
-Temperatura in Fahrenheit este: 68.00
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 2 (Mediu)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care verifică dacă un număr întreg este par. Programul va afișa **`1`** (reprezentând adevărat) dacă numărul este par, și **`0`** (reprezentând fals) dacă este impar.
-
-<br/>
-<AdmonitionType type="tip">
-
-Folosiți operatorul modulo (`%`) pentru a găsi restul împărțirii la 2. Apoi, folosiți operatorul relațional (`==`) pentru a compara acest rest cu 0. Rezultatul direct al acestei comparații (`numar % 2 == 0`) va fi stocat într-o variabilă `int` și afișat.
-
-</AdmonitionType>
-<br/>
-
-### Exemple de interacțiune:
-```text
-Introduceti un numar intreg: 10
-Este numarul par? (1=Da, 0=Nu): 1
-```
-
-```text
-Introduceti un numar intreg: 7
-Este numarul par? (1=Da, 0=Nu): 0
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 3 (Avansat)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care:
-<div class="ns-c-tight">
-
-1. Cere utilizatorului să introducă un număr întreg format din exact 3 cifre.
-2. Calculează și afișează suma cifrelor acelui număr.
-
-</div>
-<br/>
-
-<AdmonitionType type="tip">
-
-Pentru a extrage cifrele, folosiți o combinație de operatori de împărțire (`/`) și modulo (`%`) cu 10.
-- `numar % 10` vă dă ultima cifră.
-- `numar / 10` elimină ultima cifră.
-
-</AdmonitionType>
-<br/>
-
-### Exemplu de interacțiune:
-```text
-Introduceti un numar de 3 cifre: 385
-Suma cifrelor este: 16 // 3 + 8 + 5 = 16
-```
-
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Mai departe
-
-:: content ::
-
-<div class="mt-12">
+<div class="mt-14">
 
 <DeckNav />
 

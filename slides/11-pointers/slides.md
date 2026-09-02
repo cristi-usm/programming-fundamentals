@@ -15,13 +15,14 @@ lineNumbers: true
 draw:
   enabled: true
 favicon: './C.png'
-addons:
-  - slidev-addon-cpp-runner
+# The c/cpp runners come from common/setup/code-runners.ts (adds stdin support),
+# NOT from slidev-addon-cpp-runner — keep the addon out of this list, or its
+# runner can win over ours depending on setup load order.
 c:
   compiler: 'g++'
   standard: 'c2x'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -29,7 +30,7 @@ cpp:
   compiler: 'g++'
   standard: 'c++17'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -296,7 +297,7 @@ scanf("%d", &varsta);
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 int main() {
     int x = 10;
@@ -354,7 +355,7 @@ printf("Valoarea lui x este: %d\n", *p); // Va afisa 10
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {
@@ -469,7 +470,7 @@ layout: cover
 #### Problema: Pass-by-Value
 În C, funcțiile primesc în mod implicit o **COPIE** a variabilelor. Orice modificare făcută copiei nu afectează originalul.
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 // 'a' si 'b' sunt COPII ale lui x si y
@@ -499,7 +500,7 @@ layout: cover
 Putem trimite funcției **adresele** variabilelor (pointeri). Funcția poate apoi "urma" acele adrese și modifica valorile **originale**.
 <div class='mb-10'>
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 // 'a' si 'b' sunt POINTERI care contin ADRESELE originale
@@ -547,7 +548,7 @@ color: blue-light
 <div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)]">
 <h3 class="font-bold text-center text-[var(--neversink-text-color)]">Asta înseamnă că:</h3>
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main(){
@@ -585,7 +586,7 @@ layout: cover
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {

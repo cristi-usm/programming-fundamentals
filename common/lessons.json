@@ -4,22 +4,22 @@
   "modules": [
     {
       "id": 1,
-      "emoji": "🟢",
+      "icon": "i-ph-cube-duotone",
       "title": "Bazele limbajului"
     },
     {
       "id": 2,
-      "emoji": "🔵",
+      "icon": "i-ph-wrench-duotone",
       "title": "Funcții și instrumente"
     },
     {
       "id": 3,
-      "emoji": "🟡",
+      "icon": "i-ph-squares-four-duotone",
       "title": "Tablouri și șiruri"
     },
     {
       "id": 4,
-      "emoji": "🔴",
+      "icon": "i-ph-database-duotone",
       "title": "Memorie și date complexe"
     }
   ],
@@ -29,145 +29,160 @@
       "slug": "01-intro",
       "port": 3031,
       "module": 1,
-      "icon": "🚀",
+      "icon": "i-ph-rocket-launch-duotone",
       "title": "Lecția 1: Introducere în Programare",
       "description": "Ce face un computer, algoritmi, compilare, primul program",
-      "status": "ready"
+      "status": "ready",
+      "published": true
     },
     {
       "num": 2,
       "slug": "02-data-types",
       "port": 3032,
       "module": 1,
-      "icon": "🔢",
+      "icon": "i-ph-shapes-duotone",
       "title": "Lecția 2: Tipuri de date",
       "description": "Tipuri, literali, conversii, operatori.",
-      "status": "ready"
+      "status": "ready",
+      "published": true
     },
     {
       "num": 3,
       "slug": "03-io",
       "port": 3033,
       "module": 1,
-      "icon": "⌨️",
+      "icon": "i-ph-keyboard-duotone",
       "title": "Lecția 3: Input/Output",
-      "description": "printf, scanf și validarea datelor citite."
+      "description": "printf, scanf și validarea datelor citite.",
+      "published": false
     },
     {
       "num": 4,
       "slug": "04-conditionals",
       "port": 3034,
       "module": 1,
-      "icon": "🔀",
+      "icon": "i-ph-git-branch-duotone",
       "title": "Lecția 4: Condiționale",
       "description": "Instrucțiuni condiționale — if, else, switch",
-      "status": "ready"
+      "status": "ready",
+      "published": false
     },
     {
       "num": 5,
       "slug": "05-loops",
       "port": 3035,
       "module": 1,
-      "icon": "🔁",
+      "icon": "i-ph-arrows-clockwise-duotone",
       "title": "Lecția 5: Cicluri",
       "description": "Instrucțiuni ciclice — while, do-while, for",
-      "status": "ready"
+      "status": "ready",
+      "published": false
     },
     {
       "num": 6,
       "slug": "06-functions",
       "port": 3036,
       "module": 2,
-      "icon": "🧩",
+      "icon": "i-ph-puzzle-piece-duotone",
       "title": "Lecția 6: Funcții și recursivitate",
       "description": "Parametri, scope, stiva de apeluri, recursivitate",
-      "status": "ready"
+      "status": "ready",
+      "published": false
     },
     {
       "num": 7,
       "slug": "07-debugging",
       "port": 3037,
       "module": 2,
-      "icon": "🐞",
+      "icon": "i-ph-bug-duotone",
       "title": "Lecția 7: Debugging și bune practici",
-      "description": "gdb, assert, testare, stil de cod."
+      "description": "gdb, assert, testare, stil de cod.",
+      "published": false
     },
     {
       "num": 8,
       "slug": "08-arrays",
       "port": 3038,
       "module": 3,
-      "icon": "📦",
+      "icon": "i-ph-list-numbers-duotone",
       "title": "Lecția 8: Tablouri",
       "description": "Tablouri unidimensionale și căutarea liniară",
-      "status": "ready"
+      "status": "ready",
+      "published": false
     },
     {
       "num": 9,
       "slug": "09-n-arrays",
       "port": 3039,
       "module": 3,
-      "icon": "🧮",
+      "icon": "i-ph-grid-four-duotone",
       "title": "Lecția 9: Tablouri multidimensionale",
       "description": "Matrice și tablouri cu mai multe dimensiuni",
-      "status": "ready"
+      "status": "ready",
+      "published": false
     },
     {
       "num": 10,
       "slug": "10-strings",
       "port": 3040,
       "module": 3,
-      "icon": "🔤",
+      "icon": "i-ph-text-aa-duotone",
       "title": "Lecția 10: Șiruri de caractere",
       "description": "Stringuri în C și funcțiile din <string.h>",
-      "status": "ready"
+      "status": "ready",
+      "published": false
     },
     {
       "num": 11,
       "slug": "11-pointers",
       "port": 3041,
       "module": 4,
-      "icon": "📍",
+      "icon": "i-ph-map-pin-duotone",
       "title": "Lecția 11: Pointeri",
       "description": "Adrese, dereferențiere, pointeri ca parametri",
-      "status": "ready"
+      "status": "ready",
+      "published": false
     },
     {
       "num": 12,
       "slug": "12-dynamic-memory",
       "port": 3042,
       "module": 4,
-      "icon": "💾",
+      "icon": "i-ph-hard-drives-duotone",
       "title": "Lecția 12: Memorie dinamică",
-      "description": "malloc, free, memory leaks, tablouri dinamice"
+      "description": "malloc, free, memory leaks, tablouri dinamice",
+      "published": false
     },
     {
       "num": 13,
       "slug": "13-structs-enums",
       "port": 3043,
       "module": 4,
-      "icon": "🗂️",
+      "icon": "i-ph-cards-duotone",
       "title": "Lecția 13: Structuri și enum",
       "description": "Organizarea datelor complexe",
-      "status": "ready"
+      "status": "ready",
+      "published": false
     },
     {
       "num": 14,
       "slug": "14-files",
       "port": 3044,
       "module": 4,
-      "icon": "📄",
+      "icon": "i-ph-file-text-duotone",
       "title": "Lecția 14: Fișiere",
-      "description": "Citirea și scrierea datelor pe disc"
+      "description": "Citirea și scrierea datelor pe disc",
+      "published": false
     },
     {
       "num": 15,
       "slug": "15-project",
       "port": 3045,
       "module": 4,
-      "icon": "🏗️",
+      "icon": "i-ph-buildings-duotone",
       "title": "Lecția 15: Proiect integrator",
-      "description": "Aplicație completă și pregătire pentru atestare"
+      "description": "Aplicație completă și pregătire pentru atestare",
+      "published": false
     }
   ]
 }

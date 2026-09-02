@@ -15,13 +15,14 @@ lineNumbers: true
 draw:
   enabled: true
 favicon: './C.png'
-addons:
-  - slidev-addon-cpp-runner
+# The c/cpp runners come from common/setup/code-runners.ts (adds stdin support),
+# NOT from slidev-addon-cpp-runner — keep the addon out of this list, or its
+# runner can win over ours depending on setup load order.
 c:
   compiler: 'g++'
   standard: 'c2x'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -29,7 +30,7 @@ cpp:
   compiler: 'g++'
   standard: 'c++17'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -38,10 +39,6 @@ cpp:
 # Fundamentele Programării
 limbajul *`C`*
 
-<div class="absolute top-2 right-2 w-8 h-8">
-<GithubLink />
-</div>
-
 ---
 layout: top-title
 color: blue-light
@@ -50,14 +47,23 @@ align: c
 
 :: title ::
 
-# Lecții
+# Laboratoare, Seminare, Cursuri
 
 :: content ::
 
-<LessonGrid />
-
-<div class="mt-4 text-sm opacity-60">
-Click pe orice card pentru a deschide lecția. Fiecare lecție este o prezentare separată.
+<div class="grid grid-cols-3 gap-6 mt-10 neversink-blue-light-scheme">
+  <div class="p-8 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] flex flex-col items-center gap-4">
+    <span class="i-ph-flask-duotone w-12 h-12 text-[var(--neversink-highlight-color)]" />
+    <div class="text-3xl font-bold">Laboratoare</div>
+  </div>
+  <div class="p-8 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] flex flex-col items-center gap-4">
+    <span class="i-ph-clipboard-text-duotone w-12 h-12 text-[var(--neversink-highlight-color)]" />
+    <div class="text-3xl font-bold">Seminare</div>
+  </div>
+  <div class="p-8 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] flex flex-col items-center gap-4">
+    <span class="i-ph-chalkboard-teacher-duotone w-12 h-12 text-[var(--neversink-highlight-color)]" />
+    <div class="text-3xl font-bold">Cursuri</div>
+  </div>
 </div>
 
 ---
@@ -68,341 +74,83 @@ color: blue-light
 ---
 
 :: title ::
+
 # Notare
 
 :: content ::
-<style>
-.grade-container {
-  display: flex;
-  justify-content: center;
-  align-items: stretch; 
-  gap: 20px;
-  width: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--neversink-fg-color); 
-}
-.grade-box {
-  background-color: var(--neversink-admon-bg-color);
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--neversink-admon-border-color);
-}
-.grade-box.coursework {
-  flex-basis: 65%; 
-}
-.grade-box.exam {
-  flex-basis: 35%;
-  justify-content: center; 
-}
-.grade-title {
-  font-size: 3.2em;
-  font-weight: 600;
-  margin: 0;
-  padding-bottom: 10px; 
-  border-bottom: 2px solid var(--neversink-border-color); 
-  color: var(--neversink-highlight-color); 
-}
-.grade-subtitle {
-  font-size: 1.3em;
-  margin-top: 10px;
-  margin-bottom: 15px; 
-  opacity: 0.9;
-}
-.coursework-details {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px; 
-  flex-grow: 1;
-}
-.detail-item {
-  background-color: var(--neversink-bg-color);
-  padding: 15px;
-  border-radius: 8px;
-  font-size: 1em;
-  font-weight: 500;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: var(--neversink-admon-text-color);
-}
-.detail-item span {
-  display: block;
-  font-weight: bold;
-  font-size: 1.5em;
-  margin-top: 5px; 
-  color: var(--neversink-fg-code-color);
-}
-</style>
 
-<div class="grade-container neversink-blue-light-scheme">
-  <div class="grade-box coursework">
-    <p class="grade-title">60%</p>
-    <p class="grade-subtitle">Activitate Semestrială</p>
-    <div class="coursework-details">
-      <div class="detail-item">Atestare 1 <span>25%</span></div>
-      <div class="detail-item">Atestare 2 <span>25%</span></div>
-      <div class="detail-item">Lecții <span>25%</span></div>
-      <div class="detail-item">Lucrul Individual <span>25%</span></div>
+<div class="flex gap-5 items-stretch mt-6 text-left neversink-blue-light-scheme">
+
+  <div class="basis-2/3 p-5 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="flex items-baseline gap-3 pb-3 border-b border-[var(--neversink-admon-border-color)]">
+      <span class="text-5xl font-bold text-[var(--neversink-highlight-color)]">60%</span>
+      <span class="text-lg opacity-80">Activitate semestrială</span>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mt-4">
+      <div class="p-3 rounded-md bg-[var(--neversink-bg-color)]">
+        <div class="text-xs uppercase tracking-wider opacity-70">Atestare 1</div>
+        <div class="text-2xl font-bold mt-1">25%</div>
+      </div>
+      <div class="p-3 rounded-md bg-[var(--neversink-bg-color)]">
+        <div class="text-xs uppercase tracking-wider opacity-70">Atestare 2</div>
+        <div class="text-2xl font-bold mt-1">25%</div>
+      </div>
+      <div class="p-3 rounded-md bg-[var(--neversink-bg-color)]">
+        <div class="text-xs uppercase tracking-wider opacity-70">Laboratoare</div>
+        <div class="text-2xl font-bold mt-1">25%</div>
+      </div>
+      <div class="p-3 rounded-md bg-[var(--neversink-bg-color)]">
+        <div class="text-xs uppercase tracking-wider opacity-70">Lucru individual</div>
+        <div class="text-2xl font-bold mt-1">25%</div>
+      </div>
     </div>
   </div>
-  
-  <div class="grade-box exam">
-    <p class="grade-title">40%</p>
-    <p class="grade-subtitle">Examen Final</p>
+
+  <div class="basis-1/3 p-5 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] flex flex-col justify-center items-center text-center">
+    <span class="text-5xl font-bold text-[var(--neversink-highlight-color)]">40%</span>
+    <div class="text-lg opacity-80 mt-2">Examen final</div>
   </div>
-</div>
 
----
-transition: slide-left 
-layout: top-title 
-align: c 
-color: blue-light
----
-:: title ::
-
-# Lecții
-
-:: content ::
-
-<style>
-.attendance-container {
-display: flex;
-justify-content: center;
-align-items: stretch;
-gap: 30px;
-width: 100%;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-color: var(--neversink-fg-color);
-margin-top: 2rem;
-}
-.attendance-box {
-background-color: var(--neversink-admon-bg-color);
-padding: 25px;
-border-radius: 12px;
-text-align: center;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-flex-basis: 45%;
-border: 1px solid var(--neversink-admon-border-color);
-}
-.attendance-title {
-font-size: 2.2em;
-font-weight: 600;
-margin: 0;
-padding-bottom: 15px;
-color: var(--neversink-highlight-color);
-}
-.attendance-icon {
-font-size: 4em;
-margin-bottom: 15px;
-color: var(--neversink-fg-code-color);
-}
-.attendance-description {
-font-size: 1.2em;
-opacity: 0.9;
-color: var(--neversink-admon-text-color);
-margin-bottom: 0;
-}
-.attendance-description strong {
-color: var(--neversink-fg-color);
-font-weight: 700;
-}
-.attendance-note {
-font-size: 1em;
-font-style: italic;
-margin-top: 10px;
-opacity: 0.8;
-color: var(--neversink-admon-text-color);
-}
-</style>
-
-<div class="attendance-container neversink-blue-light-scheme">
-<div class="attendance-box">
-<div class="attendance-icon">🧪</div>
-<p class="attendance-title">Lecții</p>
-</div>
-
-<div class="attendance-box">
-<div class="attendance-icon">📝</div>
-<p class="attendance-title">Seminare</p>
-</div>
-
-
-<div class="attendance-box">
-<div class="attendance-icon">👨‍🏫</div>
-<p class="attendance-title">Cursuri</p>
-</div>
-</div>
-
----
-transition: slide-left 
-layout: top-title 
-align: c 
-color: blue-light
----
-
-:: title ::
-
-# Reguli Esențiale
-
-:: content ::
-
-<style>
-.rules-container {
-display: flex;
-justify-content: center;
-align-items: stretch;
-gap: 30px;
-width: 100%;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-color: var(--neversink-fg-color);
-margin-top: 2rem;
-}
-.rules-box {
-background-color: var(--neversink-admon-bg-color);
-padding: 25px;
-border-radius: 12px;
-text-align: center;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-flex-basis: 45%;
-border: 1px solid var(--neversink-admon-border-color);
-}
-.rules-title {
-font-size: 2.2em;
-font-weight: 600;
-margin: 0;
-padding-bottom: 15px;
-color: var(--neversink-highlight-color);
-}
-.rules-icon {
-font-size: 4em;
-margin-bottom: 15px;
-color: var(--neversink-fg-code-color);
-}
-.rules-description {
-font-size: 1.2em;
-opacity: 0.9;
-color: var(--neversink-admon-text-color);
-}
-.rules-description strong {
-color: var(--neversink-fg-color);
-font-weight: 700;
-}
-</style>
-
-<div class="rules-container neversink-blue-light-scheme">
-<div class="rules-box">
-<div class="rules-icon">📅</div>
-<p class="rules-title">Termene Limită</p>
-<p class="rules-description">Respectarea termenelor este <strong>esențială</strong>. Lucrările întârziate nu accepta.</p>
-</div>
-
-<div class="rules-box">
-<div class="rules-icon">⚠️</div>
-<p class="rules-title">Integritate</p>
-<p class="rules-description">Toleranță <strong>zero</strong> pentru plagiat. Toate temele și proiectele trebuie să fie individuale.</p>
-</div>
 </div>
 
 ---
 transition: slide-left
-layout: top-title 
-align: c 
+layout: top-title
+align: c
 color: blue-light
 ---
 
 :: title ::
 
-# Date de Contact
+# Atestări și Examen
 
 :: content ::
 
-<style>
-.presence-container {
-display: flex;
-justify-content: center;
-align-items: stretch;
-gap: 30px;
-width: 100%;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-color: var(--neversink-fg-color);
-margin-top: 2rem;
-}
-.presence-box {
-background-color: var(--neversink-admon-bg-color);
-padding: 25px;
-border-radius: 12px;
-text-align: center;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-flex-basis: 45%;
-border: 1px solid var(--neversink-admon-border-color);
-}
-.presence-title {
-font-size: 2.2em;
-font-weight: 600;
-margin: 0;
-padding-bottom: 15px;
-color: var(--neversink-highlight-color);
-}
-.presence-icon {
-font-size: 4em;
-margin-bottom: 15px;
-color: var(--neversink-fg-code-color);
-}
-.presence-description {
-font-size: 1.2em;
-color: var(--neversink-admon-text-color);
-opacity: 0.9;
-}
-.contact-list {
-text-align: left;
-width: 100%;
-}
-.contact-item {
-display: flex;
-align-items: center;
-margin-bottom: 10px;
-font-size: 1.1em;
-}
-.contact-item-icon {
-margin-right: 15px;
-font-size: 1.5em;
-}
-</style>
-
-<div class="presence-container neversink-blue-light-scheme">
-
-<div class="presence-box">
-<div class="presence-icon">📬</div>
-<p class="presence-title">Contact</p>
-<div class="contact-list">
-<div class="contact-item">
-<span class="contact-item-icon">✉️</span>
-<span>cristian.crudu@usm.md</span>
-</div>
-<div class="contact-item">
-<span class="contact-item-icon">📞</span>
-<span>+373 67 277 471</span>
-</div>
-</div>
-</div>
+<div class="grid grid-cols-3 gap-5 mt-8 text-left neversink-blue-light-scheme">
+  <div class="p-5 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-number-circle-one-duotone block w-8 h-8 text-[var(--neversink-highlight-color)]" />
+    <div class="text-xl font-bold mt-3">Atestare 1</div>
+    <p class="text-sm mt-2 opacity-80">Evaluare teoretică și practică la mijlocul semestrului.</p>
+    <div class="text-xs uppercase tracking-wider opacity-60 mt-3">se susține la seminar</div>
+  </div>
+  <div class="p-5 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-number-circle-two-duotone block w-8 h-8 text-[var(--neversink-highlight-color)]" />
+    <div class="text-xl font-bold mt-3">Atestare 2</div>
+    <p class="text-sm mt-2 opacity-80">A doua evaluare semestrială, pe temele din a doua jumătate.</p>
+    <div class="text-xs uppercase tracking-wider opacity-60 mt-3">se susține la laborator</div>
+  </div>
+  <div class="p-5 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-flag-checkered-duotone block w-8 h-8 text-[var(--neversink-highlight-color)]" />
+    <div class="text-xl font-bold mt-3">Examen final</div>
+    <p class="text-sm mt-2 opacity-80">Verificarea finală a tot ce s-a acumulat peste semestru.</p>
+    <div class="text-xs uppercase tracking-wider opacity-60 mt-3">se susține la curs</div>
+  </div>
 </div>
 
 ---
-transition: slide-left 
-layout: top-title 
-align: c 
+transition: slide-left
+layout: top-title
+align: c
 color: blue-light
 ---
 
@@ -412,119 +160,36 @@ color: blue-light
 
 :: content ::
 
-<style>
-.work-focus-container {
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100%;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-.work-focus-box {
-background-color: var(--neversink-admon-bg-color);
-padding: 30px 40px;
-border-radius: 12px;
-text-align: center;
-max-width: 65%;
-border: 1px solid var(--neversink-admon-border-color);
-}
-.work-focus-icon {
-font-size: 4.5em;
-margin-bottom: 20px;
-color: var(--neversink-fg-code-color);
-}
-.work-focus-text {
-font-size: 1.5em;
-color: var(--neversink-fg-color);
-font-weight: 500;
-line-height: 1.4;
-}
-</style>
+<div class="max-w-4xl mx-auto text-left neversink-blue-light-scheme">
 
-<div class="work-focus-container neversink-blue-light-scheme">
-<div class="work-focus-box">
-<div class="work-focus-icon">💻</div>
-<p class="work-focus-text">
-La sfarsitul semestrului veți avea un mic colocviu. Veti primi intrebari teoretice si sarcini practice pe toate temele care le veti trece pe parcursul anului.
+<p class="text-lg">
+La finalul semestrului susțineți un <strong>colocviu</strong>: singura probă care
+acoperă tot ce am parcurs, dintr-o dată.
 </p>
-</div>
-</div>
 
----
-transition: slide-left 
-layout: top-title 
-align: c 
-color: blue-light
----
-:: title ::
-
-# Atestări & Examen
-
-:: content ::
-
-<style>
-.eval-container {
-display: flex;
-justify-content: center;
-align-items: stretch;
-gap: 20px;
-width: 100%;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-color: var(--neversink-fg-color);
-margin-top: 2rem;
-}
-.eval-box {
-background-color: var(--neversink-admon-bg-color);
-padding: 20px;
-border-radius: 12px;
-text-align: center;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-flex-basis: 30%;
-border: 1px solid var(--neversink-admon-border-color);
-}
-.eval-title {
-font-size: 1.8em;
-font-weight: 600;
-margin: 0;
-padding-bottom: 10px;
-color: var(--neversink-highlight-color);
-}
-.eval-icon {
-font-size: 3.5em;
-margin-bottom: 15px;
-color: var(--neversink-fg-code-color);
-}
-.eval-description {
-font-size: 1.0em;
-opacity: 0.9;
-color: var(--neversink-admon-text-color);
-}
-</style>
-
-<div class="eval-container neversink-blue-light-scheme">
-<div class="eval-box">
-<div class="eval-icon">1️⃣</div>
-<p class="eval-title">Atestare 1</p>
-<p class="eval-description">Evaluare teoretică și practică la mijlocul semestrului.</p>
-<p>(Seminar)</p>
+<div class="grid grid-cols-3 gap-4 mt-6">
+  <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-chat-teardrop-text-duotone block w-7 h-7 text-[var(--neversink-highlight-color)]" />
+    <div class="text-base font-bold mt-2">Întrebări teoretice</div>
+    <p class="text-sm mt-1 opacity-80">Nu definiții pe de rost — de ce funcționează lucrurile așa.</p>
+  </div>
+  <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-code-duotone block w-7 h-7 text-[var(--neversink-highlight-color)]" />
+    <div class="text-base font-bold mt-2">Sarcini practice</div>
+    <p class="text-sm mt-1 opacity-80">Cod scris pe loc, pornind de la o cerință nouă.</p>
+  </div>
+  <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-books-duotone block w-7 h-7 text-[var(--neversink-highlight-color)]" />
+    <div class="text-base font-bold mt-2">Toate temele</div>
+    <p class="text-sm mt-1 opacity-80">Tot materialul semestrului, de la primul laborator la ultimul.</p>
+  </div>
 </div>
 
-<div class="eval-box">
-<div class="eval-icon">2️⃣</div>
-<p class="eval-title">Atestare 2</p>
-<p class="eval-description">A doua evaluare semestrială.</p>
-<p>(Lecție)</p>
-</div>
+<p class="text-base mt-6 opacity-80">
+Pregătirea se face pe parcurs: fiecare laborator dus la capăt este o bucată din
+colocviu rezolvată din timp.
+</p>
 
-<div class="eval-box">
-<div class="eval-icon">🏁</div>
-<p class="eval-title">Examen Final</p>
-<p class="eval-description">Verificarea finală a cunoștințelor acumulate.</p>
-<p>(Curs)</p>
-</div>
 </div>
 
 ---
@@ -536,18 +201,68 @@ color: blue-light
 
 :: title ::
 
-# Scutire de Lecții (Opțional)
+# Scutire de Laboratoare
 
 :: content ::
 
-<div class="mt-8">
-<AdmonitionType type="info" class="text-center text-xl">
+<div class="max-w-4xl mx-auto text-left neversink-blue-light-scheme">
 
-# Studenții care doresc să fie scutiți de lecțiile semestriale pot rezolva și susține **Sarcinile Suplimentare**.
+<p class="text-lg">
+Opțional. Cine vrea să lucreze în ritm propriu poate rezolva <strong>Sarcinile
+Suplimentare</strong> în locul laboratoarelor semestriale.
+</p>
 
-# Aceste sarcini sunt mai complexe și vor fi evaluate mai strict, dar finalizarea lor cu succes va înlocui nota pentru toate lecțiile.
+<div class="grid grid-cols-3 gap-4 mt-6">
+  <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70">Ce sunt</div>
+    <p class="text-sm mt-2">Un set de probleme mai complexe, care acoperă aceleași teme.</p>
+  </div>
+  <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70">Cum se evaluează</div>
+    <p class="text-sm mt-2">Se susțin în fața mea și se notează mai strict decât laboratoarele.</p>
+  </div>
+  <div class="p-4 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70">Ce înlocuiesc</div>
+    <p class="text-sm mt-2">Rezolvate integral, țin loc de nota pentru <strong>toate</strong> laboratoarele.</p>
+  </div>
+</div>
 
-</AdmonitionType>
+<div class="flex items-center gap-3 mt-7 p-4 rounded-lg bg-[var(--neversink-bg-color)] border border-[var(--neversink-border-color)]">
+  <span class="i-ph-file-pdf-duotone w-7 h-7 flex-none text-[var(--neversink-highlight-color)]" />
+  <div>
+    <div class="font-bold">Enunțurile sarcinilor suplimentare</div>
+    <!-- Când PDF-ul e pe Moodle: înlocuiește linia de mai jos cu
+         <a href="URL" target="_blank" rel="noopener">Descarcă PDF-ul (Moodle)</a> -->
+    <div class="text-sm opacity-70">PDF pe Moodle — linkul se publică la începutul semestrului.</div>
+  </div>
+</div>
+
+</div>
+
+---
+transition: slide-left
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Reguli Esențiale
+
+:: content ::
+
+<div class="grid grid-cols-2 gap-6 max-w-4xl mx-auto mt-8 text-left neversink-blue-light-scheme">
+  <div class="p-6 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-calendar-check-duotone block w-9 h-9 text-[var(--neversink-highlight-color)]" />
+    <div class="text-2xl font-bold mt-3">Termene limită</div>
+    <p class="text-base mt-2 opacity-85">Fiecare laborator are data lui de predare. Lucrările întârziate nu se primesc.</p>
+  </div>
+  <div class="p-6 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-shield-warning-duotone block w-9 h-9 text-[var(--neversink-highlight-color)]" />
+    <div class="text-2xl font-bold mt-3">Integritate</div>
+    <p class="text-base mt-2 opacity-85">Toleranță zero pentru plagiat. Codul pe care îl predați trebuie să fie al vostru și să știți să-l explicați.</p>
+  </div>
 </div>
 
 ---
@@ -565,8 +280,8 @@ align: c
 <div class="flex flex-col items-center mt-6">
 <div class="text-left">
 
-Fiecare lecție este o prezentare separată. Navighezi între ele din pagina
-**Lecții**, sau cu butoanele de la finalul fiecărei lecții.
+Fiecare laborator este o prezentare separată. Ajungi la ele din lista
+**Laboratoare**, sau cu butoanele de la finalul fiecărei prezentări.
 
 ### Scurtături tastatură
 
@@ -582,10 +297,126 @@ Fiecare lecție este o prezentare separată. Navighezi între ele din pagina
 
 <AdmonitionType type="tip">
 
-Pentru a te întoarce la lista de lecții de oriunde, click pe butonul 🏠 din
-colțul stânga-sus.
+Butonul <span class="i-ph-house-duotone inline-block w-4 h-4 align-text-bottom" /> din colțul
+stânga-sus te întoarce oricând la lista laboratoarelor.
 
 </AdmonitionType>
 
 </div>
 </div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Fișele Laboratoarelor
+
+:: content ::
+
+Enunțul fiecărui laborator — sarcinile de rezolvat — se publică pe **Moodle**, ca PDF:
+
+<div class="mt-6 neversink-blue-light-scheme">
+
+<LabSheets />
+
+</div>
+
+<div class="mt-6 text-sm opacity-70">
+Prezentarea de la laborator explică materia; fișa spune ce aveți de predat.
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Laboratoare
+
+:: content ::
+
+<LessonGrid />
+
+<div class="mt-4 text-sm opacity-60">
+Se deschid pe rând, pe măsură ce înaintăm prin semestru. Cele cu
+<span class="i-ph-lock-simple-duotone inline-block w-3.5 h-3.5 align-text-bottom" /> nu sunt încă disponibile.
+</div>
+
+---
+transition: slide-left
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Date de Contact
+
+:: content ::
+
+<div class="grid grid-cols-2 gap-6 max-w-4xl mx-auto mt-8 text-left neversink-blue-light-scheme">
+
+  <div class="p-6 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-user-circle-duotone block w-9 h-9 text-[var(--neversink-highlight-color)]" />
+    <div class="text-xl font-bold mt-3">Crudu Cristian</div>
+    <div class="text-xs uppercase tracking-wider opacity-60 mt-1">Laborator</div>
+    <div class="mt-4 flex flex-col gap-2 text-sm">
+      <a class="contact-line" href="mailto:cristian.crudu@usm.md">
+        <span class="i-ph-envelope-simple-duotone" />
+        <span>cristian.crudu@usm.md</span>
+      </a>
+      <a class="contact-line" href="tel:+37367277471">
+        <span class="i-ph-phone-duotone" />
+        <span>+373 67 277 471</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- TODO: numele și adresa celui de-al doilea profesor. -->
+  <div class="p-6 rounded-lg bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <span class="i-ph-user-circle-duotone block w-9 h-9 text-[var(--neversink-highlight-color)]" />
+    <div class="text-xl font-bold mt-3">Nume Prenume</div>
+    <div class="text-xs uppercase tracking-wider opacity-60 mt-1">Curs și seminar</div>
+    <div class="mt-4 flex flex-col gap-2 text-sm">
+      <a class="contact-line" href="mailto:nume.prenume@usm.md">
+        <span class="i-ph-envelope-simple-duotone" />
+        <span>nume.prenume@usm.md</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<style>
+.contact-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  width: fit-content;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.contact-line span:first-child {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  color: var(--neversink-highlight-color);
+}
+.contact-line:hover {
+  color: var(--neversink-highlight-color);
+  border-bottom-color: currentColor;
+}
+.contact-line:focus-visible {
+  outline: 2px solid var(--neversink-highlight-color);
+  outline-offset: 3px;
+}
+</style>

@@ -15,13 +15,14 @@ lineNumbers: true
 draw:
   enabled: true
 favicon: './C.png'
-addons:
-  - slidev-addon-cpp-runner
+# The c/cpp runners come from common/setup/code-runners.ts (adds stdin support),
+# NOT from slidev-addon-cpp-runner — keep the addon out of this list, or its
+# runner can win over ours depending on setup load order.
 c:
   compiler: 'g++'
   standard: 'c2x'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -29,7 +30,7 @@ cpp:
   compiler: 'g++'
   standard: 'c++17'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -123,7 +124,7 @@ while (condiție) {
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {
@@ -159,7 +160,7 @@ color: blue-light
 :: content ::
 
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {
@@ -305,7 +306,7 @@ for (initializare; conditie; actualizare) {
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {
@@ -343,7 +344,7 @@ Să generăm tabla înmulțirii pentru un număr dat, de la 1 la 10.
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {
@@ -415,7 +416,7 @@ Să căutăm primul număr (mai mare ca 1) care divide un număr dat `N`. Odată
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {
@@ -453,7 +454,7 @@ Să afișăm toate numerele de la 1 la 10, dar să sărim peste cele pare folosi
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {
@@ -515,7 +516,7 @@ Să desenăm un dreptunghi de `L` lățime și `H` înălțime folosind un carac
 layout: cover
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {

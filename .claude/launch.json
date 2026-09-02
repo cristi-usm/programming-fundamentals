@@ -1,0 +1,32 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "hub",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "dev:hub"
+      ],
+      "port": 3030
+    },
+    {
+      "name": "dist-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "serve",
+        "dist",
+        "-l",
+        "4173"
+      ],
+      "port": 4173
+    },
+    {
+      "name": "01-intro",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "dev:01-intro"
+      ],
+      "port": 3031
+    }
+  ]
+}

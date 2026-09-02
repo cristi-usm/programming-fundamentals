@@ -15,13 +15,14 @@ lineNumbers: true
 draw:
   enabled: true
 favicon: './C.png'
-addons:
-  - slidev-addon-cpp-runner
+# The c/cpp runners come from common/setup/code-runners.ts (adds stdin support),
+# NOT from slidev-addon-cpp-runner — keep the addon out of this list, or its
+# runner can win over ours depending on setup load order.
 c:
   compiler: 'g++'
   standard: 'c2x'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -29,7 +30,7 @@ cpp:
   compiler: 'g++'
   standard: 'c++17'
   optimization: 'O2'
-  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args'
+  flags: '-Wall -Wextra -pedantic -pthread -pedantic-errors -Wno-format -Wno-format-security -Wno-format-extra-args -Wno-unused-result'
   libraries: '-lm -latomic'
   extraCommands: ''
   alwaysShowCompilerOutput: true
@@ -77,7 +78,7 @@ layout: cover
 color: blue-light
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 // Functia returneaza int* (adresa), nu int
@@ -136,7 +137,7 @@ layout: cover
 color: blue-light
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int este_simetrica(int n, int mat[n][n]) {
@@ -205,7 +206,7 @@ layout: cover
 color: blue-light
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 void my_strcat(char *dest, char *src) {
@@ -280,7 +281,7 @@ layout: cover
 color: blue-light
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 #include <string.h> 
 
@@ -351,7 +352,7 @@ layout: cover
 color: blue-light
 ---
 
-```c {monaco-run}
+```c {monaco-run} {autorun:false}
 #include <stdio.h>
 
 int main() {

@@ -1,9 +1,65 @@
 ---
 name: cpp-runner
-description: Run C and C++ code inside a slide with slidev-addon-cpp-runner — the Coliru compile backend, the c/cpp frontmatter config (compiler, standard, optimization, flags, libraries, extraCommands, alwaysShowCompilerOutput), supported compiler/standard combinations, output prefixes, and the per-slide vs deck-wide config trap. Use when a slide has a runnable C or C++ block or the compile flags need changing.
+description: Run C and C++ code inside a slide with slidev-addon-cpp-runner — the Coliru compile backend, the c/cpp frontmatter config (compiler, standard, optimization, flags, libraries, extraCommands, alwaysShowCompilerOutput, stdin), supported compiler/standard combinations, output prefixes, and the per-slide vs deck-wide config trap. Use when a slide has a runnable C or C++ block, needs scanf input, or the compile flags need changing.
 ---
 
 # slidev-addon-cpp-runner
+
+## ⭐ This repository overrides the addon's runners
+
+`common/setup/code-runners.ts` (re-exported by each deck's `setup/code-runners.ts`)
+replaces the addon's `c`/`cpp` runners. The output area is a **faithful local-terminal
+simulation** — nothing appears that would not appear in a local run:
+
+```
+$ gcc program.c -o program
+$ ./program
+Introduceti doua note: 9 8
+Media este 8.50
+$
+```
+
+No prefixes, no banners. Diagnostics say `program.c` (renamed from Coliru's `main.cpp`).
+When the program blocks on stdin, a borderless inline input sits exactly where the
+local cursor would — a prompt printed without `\n` keeps the caret **on the same
+line**, because what is shown is the program's real output up to the moment it blocked.
+Typed input is echoed like a tty and the session continues; multiple reads = multiple
+waits, each answered separately. Keystrokes don't leak into slide navigation.
+
+**How it works** (and its limits): Coliru is one-shot, so every interaction re-runs the
+program with all input collected so far, under `timeout 2` with `stdbuf -o0` and stdin
+held open — a program needing more input blocks and is killed (exit 124 = "waiting"),
+and only the not-yet-shown output tail is displayed. Consequences: one Coliru round
+trip (~5s) per input line; programs must be **deterministic** (a replay must print the
+same prefix — no `rand()`/time-dependent output before reads); a clean program that
+legitimately runs longer than ~2s reads as "waiting". No source-detection heuristics —
+whether it waits is decided by actual runtime behaviour.
+
+**Pre-fed input** — line N answers the Nth wait, no typing needed:
+
+```yaml
+---
+layout: top-title
+c:
+  stdin: '9 8'        # multi-line: one line per read/wait
+---
+```
+
+Input travels as a quoted heredoc (no escaping — only a literal `__FP_STDIN__` line
+breaks it). Like all runner config, `stdin` is read from the **current slide's**
+frontmatter (see the config-scope trap below). `alwaysShowCompilerOutput` is ignored —
+diagnostics always show, like a local `gcc` would.
+
+⚠️ The addon must stay **out** of the headmatter `addons:` list (sync-headmatter no
+longer emits it) — both register a `c` runner and the addon's can shadow ours. The
+package stays installed; `fix-cpp-runner.sh` still patches it but no longer affects
+behaviour — our defaults already carry the `-Wno-format*` and `-Wno-unused-result`
+flags.
+
+Everything below documents the addon itself, and still applies to our override unless
+said otherwise (we support only `g++`; other compilers fall back to it).
+
+# slidev-addon-cpp-runner (upstream behaviour)
 
 Adds `c` and `cpp` code runners to Slidev's Monaco runner, so ```` ```c {monaco-run} ````
 gets a Run button.

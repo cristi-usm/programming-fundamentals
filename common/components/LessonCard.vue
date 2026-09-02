@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { LESSONS, deckUrl, isDraft, lessonBySlug } from '../lessons'
+import { LESSONS, deckUrl, isPublished, lessonBySlug } from '../lessons'
 import { THEME_CONFIG } from '../theme/config'
 
 /**
@@ -21,9 +21,36 @@ const props = defineProps<{
 
 const lesson = computed(() => (props.slug ? lessonBySlug(props.slug) : undefined))
 
-const icon = computed(() => props.icon ?? lesson.value?.icon ?? '❓')
-const title = computed(() => props.title ?? lesson.value?.title ?? 'În curând')
-const description = computed(() => props.description ?? lesson.value?.description ?? 'În curând')
+/**
+ * Only released decks are links. The rest stay on the grid — students see the
+ * whole semester — but locked, so the card cannot be opened ahead of time.
+ */
+const open = computed(() => !props.disabled && isPublished(lesson.value))
+
+const href = computed(() => (open.value && props.slug ? deckUrl(props.slug) : undefined))
+
+/**
+ * An unreleased lab gives nothing away — a neutral icon and its number, no
+ * subject and no description. The grid shows how many labs there are and how
+ * far we've got, not what is coming.
+ */
+const icon = computed(() => {
+  if (props.icon) return props.icon
+  if (!open.value) return 'i-ph-circle-dashed-duotone'
+  return lesson.value?.icon ?? 'i-ph-question-duotone'
+})
+
+const title = computed(() => {
+  if (props.title) return props.title
+  if (!open.value) return lesson.value ? `Laboratorul ${lesson.value.num}` : 'În curând'
+  return lesson.value?.title ?? 'În curând'
+})
+
+const description = computed(() => {
+  if (props.description) return props.description
+  if (!open.value) return ''
+  return lesson.value?.description ?? ''
+})
 
 /** A lesson is marked done once the active lesson has moved past it. */
 const isCompleted = computed(() => {
@@ -36,14 +63,6 @@ const isCompleted = computed(() => {
 })
 
 const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.currentLesson)
-
-/** Scaffolded but unwritten decks stay clickable — just visibly marked. */
-const draft = computed(() => !!lesson.value && isDraft(lesson.value))
-
-const href = computed(() => {
-  if (!props.slug || props.disabled) return undefined
-  return deckUrl(props.slug)
-})
 </script>
 
 <template>
@@ -51,16 +70,22 @@ const href = computed(() => {
     :is="href ? 'a' : 'div'"
     :href="href"
     class="lesson-card"
-    :class="{ complete: isCompleted, current: isCurrent, disabled: !href }"
+    :class="{ complete: isCompleted, current: isCurrent, locked: !href }"
+    :aria-disabled="href ? undefined : 'true'"
   >
-    <div class="lesson-card-icon">{{ icon }}</div>
+    <span class="lesson-card-icon" :class="icon" />
     <div class="lesson-card-content">
       <h3>{{ title }}</h3>
+      <!-- Kept even when empty, so a locked card is the same height as an open one. -->
       <p>{{ description }}</p>
     </div>
-    <div v-if="isCompleted" class="lesson-card-status">✅</div>
-    <div v-else-if="isCurrent" class="lesson-card-status">▶️</div>
-    <span v-if="draft" class="lesson-card-draft" title="Deck-ul nu este încă scris">schelet</span>
+    <span v-if="isCompleted && open" class="lesson-card-status i-ph-check-circle-fill" />
+    <span v-else-if="isCurrent && open" class="lesson-card-status i-ph-play-circle-fill" />
+    <span
+      v-else-if="!open"
+      class="lesson-card-status lesson-card-lock i-ph-lock-simple-duotone"
+      title="Se deschide la momentul potrivit"
+    />
   </component>
 </template>
 
@@ -71,30 +96,47 @@ const href = computed(() => {
   text-align: left;
   text-decoration: none;
   color: inherit;
-  background: rgba(120, 113, 108, 0.06);
-  border: 1px solid rgba(120, 113, 108, 0.25);
+  background: #fff;
+  border: 1px solid var(--neversink-admon-border-color);
   border-radius: 8px;
   padding: 0.55rem 0.7rem;
-  transition: all 0.2s ease;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s ease,
+    border-color 0.2s ease;
   height: 100%;
   max-width: 100%;
   overflow: hidden;
   position: relative;
 }
 
-.lesson-card:not(.disabled) {
+.lesson-card:not(.locked) {
   cursor: pointer;
+  border-color: var(--neversink-border-color);
 }
 
-.lesson-card:not(.disabled):hover {
-  background: rgba(120, 113, 108, 0.14);
-  border-color: rgba(120, 113, 108, 0.5);
+.lesson-card:not(.locked):hover {
+  background: var(--neversink-admon-bg-color);
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 14px -6px rgba(15, 23, 42, 0.35);
 }
 
-.lesson-card.disabled {
-  opacity: 0.45;
+.lesson-card:not(.locked):focus-visible {
+  outline: 2px solid var(--neversink-highlight-color);
+  outline-offset: 2px;
+}
+
+/* Locked cards still read as part of the semester — just not openable yet. */
+.lesson-card.locked {
+  background: color-mix(in srgb, var(--neversink-admon-bg-color) 45%, #fff);
+  cursor: default;
+}
+
+.lesson-card.locked .lesson-card-icon,
+.lesson-card.locked h3,
+.lesson-card.locked p {
+  opacity: 0.55;
 }
 
 .lesson-card.complete {
@@ -102,7 +144,7 @@ const href = computed(() => {
   background: rgba(74, 222, 128, 0.05);
 }
 
-.lesson-card.complete:hover {
+.lesson-card.complete:not(.locked):hover {
   background: rgba(74, 222, 128, 0.12);
   border-color: rgba(74, 222, 128, 0.7);
 }
@@ -113,13 +155,11 @@ const href = computed(() => {
 }
 
 .lesson-card-icon {
-  font-size: 1.4rem;
-  margin-right: 0.55rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.6rem;
   flex-shrink: 0;
-  width: 1.7rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: var(--lesson-accent, var(--neversink-highlight-color));
 }
 
 .lesson-card-content {
@@ -147,6 +187,7 @@ const href = computed(() => {
   opacity: 0.85;
   font-size: 0.68rem;
   line-height: 1.25;
+  min-height: 0.85rem;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -155,20 +196,18 @@ const href = computed(() => {
 
 .lesson-card-status {
   margin-left: 0.5rem;
-  font-size: 1.1rem;
+  width: 1rem;
+  height: 1rem;
   flex-shrink: 0;
+  color: var(--neversink-highlight-color);
 }
 
-.lesson-card-draft {
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 0.55rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 0.05rem 0.35rem;
-  border-radius: 0 8px 0 6px;
-  background: rgba(245, 158, 11, 0.25);
-  color: #b45309;
+.lesson-card.complete .lesson-card-status {
+  color: #4ade80;
+}
+
+.lesson-card-lock {
+  color: var(--neversink-text-color);
+  opacity: 0.35;
 }
 </style>
