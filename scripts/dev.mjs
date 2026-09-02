@@ -118,7 +118,7 @@ procs:
 ${procs}
 `
 
-  const configPath = path.join(os.tmpdir(), 'programming-fundamentals-lab-mprocs.yaml')
+  const configPath = path.join(os.tmpdir(), 'programming-fundamentals-mprocs.yaml')
   fs.writeFileSync(configPath, config, 'utf8')
 
   const child = spawn('mprocs', ['--config', configPath, '--proc-list-title', 'Prezentări'], {

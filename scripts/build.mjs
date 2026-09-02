@@ -17,7 +17,7 @@
  * Usage:
  *   node scripts/build.mjs
  *   node scripts/build.mjs --only 05-arrays        # rebuild one deck in place
- *   BASE_PATH=/programming-fundamentals-lab node scripts/build.mjs
+ *   BASE_PATH=/programming-fundamentals node scripts/build.mjs
  */
 
 import { execFileSync } from 'node:child_process'

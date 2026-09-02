@@ -57,7 +57,7 @@ export function childEnv(extra = {}) {
   const env = { ...process.env, ...extra }
 
   if (localStorageIsBroken()) {
-    const file = path.join(os.tmpdir(), 'programming-fundamentals-lab-localstorage')
+    const file = path.join(os.tmpdir(), 'programming-fundamentals-localstorage')
     env.NODE_OPTIONS = `${env.NODE_OPTIONS ?? ''} --localstorage-file=${file}`.trim()
   }
 

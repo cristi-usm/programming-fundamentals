@@ -1,6 +1,6 @@
 {
   "$comment": "Single source of truth for the lesson structure. Read at build time by scripts/*.mjs and at runtime by common/lessons.ts. Adding an entry here makes the lesson appear on the hub grid and gives it a dev port.",
-  "repo": "https://github.com/cristi-usm/programming-fundamentals-lab",
+  "repo": "https://github.com/cristi-usm/programming-fundamentals",
   "modules": [
     {
       "id": 1,

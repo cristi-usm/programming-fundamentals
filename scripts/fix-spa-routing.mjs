@@ -4,7 +4,7 @@
  * SPA routing fallback for static hosts (GitHub Pages in particular).
  *
  * Each deck is an independent Slidev SPA. A deep link like
- * /programming-fundamentals-lab/05-arrays/12 is not a real file, so the host serves a 404
+ * /programming-fundamentals/05-arrays/12 is not a real file, so the host serves a 404
  * instead of the deck. Two things fix that:
  *
  *   1. Every deck gets a 404.html that is a copy of its own index.html, so the

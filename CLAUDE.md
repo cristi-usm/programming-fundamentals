@@ -118,7 +118,7 @@ skill.
 ## 5. Repository layout
 
 ```
-programming-fundamentals-lab/
+programming-fundamentals/
 ├── slides/                    # one independent deck per lesson
 │   ├── 00-hub/                # landing page / table of contents (port 3030)
 │   ├── 01-intro/              (port 3031)
@@ -135,7 +135,7 @@ programming-fundamentals-lab/
 └── README.md                  # quick start (Romanian)
 ```
 
-Each `slides/*` is an independent pnpm workspace (`@programming-fundamentals-lab/<name>`)
+Each `slides/*` is an independent pnpm workspace (`@programming-fundamentals/<name>`)
 with its own `package.json`, `vite.config.ts`, `setup/main.ts` and dev port.
 
 ### Why one deck per lesson
@@ -306,7 +306,7 @@ earlier lessons show ✅ in the hub grid, this one ▶️.
 ```bash
 pnpm build                                   # everything into dist/
 node scripts/build.mjs --only 08-arrays      # rebuild a single deck in place
-BASE_PATH=/programming-fundamentals-lab pnpm build
+BASE_PATH=/programming-fundamentals pnpm build
 pnpm preview
 ```
 

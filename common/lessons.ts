@@ -61,7 +61,7 @@ function isDev(): boolean {
 }
 
 /**
- * Segments of this deck's own base, e.g. `['programming-fundamentals-lab', '05-arrays']`.
+ * Segments of this deck's own base, e.g. `['programming-fundamentals', '05-arrays']`.
  *
  * Each deck is built with `--base <BASE_PATH>/<slug>/` (see scripts/build.mjs),
  * and Vite bakes that into `import.meta.env.BASE_URL`. Reading it there is exact
