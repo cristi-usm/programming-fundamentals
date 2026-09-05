@@ -41,10 +41,10 @@
       "port": 3032,
       "module": 1,
       "icon": "i-ph-shapes-duotone",
-      "title": "Lecția 2: Tipuri de date",
-      "description": "Tipuri, literali, conversii, operatori.",
+      "title": "Lecția 2: Variabile și tipuri de date",
+      "description": "Biți și bytes, variabile, tipurile din C, operatori și conversii.",
       "status": "ready",
-      "published": false
+      "published": true
     },
     {
       "num": 3,

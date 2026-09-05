@@ -47,15 +47,27 @@ align: c
 
 :: title ::
 
-# De ce este `scanf` mai greu decât pare?
+# Poarta de Intrare a Programului
 
 :: content ::
 
 Un program care nu poate citi date de la utilizator calculează mereu același
-lucru. `scanf` este poarta de intrare — și cea mai frecventă sursă de bug-uri
-din primul semestru.
+lucru. `scanf` este poarta de intrare, iar în lecția 2 am folosit-o ca pe o
+rețetă: specificator, `&`, gata.
 
-> **Schelet** — de completat.
+<div class="text-center text-xl mt-10 max-w-3xl mx-auto">
+Azi vedem ce se întâmplă când utilizatorul <strong>nu</strong> tastează ce
+așteptam, pentru că exact acolo se nasc cele mai multe bug-uri din primul
+semestru.
+</div>
+
+<FlowSteps class="mt-10" :size="0.85" :steps="[
+  { label: 'tastatura', sub: 'ce tastează omul' },
+  { label: 'buffer', sub: 'coada de caractere', kind: 'file', via: 'Enter' },
+  { label: 'variabile', kind: 'file', via: 'scanf' },
+  { label: 'ecranul', sub: 'output', via: 'printf', highlight: true },
+]" caption="între tastatură și variabila voastră există o coadă de caractere; ea explică aproape toate surprizele" />
+
 ---
 layout: top-title
 color: blue-light
@@ -64,13 +76,46 @@ align: c
 
 :: title ::
 
-# Format specifiers la `printf`
+# Lățime, Precizie, Aliniere
 
 :: content ::
 
-`%d`, `%f`, `%c`, `%s`, `%lf` — lățime, precizie, aliniere.
+Între `%` și literă încap opțiuni: **lățimea** câmpului și **precizia**
+zecimalelor, de ajuns pentru tabele aliniate.
 
-> **Schelet** — de completat.
+<div class="grid grid-cols-2 gap-6 mt-4 items-center">
+<div>
+
+```c
+double medie = 8.7561;
+
+printf("%f\n", medie);      // 8.756100
+printf("%.2f\n", medie);    // 8.76
+printf("%8.2f\n", medie);   //     8.76
+printf("%-8.2f|\n", medie); // 8.76    |
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- `.2` înseamnă două zecimale, **rotunjite** la afișare.
+- `8` înseamnă minim 8 caractere, umplute cu spații la stânga.
+- `-` aliniază la stânga.
+- Valoarea din memorie **nu se schimbă**, ci doar afișarea.
+
+</div>
+</div>
+
+<div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)] font-mono text-sm mt-6 text-left">
+Produs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pret<br/>
+Paine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.50<br/>
+Lapte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12.75
+</div>
+
+<div class="text-center text-sm mt-2 opacity-75">
+un tabel aliniat, făcut doar din <code>%-10s</code> și <code>%8.2f</code>
+</div>
+
 ---
 layout: top-title
 color: blue-light
@@ -79,15 +124,30 @@ align: c
 
 :: title ::
 
-# `scanf` și capcanele lui
+# Tabelul, Rulat
 
 :: content ::
 
-- de ce `&` la variabile, dar nu la array-uri
-- `\n` rămas în buffer după `scanf("%d")`
-- ce întoarce `scanf` și de ce trebuie verificat
+Aceleași două specificatori, într-un program complet. Schimbați lățimile și
+rulați din nou ca să vedeți coloanele mutându-se:
 
-> **Schelet** — de completat.
+```c {monaco-run} {autorun:false}
+#include <stdio.h>
+
+int main(void) {
+    printf("%-10s %8s\n", "Produs", "Pret");
+    printf("%-10s %8.2f\n", "Paine", 8.5);
+    printf("%-10s %8.2f\n", "Lapte", 12.75);
+    printf("%-10s %8.2f\n", "Ciocolata", 6.2);
+    return 0;
+}
+```
+
+<div class="text-sm mt-4 opacity-80 text-center">
+Coloana din stânga este lată de 10 și aliniată la stânga; cea din dreapta este
+lată de 8 și aliniată la dreapta, ceea ce pune virgulele una sub alta.
+</div>
+
 ---
 layout: top-title
 color: blue-light
@@ -96,13 +156,245 @@ align: c
 
 :: title ::
 
-# Validarea datelor citite
+# scanf Întoarce un Număr
 
 :: content ::
 
-Ce facem când utilizatorul introduce text acolo unde așteptam un `int`.
+`scanf` nu este o instrucțiune care "reușește mereu". Este o funcție care
+întoarce **câte valori a reușit să citească**, iar acel număr este singurul fel
+în care aflați dacă a mers.
 
-> **Schelet** — de completat.
+<div class="grid grid-cols-2 gap-6 mt-6 items-center">
+<div>
+
+```c
+int nota;
+int citite = scanf("%d", &nota);
+
+// citite == 1  → am primit un întreg
+// citite == 0  → utilizatorul a scris text
+// citite == EOF → nu mai vine nimic
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- La `scanf("%d %d", &a, &b)` valoarea așteptată este `2`.
+- Dacă `citite` este `0`, variabila **nu a fost atinsă**, deci conține tot
+  gunoiul de la declarare.
+- Ignorând valoarea întoarsă, programul calculează liniștit cu gunoi.
+
+</div>
+</div>
+
+<div class="mt-6">
+
+<AdmonitionType type="important" title="Regula">
+
+Orice `scanf` dintr-un program care va fi notat își verifică rezultatul.
+`if (scanf("%d", &nota) != 1) { … }` este forma pe care o veți scrie de acum
+înainte.
+
+</AdmonitionType>
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Enter-ul Rămâne în Coadă
+
+:: content ::
+
+Când tastați `9` și apăsați Enter, în buffer ajung **două** caractere: `9` și
+`\n`. `scanf("%d")` ia cifra și **lasă `\n` acolo**, pentru că nu face parte
+din număr.
+
+<MemoryCells class="mt-6" :size="130"
+  :cells="[
+    { addr: 'primul', value: '9' },
+    { addr: 'al doilea', value: '\\n' },
+  ]"
+  :continues="false"
+  :label="'BUFFER'"
+  :vars="[
+    { start: 0, len: 1, name: 'luat de %d' },
+    { start: 1, len: 1, name: 'rămas acolo', highlight: true },
+  ]"
+  caption='bufferul după citirea unui întreg: cifra a plecat, Enter-ul a rămas'
+/>
+
+<div class="ns-c-tight text-base mt-6">
+
+- Pentru numere nu contează: `%d`, `%f` și `%lf` **sar peste** spații albe,
+  inclusiv peste `\n`.
+- Pentru caractere contează enorm: `scanf("%c", &raspuns)` citește exact
+  caracterul următor, adică Enter-ul rămas, nu litera pe care o așteptați.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Capcana lui %c
+
+:: content ::
+
+Programul de mai jos pare corect și nu așteaptă niciodată răspunsul.
+Rulați-l, tastați `9` și Enter, apoi urmăriți ce afișează:
+
+```c {monaco-run} {autorun:false}
+#include <stdio.h>
+
+int main(void) {
+    int nota;
+    char raspuns;
+
+    printf("Nota: ");
+    scanf("%d", &nota);
+
+    printf("Salvam? (d/n): ");
+    scanf("%c", &raspuns);        // ia Enter-ul rămas, nu litera
+
+    printf("Nota %d, raspuns '%c'\n", nota, raspuns);
+    return 0;
+}
+```
+
+<div class="text-sm mt-4 opacity-80 text-center">
+Soluția are un singur caracter: <code>scanf(" %c", &raspuns)</code>. Spațiul
+din față îi spune lui <code>scanf</code> să sară peste spațiile albe rămase.
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Curățarea Bufferului
+
+:: content ::
+
+Când `scanf` **eșuează**, textul greșit rămâne în coadă. Dacă cereți din nou
+fără să-l scoateți, al doilea `scanf` dă peste același text și eșuează la fel,
+la nesfârșit.
+
+<div class="grid grid-cols-2 gap-6 mt-6 items-center">
+<div>
+
+```c
+int c;
+while ((c = getchar()) != '\n' && c != EOF) {
+    // aruncăm tot până la capătul liniei
+}
+```
+
+</div>
+<div class="ns-c-tight text-base">
+
+- `getchar()` scoate **un caracter** din buffer și îl întoarce.
+- Bucla merge până la `\n`, adică până la capătul liniei greșite.
+- `EOF` oprește bucla dacă nu mai vine nimic, ca programul să nu se blocheze.
+- Despre `while` vorbim pe larg în lecția 5; deocamdată este o rețetă.
+
+</div>
+</div>
+
+<div class="mt-6">
+
+<AdmonitionType type="warning" title="fflush(stdin) nu este soluția">
+
+Veți găsi `fflush(stdin)` prin exemple de pe internet. Standardul C nu îl
+definește pentru intrare: pe Windows pare că merge, pe Linux nu face nimic.
+Folosiți bucla de mai sus.
+
+</AdmonitionType>
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Validarea, Cap-Coadă
+
+:: content ::
+
+Cele trei bucăți puse împreună: cerem, verificăm rezultatul, curățăm ce a
+rămas. Rulați și tastați `abc` în loc de un număr:
+
+```c {monaco-run} {autorun:false}
+#include <stdio.h>
+
+int main(void) {
+    int nota;
+
+    printf("Introduceti nota: ");
+    if (scanf("%d", &nota) != 1) {
+        printf("Nu ati introdus un numar intreg.\n");
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) { }
+        return 1;
+    }
+
+    if (nota < 1 || nota > 10) {
+        printf("Nota %d este in afara intervalului 1-10.\n", nota);
+        return 1;
+    }
+
+    printf("Nota acceptata: %d\n", nota);
+    return 0;
+}
+```
+
+<div class="text-sm mt-3 opacity-80 text-center">
+Două verificări diferite: prima întreabă "am primit un întreg?", a doua
+"întregul primit are sens?". Programul are nevoie de amândouă.
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Ce Luăm cu Noi
+
+:: content ::
+
+<div class="ns-c-tight text-lg mt-6 max-w-4xl mx-auto text-left">
+
+- Între lățime și precizie, `printf` aliniază orice tabel: `%-10s` și `%8.2f`.
+- `scanf` întoarce **câte valori a citit**, iar acel număr se verifică
+  întotdeauna.
+- La eșec, variabila rămâne neatinsă, deci plină cu gunoi.
+- Enter-ul rămâne în buffer. Numerele îl ignoră, `%c` nu, iar leacul este
+  spațiul din `" %c"`.
+- Textul greșit se curăță cu o buclă `getchar()`, nu cu `fflush(stdin)`.
+- "Am citit ceva" și "ceea ce am citit are sens" sunt două verificări
+  separate.
+
+</div>
+
 ---
 layout: top-title
 color: blue-light

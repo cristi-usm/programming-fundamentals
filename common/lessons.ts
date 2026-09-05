@@ -132,11 +132,20 @@ export function lessonBySlug(slug: string | null): Lesson | undefined {
   return LESSONS.find(l => l.slug === slug)
 }
 
-/** Previous and next lesson relative to `slug`, for end-of-deck navigation. */
+/**
+ * Previous and next lesson relative to `slug`, for end-of-deck navigation.
+ *
+ * Unpublished lessons are skipped: the hub already locks them, and a `<DeckNav>`
+ * that links straight into a deck we have not taught yet hands out the same
+ * material through the back door. The links open up on their own as `published`
+ * moves forward through the semester.
+ */
 export function neighbours(slug: string | null): { prev?: Lesson; next?: Lesson } {
   const index = LESSONS.findIndex(l => l.slug === slug)
   if (index === -1) return {}
-  return { prev: LESSONS[index - 1], next: LESSONS[index + 1] }
+  const before = LESSONS.slice(0, index).filter(isPublished)
+  const after = LESSONS.slice(index + 1).filter(isPublished)
+  return { prev: before[before.length - 1], next: after[0] }
 }
 
 export function lessonsOfModule(moduleId: number): Lesson[] {

@@ -43,6 +43,12 @@ Two more editing surfaces:
 
 ## Speaker notes
 
+> ⚠️ **This course does not use them.** No deck may contain a trailing `<!-- … -->`
+> block — see *No presenter notes* in `CLAUDE.md` §4. Anything worth saying goes on the
+> slide; maintainer rationale goes in `CLAUDE.md` or a skill. The rest of this section
+> documents the Slidev feature so the syntax is recognisable when it turns up in
+> upstream examples.
+
 A comment block **at the end** of a slide is its note; Markdown and HTML render.
 
 ```md

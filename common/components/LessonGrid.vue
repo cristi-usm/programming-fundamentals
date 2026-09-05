@@ -97,15 +97,17 @@ const columns = computed(() =>
     color-mix(in srgb, var(--neversink-highlight-color) 14%, transparent) 100%
   );
   background-size: 200% 100%;
-  animation: column-sweep 2.4s ease-in-out infinite;
+  animation: column-sweep 2.4s linear infinite;
 }
 
+/* One full tile of travel (120% → -80% is a 200% shift), so the last frame is
+   pixel-identical to the first and the loop has no seam. */
 @keyframes column-sweep {
   0% {
     background-position: 120% 0;
   }
   100% {
-    background-position: -20% 0;
+    background-position: -80% 0;
   }
 }
 

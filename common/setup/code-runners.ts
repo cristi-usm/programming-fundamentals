@@ -185,6 +185,16 @@ function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunner
   })
   root.appendChild(input)
 
+  // The caret is a 2ch-wide borderless field: once it loses focus there is
+  // nothing left to aim at. A real terminal takes a click anywhere in its area,
+  // so this one does too. `click` rather than `mousedown`, and only when nothing
+  // is selected, so that copying output still works.
+  root.addEventListener('click', () => {
+    if (input.style.display === 'none') return
+    if (window.getSelection()?.toString()) return
+    input.focus()
+  })
+
   // While Coliru is compiling/running there is nothing to show and a slide that
   // sits blank for two seconds looks broken in front of a class. A pulsing
   // caption says which step we are on.
@@ -211,6 +221,7 @@ function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunner
   const inputs: string[] = []
 
   const finishSession = () => {
+    root.style.cursor = ''
     input.remove()
     print('$ ')
   }
@@ -261,6 +272,8 @@ function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunner
         input.style.display = 'inline-block'
         input.value = ''
         input.style.width = '2ch'
+        // Says the whole block is clickable, and that typing goes here.
+        root.style.cursor = 'text'
         input.focus()
       }
       else {

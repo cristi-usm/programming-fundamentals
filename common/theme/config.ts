@@ -11,7 +11,7 @@ export const THEME_CONFIG = {
 
   // Slug of the lesson currently being taught. Earlier lessons are marked complete on
   // the hub grid; this one is marked as active. Set to '' to mark none.
-  currentLesson: '01-intro' as string,
+  currentLesson: '02-data-types' as string,
 
   // Extra CSS variables set on :root, e.g. { '--custom-accent': '#78716c' }.
   customVars: {} as Record<string, string>,

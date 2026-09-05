@@ -83,15 +83,6 @@ color: blue-light
 
 </div>
 
-<!--
-Primul sens este circular: „programare = acțiunea de a programa". Lăsați clasa
-să observe asta. De aceea „a programa" este marcat. Abia al doilea sens spune
-ceva, și el apare la click ca răspuns la cuvântul marcat.
-
-Lista este scrisă ca HTML, nu ca listă markdown, pentru că v-click trebuie pus
-pe UN singur element. În lecțiile arhivate reveal-ul dispare și ambele sensuri
-se văd deodată (vezi CLAUDE.md §4).
--->
 
 ---
 layout: top-title
@@ -157,24 +148,6 @@ Niciun pas nu poate fi sărit. Și niciunul mutat din loc.
 
 </div>
 
-<!--
-Ritmul slide-ului: stânga se vede din start. Citiți propoziția și întrebați
-clasa cum i-ar spune asta unui computer. Lăsați-i să încerce ÎNAINTE de primul
-click; de-aia dreapta e goală la început.
-
-Apoi click: apare cardul din dreapta, gol, și pașii vin unul câte unul. Fiecare
-click este un pas pe care cineva din clasă l-a spus (sau l-a uitat). Sub listă,
-<AverageMachine> execută pasul: tile-urile se aprind, suma urcă 17 → 27, apoi
-apare media. Ultimul click aduce concluzia.
-
-Arătați suma URCÂND, nu rezultatul gata calculat. Asta e diferența dintre „27"
-și „computerul a adunat 8 cu 9, apoi a adăugat 10".
-
-Lista e HTML, nu markdown, pentru ca v-click sa poata sta pe fiecare <li>.
-Numerele din v-click="N" sunt obligatorii aici: pasii sunt IMBRICATI in cardul
-care are si el v-click, iar fara numere ordinea clickurilor nu urmeaza ordinea
-vizuala, iar unele clickuri nu schimba nimic pe ecran.
--->
 
 ---
 layout: top-title
@@ -248,19 +221,6 @@ Computerul nu vede lista așa cum o vedem noi. La orice moment ține minte
 
 </div>
 
-<!--
-Un click = un număr. Cele cinci clickuri plimbă cursorul prin listă, iar al
-șaselea încheie parcurgerea și aduce concluzia. Mergeți în ritmul în care
-vorbiți: la fiecare număr întrebați clasa „ține minte sau merge mai departe?".
-
-Întrebarea de pus la final: „de ce nu se uită pur și simplu la toată lista?"
-Răspunsul: nu are ochi, are un singur loc în care ține minte ceva. Asta
-pregătește slide-urile despre ce face și ce NU face un computer.
-
-v-click="6" de pe concluzie nu este decorativ: el este cel care îi spune lui
-Slidev că slide-ul are 6 clickuri. În lecțiile arhivate transformer-ul îl șterge,
-clicksTotal devine 0, iar <MaxScan> pornește singur în buclă (vezi componenta).
--->
 
 ---
 layout: top-title
@@ -537,17 +497,6 @@ Teoretic, am putea scrie chiar noi codul mașină. Practic, nu.
 
 </div>
 
-<!--
-click 1: apare peretele de cod mașină
-click 2: badge-ul „× 1.000.000" și peretele continuă dincolo de margine
-click 3: un 0 devine 1, roșu. ÎNTREBAȚI clasa care s-a schimbat înainte să
-          arătați; faptul că nu se vede ESTE argumentul
-click 4: același început de funcție, alt procesor: peretele se rescrie
-
-v-click="4" de pe ultimul punct este și cel care îi spune lui Slidev că slide-ul
-are 4 clickuri. În lecțiile arhivate dispare, clicksTotal devine 0, iar
-<BinaryWall> rulează singur în buclă.
--->
 
 ---
 layout: top-title
@@ -645,14 +594,6 @@ color: blue-light
 <CompilePipeline class="mt-4" />
 
 
-<!--
-Slide-ul nu predă etapele, ci arată că „compilarea" e o mașinărie, nu un pas.
-Nu citiți diagrama pe rând; lăsați-o să ruleze 10–15 secunde și spuneți doar
-că fiecare fișier .c trece singur prin tot lanțul, iar bibliotecile se lipesc
-abia la final.
-
-Detaliile revin în lecția 7, când erorile de linking chiar contează.
--->
 
 ---
 layout: top-title
@@ -756,13 +697,6 @@ oricăruia dintre ele.
 
 </div>
 
-<!--
-Nu insistați pe definiții: axele există doar ca să aibă sens harta de pe
-slide-ul următor.
-
-Pentru „tipizare" ajunge un exemplu spus cu voce: în Python puteți atribui un
-text unei variabile care ținea un număr; în C, compilatorul respinge programul.
--->
 
 ---
 layout: top-title

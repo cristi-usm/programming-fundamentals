@@ -82,9 +82,9 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
     <span v-else class="lesson-card-num">{{ lesson?.num ?? '·' }}</span>
 
     <div v-if="open" class="lesson-card-content">
-      <h3>{{ title }}</h3>
+      <h3 :title="title">{{ title }}</h3>
       <!-- Kept even when empty, so a locked card is the same height as an open one. -->
-      <p>{{ description }}</p>
+      <p :title="description">{{ description }}</p>
     </div>
     <!-- Same box, same height — only the content is a placeholder. -->
     <div v-else class="lesson-card-content lesson-card-skeleton" aria-label="Se deschide mai târziu">
@@ -132,6 +132,23 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
   background: var(--neversink-admon-bg-color);
   transform: translateY(-2px);
   box-shadow: 0 6px 14px -6px rgba(15, 23, 42, 0.35);
+  /* A long title is clipped at rest; hovering lets it wrap to its full length.
+     The card grows over its neighbours instead of pushing the grid around. */
+  overflow: visible;
+  height: auto;
+  min-height: 100%;
+  z-index: 2;
+}
+
+.lesson-card:not(.locked):hover .lesson-card-content {
+  overflow: visible;
+}
+
+.lesson-card:not(.locked):hover h3,
+.lesson-card:not(.locked):hover p {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .lesson-card:not(.locked):focus-visible {
@@ -177,7 +194,7 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
     color-mix(in srgb, var(--neversink-highlight-color) 12%, transparent) 100%
   );
   background-size: 200% 100%;
-  animation: skeleton-sweep 2.4s ease-in-out infinite;
+  animation: skeleton-sweep 2.4s linear infinite;
 }
 
 .skeleton-title {
@@ -199,12 +216,14 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
   animation-delay: 1.1s;
 }
 
+/* One full tile of travel (120% → -80% is a 200% shift), so the last frame is
+   pixel-identical to the first and the loop has no seam. */
 @keyframes skeleton-sweep {
   0% {
     background-position: 120% 0;
   }
   100% {
-    background-position: -20% 0;
+    background-position: -80% 0;
   }
 }
 

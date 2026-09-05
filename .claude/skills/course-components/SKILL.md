@@ -187,28 +187,111 @@ fades the wall back when it is a backdrop rather than the subject.
 
 ## `<MemoryCells>`
 
-A strip of memory: name above the box, address below, content inside.
+A run of memory, drawn as it is: byte cells that touch, with consecutive addresses
+underneath. What makes it a *type* drawing rather than a row of boxes is `vars` — a
+named bracket spanning the cells one variable owns.
 
 ```markdown
 <MemoryCells
-  :cells="[
-    { addr: '…04', value: '8', name: 'nota', highlight: true },
-    { addr: '…08', value: '?' },
+  :base="1000"
+  :cells="[{ value: '97' }, { value: '0' }, { value: '0' }, { value: '0' }, { value: '8' }]"
+  :vars="[
+    { start: 0, len: 1, name: 'litera', type: 'char' },
+    { start: 1, len: 4, name: 'nota', type: 'int', highlight: true },
   ]"
-  caption="numele este al vostru — procesorul lucrează doar cu adresa"
+  caption="un char ia o cutie; un int ia patru, citite împreună"
 />
 ```
 
-`value` is free text, so `?`, `\0` and `garbage` all work — which is what the arrays,
-strings and dynamic-memory lessons need.
+`start` is an index into `cells`, `len` the number of bytes. `base` numbers the
+addresses from there by one; pass each cell its own `addr` instead when the numbers
+should be elided (`…04`). `value` is free text, so `?`, `\0` and `gunoi` all work,
+which is what the arrays, strings and dynamic-memory lessons need.
 
-The strip sits on a "RAM" board (`label` prop, default `RAM`) with faded `⋯`
-half-cells at both ends (`:continues="false"` to disable) and a small legend —
-the drawing says memory continues beyond the window shown.
+The strip sits on a labelled board (`label`, default `MEMORIE`) with faded `⋯`
+half-cells at both ends (`:continues="false"` to disable, e.g. when stacking several
+small strips to show a value changing).
 
-- ✅ Elided addresses (`…04`), not invented full ones — a concrete `0x7ffd04` invites
-  students to think the number is meaningful or reproducible
-- ✅ Keep the stride consistent with the type being drawn (4 apart for an `int`)
+- ✅ Draw a multi-byte type with a `vars` bracket — a highlighted run of cells does not
+  say *why* those cells belong together, and the bracket is the whole point
+- ✅ A cell with `name` still becomes a one-byte bracket, so a lone `char` needs no `vars`
+- ✅ Elided addresses (`…04`) when the number must not look reproducible; `base` when the
+  lesson is precisely that addresses count by one
+
+---
+
+## `<BinaryNumber>`
+
+Positional notation, drawn and clickable: each bit is a box with its place value above
+it, and the bits that are on are added up underneath (`64 + 1 = 65`).
+
+```markdown
+<BinaryNumber :value="65" show-char />
+<BinaryNumber :value="0" :bits="4" :interactive="false" />
+```
+
+Clicking a bit flips it, which is what it is for in a lecture: ask the class for a
+number, then flip bits until it shows up. `show-char` adds the ASCII character next to
+the total. `:interactive="false"` for a static illustration.
+
+`signed` turns the leftmost place negative (`−2⁷`), which is two's complement with no
+new machinery: build `11111111` and the sum reads `-128 + 64 + … + 1 = -1`. It is the
+clearest way to show why the integer range is asymmetric and why `INT_MAX + 1` wraps.
+
+Each position also shows the power it comes from (`2⁷` above `128`), on by default;
+`:show-powers="false"` drops that row. The exponent is the rule and the value is only
+its result, so a slide that hides it is asserting the place values rather than deriving
+them.
+
+- ✅ The place-value row is the lesson. A bit is not "a 1", it is "a 2⁶", so "a 64"
+- ❌ Don't pair it with a v-click reveal of the answer — the sum line already updates
+
+---
+
+## `<Transistor>`
+
+A transistor letting current through, or not: the gate opens, the current visibly
+flows, the bulb answers with 1 or 0.
+
+```markdown
+<Transistor />
+<Transistor :autoplay="false" :on="true" />
+```
+
+It runs itself (default 2.6s per state) so it still works in an archived deck with no
+clicks left, and a click freezes it on one state for when the presenter wants to hold
+one. `:autoplay="false"` with `:on` gives a static illustration.
+
+- ✅ Use it where a slide claims a computer is "made of switches" — that claim is made
+  on every intro slide and almost never shown
+- ⚠️ It is drawn in **HTML, not SVG**, and a diagram like it should be too. A global
+  reset sets `display: block` on SVG children, which takes `<text>` out of SVG
+  positioning and paints the labels nowhere; a global `svg` rule also outranks a single
+  class, so `fill` keeps the wrong colour when it changes with state. Divs have neither
+  argument with the page.
+
+---
+
+## `<AsciiTable>`
+
+The ASCII table the way students expect to meet it: codes and characters in a grid,
+16 per row, printable range only.
+
+```markdown
+<AsciiTable :marks="[48, 65, 97]" />
+```
+
+The 16-wide rows are load-bearing, not cosmetic. Laid out that way the digits form one
+short tinted block, and `'A'` (65) and `'a'` (97) fall in the **same column two rows
+apart** — 32 is two rows of 16, which is the whole explanation for `'a' - 'A' == 32`.
+Only the digits, capitals and lowercase are tinted; the shape of those blocks is what
+teaches the arithmetic, so everything else stays plain.
+
+`marks` rings individual codes. `from`/`to` narrow the range (defaults 32–126); codes
+0–31 have no glyph and are summarised in a note rather than drawn as empty boxes.
+
+- ✅ Point at the two aligned blocks when explaining the +32 rule — the table proves it,
+  a sentence only asserts it
 
 ---
 

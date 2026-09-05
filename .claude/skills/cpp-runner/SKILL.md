@@ -23,6 +23,11 @@ No prefixes, no banners. Diagnostics say `program.c` (renamed from Coliru's `mai
 When the program blocks on stdin, a borderless inline input sits exactly where the
 local cursor would — a prompt printed without `\n` keeps the caret **on the same
 line**, because what is shown is the program's real output up to the moment it blocked.
+A click anywhere in the terminal block refocuses that caret (unless text is selected,
+so copying output still works) and the block shows a text cursor while it waits. The
+field is only ~2ch wide and borderless: without that, one stray click leaves the
+presenter with nothing to aim at and the program apparently frozen.
+
 Typed input is echoed like a tty and the session continues; multiple reads = multiple
 waits, each answered separately. Keystrokes don't leak into slide navigation.
 

@@ -132,7 +132,7 @@ a.lab-sheet:focus-visible {
     color-mix(in srgb, var(--neversink-highlight-color) 12%, transparent) 100%
   );
   background-size: 200% 100%;
-  animation: sheet-sweep 2.4s ease-in-out infinite;
+  animation: sheet-sweep 2.4s linear infinite;
 }
 
 /* Offset the rows so the list ripples instead of blinking as one block. */
@@ -144,12 +144,14 @@ a.lab-sheet:focus-visible {
   animation-delay: 1s;
 }
 
+/* One full tile of travel (120% → -80% is a 200% shift), so the last frame is
+   pixel-identical to the first and the loop has no seam. */
 @keyframes sheet-sweep {
   0% {
     background-position: 120% 0;
   }
   100% {
-    background-position: -20% 0;
+    background-position: -80% 0;
   }
 }
 

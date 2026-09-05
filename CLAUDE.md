@@ -160,8 +160,42 @@ Ce este programarea?
 - ✅ `color` matches the deck scheme, so the bubble is tinted, not white-on-white
 - ✅ The `flex justify-center` wrapper — `maxWidth` makes the bubble a fixed-width block
   that would otherwise sit left
-- ❌ Presenter reminders on the slide — those belong in `<!-- -->` notes or a `devOnly`
-  `<StickyNote>`
+- ❌ Presenter reminders anywhere on the slide, notes included (see *No presenter notes*)
+
+### One quote character: `"`
+
+Every quotation mark a student reads is a straight `"`. Not the Romanian `„…"`
+pair, not `“…”`, not `«…»`, and not `‘…’` for a single quote.
+
+The reason is consistency, not typography. Slide prose sits next to code on almost every
+slide, and code is full of `"` and `'`. Two visually similar but different pairs of
+quotes on one slide invites students to copy a `„` into a `printf` and then wonder why
+the compiler is complaining about a character it cannot even name.
+
+```
+❌ `nota` nu stă „la 1001".        ❌ merge „de obicei"
+✅ `nota` nu stă "la 1001".        ✅ merge "de obicei"
+```
+
+The same goes for apostrophes: `'` where a real quote is needed, and Romanian words that
+would take one are rewritten rather than punctuated around.
+
+### No presenter notes
+
+A trailing `<!-- … -->` block in a slide is a **speaker note**: Slidev shows it in
+presenter mode. This course does not use them, and no deck should contain one.
+
+The reasons are practical. A note is written for one person on one delivery, it goes stale
+the moment the slide is edited, and it is invisible in normal view, so nobody notices it
+rotting. Worse, it splits the lesson in two: what the slide says and what the presenter is
+supposed to remember to say. If a point is worth making, put it **on the slide**, where the
+student revisiting the deck in week 9 will also find it.
+
+- ✅ Everything the lesson teaches lives in the slide body
+- ✅ Rationale that is for *maintainers*, not presenters, belongs in this file or in a
+  `.claude/skills/` reference, next to the pattern it explains
+- ❌ `<!-- … -->` at the end of a slide, in any deck
+- ❌ A `devOnly` `<StickyNote>` used as a private reminder
 
 ⚠️ `align` arity differs per layout: `top-title` takes one letter (`align: c`), but
 `top-title-two-cols` and `two-cols-title` need three parts (`align: c-lt-lt`). Passing
@@ -266,7 +300,10 @@ In `common/components/`, auto-imported in every deck — **no import needed** in
 | `<Chip>C</Chip>` | A pill with an auto-resolved language/tool logo |
 | `<AxisMap :items :zones … />` | A 2D map: two axes crossing, four named zones |
 | `<LogoWall :names />` | A collage of logos from `common/public/icons/` |
-| `<MemoryCells :cells />` | A strip of memory boxes: name, content, address |
+| `<MemoryCells :cells :vars :base />` | A run of memory bytes; `vars` brackets the ones a variable owns |
+| `<BinaryNumber :value />` | Bits as place values, clickable, summed to a number |
+| `<AsciiTable :marks />` | The printable ASCII table, 16 per row |
+| `<Transistor />` | A transistor passing current, or not; self-running |
 | `<LabSheets />` | The list of lab sheets (PDF pe Moodle), one row per lesson |
 
 Props, the slide patterns each one belongs in, and how to write a new one: the
@@ -447,6 +484,8 @@ Upstream: [Slidev](https://sli.dev/) ·
 - [ ] Slide content in **Romanian**, technical terms in **English**
 - [ ] Slide titles carry **only the title** — no `Lecția N`, no numbering
 - [ ] `color: blue-light` and `align: c` on every content slide
+- [ ] Quotes are straight `"`, never `„…"`
+- [ ] No `<!-- … -->` speaker notes anywhere in the deck
 - [ ] `v-click` used for pacing only — the deck must still read with every reveal removed
 - [ ] Runnable C examples compile clean and are complete programs
 - [ ] Lesson metadata changed in `common/lessons.json`, not in the deck
