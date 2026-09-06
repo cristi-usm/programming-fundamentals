@@ -121,7 +121,7 @@ mică unitate de informație, iar un tranzistor ține exact un bit.
 
 </Definition>
 
-<Definition term="Byte" source="octet, ">
+<Definition term="Byte" source="octet">
 
 Un grup de **8 biți**. Este cea mai mică bucată de memorie cu **adresă
 proprie**, deci cea mai mică pe care computerul o poate citi separat.
