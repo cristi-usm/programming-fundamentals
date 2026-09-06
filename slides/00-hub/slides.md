@@ -370,6 +370,27 @@ color: blue-light
 </style>
 
 ---
+transition: slide-left
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Cursul pe Moodle
+
+:: content ::
+
+<div class="flex flex-col items-center gap-6 mt-8 neversink-blue-light-scheme">
+
+  <MoodleQr :size="300" />
+
+  <div class="text-3xl font-bold">Fundamentele Programării</div>
+
+</div>
+
+---
 layout: top-title
 color: blue-light
 align: c
