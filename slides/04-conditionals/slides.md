@@ -556,19 +556,8 @@ Eroare: Impartirea la zero nu este permisa.
 ```
 
 ---
-layout: top-title
+layout: center
 color: blue-light
-align: c
 ---
 
-:: title ::
-
-# Mai departe
-
-:: content ::
-
-<div class="mt-12">
-
 <DeckNav />
-
-</div>

@@ -645,19 +645,8 @@ Suma cifrelor este: 13
 ```
 
 ---
-layout: top-title
+layout: center
 color: blue-light
-align: c
 ---
 
-:: title ::
-
-# Mai departe
-
-:: content ::
-
-<div class="mt-12">
-
 <DeckNav />
-
-</div>
