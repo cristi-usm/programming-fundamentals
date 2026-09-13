@@ -17,9 +17,11 @@ const sheets = computed(() =>
   LESSONS.map(lesson => ({
     num: lesson.num,
     sheet: lesson.sheet,
-    // Registry titles read "Lecția 5: Cicluri" — the number is already the badge.
+    // A lab is numbered after a lesson but need not cover it, so the registry
+    // may override the title. Otherwise strip the "Lecția 5: " prefix from the
+    // lesson's own title: the number is already the badge.
     title: isPublished(lesson)
-      ? lesson.title.split(': ').slice(1).join(': ') || lesson.title
+      ? lesson.sheetTitle ?? (lesson.title.split(': ').slice(1).join(': ') || lesson.title)
       : '',
   })),
 )

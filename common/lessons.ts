@@ -18,6 +18,13 @@ export interface Lesson {
   published?: boolean
   /** Moodle URL of the lab sheet (PDF). Absent while the sheet is not up yet. */
   sheet?: string
+  /**
+   * Title of the lab sheet, when it differs from the lesson's own. A lab does
+   * not always cover the lesson it is numbered after: lab 2 covers lessons 3
+   * and 4, so <LabSheets> would otherwise label it "Variabile și tipuri de
+   * date". Absent means the lesson title is right.
+   */
+  sheetTitle?: string
 }
 
 export interface LessonModule {
@@ -40,7 +47,7 @@ export const HUB_PORT = 3030
  * `slides/00-hub/slides.md` is a one-line change, not a hunt through
  * components.
  */
-export const HUB_LESSONS_SLIDE = 11
+export const HUB_LESSONS_SLIDE = 12
 
 /** Every slug that can appear as a path segment in the built site. */
 const DECK_SLUGS = new Set<string>(LESSONS.map(l => l.slug))
