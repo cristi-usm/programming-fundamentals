@@ -67,9 +67,9 @@
       "module": 1,
       "icon": "i-ph-git-branch-duotone",
       "title": "Lecția 4: Condiționale",
-      "description": "Instrucțiuni condiționale — if, else, switch",
+      "description": "if, else, switch, operatori logici și capcanele lor",
       "status": "ready",
-      "published": false
+      "published": true
     },
     {
       "num": 5,
