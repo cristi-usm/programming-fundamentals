@@ -54,8 +54,9 @@
       "module": 1,
       "icon": "i-ph-keyboard-duotone",
       "title": "Lecția 3: Input/Output",
-      "description": "printf, scanf și validarea datelor citite.",
-      "published": false
+      "description": "printf, scanf și bufferul de intrare.",
+      "status": "ready",
+      "published": true
     },
     {
       "num": 4,
