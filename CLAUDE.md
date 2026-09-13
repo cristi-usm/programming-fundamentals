@@ -82,6 +82,34 @@ the generated frontmatter `title` / `info`, which drive the browser tab and the 
 - ✅ `layout: top-title` for most content slides
 - ✅ `v-click` / `v-clicks` are allowed — see *Clicks* below
 
+### Copy the reference deck, don't invent a shape ⭐
+
+`slides/02-data-types/` is the deck every other one is measured against. Before writing a
+slide, open the equivalent slide there and copy its shape. Inventing a new arrangement for
+something that already has one is how a deck drifts, and the drift is only ever caught by
+someone reading the rendered slide.
+
+What this settles, in practice:
+
+| Situation | The shape |
+|---|---|
+| End of the deck | `layout: center` + `<DeckNav />`, no title (see `course-components`) |
+| `code` + explanatory bullets | `layout: top-title-two-cols`, lead sentence at the top of `:: left ::` |
+| A question for the class | centred `<SpeechBubble>` on `layout: center` |
+| Anything else | the closest slide in `02-data-types` |
+
+**One lead sentence plus one element per slide.** A slide that stacks a paragraph, a
+two-column grid, an admonition *and* a trailing caption is too busy; `02-data-types`
+averages well under one admonition per slide and makes more slides instead.
+
+### A slide that overflows is invisible to the build
+
+`slidev build` succeeds on a slide whose content runs off the bottom, because the overflow
+happens inside the fixed 980×552 canvas. **Nothing but looking catches it.** Preview the
+slide (see the `slide-presenting` skill and the scratch-port workflow) before calling a
+layout done; `margin: tight` in a slide's frontmatter reclaims the layout's top padding
+when a slide is genuinely full.
+
 ### Clicks disappear once a lesson is past
 
 A lecture wants reveals: the class sees one idea at a time and cannot read ahead. An
@@ -481,6 +509,8 @@ Upstream: [Slidev](https://sli.dev/) ·
 
 ## Quick checklist ✅
 
+- [ ] Shape copied from `02-data-types`, not invented
+- [ ] Slide previewed in a browser — a slide that overflows still builds clean
 - [ ] Slide content in **Romanian**, technical terms in **English**
 - [ ] Slide titles carry **only the title** — no `Lecția N`, no numbering
 - [ ] `color: blue-light` and `align: c` on every content slide

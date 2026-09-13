@@ -324,6 +324,30 @@ slides.
 
 ---
 
+## `<DeckNav>` — the last slide of every deck
+
+The end-of-deck navigation is **its own slide, centred, with no title**. Nothing else goes
+on it.
+
+```markdown
+---
+layout: center
+color: blue-light
+---
+
+<DeckNav />
+```
+
+- ✅ `layout: center` — the three cards sit in the middle of the slide
+- ❌ **Not** `layout: top-title` with a `# Mai departe` heading and a `<div class="mt-12">`
+  wrapper. That pins the cards near the top with an empty half-slide under them, and it
+  makes the deck end on a heading that says nothing
+- The component decides for itself what to show: `neighbours()` filters on `published`, so
+  a lesson that has not been released yet simply does not appear as *Lecția următoare*.
+  There is nothing to configure per deck
+
+`02-data-types` is the deck to copy this from.
+
 ## Icons
 
 Two sources, deliberately:
