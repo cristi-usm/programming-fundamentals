@@ -1483,3 +1483,10 @@ Orice program C are aceeași formă: importă ce îi trebuie, apoi execută paș
   box-shadow: 0 8px 20px -14px var(--neversink-fg-color);
 }
 </style>
+
+---
+layout: center
+color: blue-light
+---
+
+<DeckNav />

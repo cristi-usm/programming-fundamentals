@@ -63,7 +63,9 @@ const hubHref = computed(() => deckUrl(null, HUB_LESSONS_SLIDE))
   justify-content: center;
   gap: 0.35rem;
   flex: 1;
-  min-width: 0;
+  /* Floor width so a card still fits its title on two lines when the opposite
+     slot is an empty spacer (first and last lesson of the course). */
+  min-width: 15rem;
   padding: 1.1rem 1.3rem;
   border: 1px solid var(--neversink-admon-border-color);
   border-radius: 12px;
@@ -101,9 +103,10 @@ const hubHref = computed(() => deckUrl(null, HUB_LESSONS_SLIDE))
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--neversink-fg-color);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Wrap rather than clip: with no next lesson the card only gets a third of the
+     row, and "Lecția 3: Input/Output" does not fit on one line there. Wrapping
+     happens at spaces only, so a slug like Input/Output is never split. */
+  line-height: 1.25;
 }
 
 /* The hub is the secondary action: filled accent, but small. */
