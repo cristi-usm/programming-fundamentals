@@ -262,6 +262,78 @@ int main() {
 ```
 
 ---
+layout: top-title-two-cols
+color: blue-light
+align: c-lm-lm
+columns: is-7
+---
+
+:: title ::
+
+# Curățarea Bufferului
+
+:: left ::
+
+Scoatem caracterele unul câte unul, până la capătul liniei greșite.
+
+```c
+int c;
+
+while ((c = getchar()) != '\n' && c != EOF) {
+    // aruncăm tot până la capătul liniei
+}
+```
+
+:: right ::
+
+<div class="ns-c-tight text-base">
+
+- `getchar()` scoate un caracter din buffer și îl întoarce.
+- `c` este `int`, nu `char`, pentru că `EOF` nu încape într-un `char`.
+- `fflush(stdin)`, pe care îl veți găsi pe internet, **nu** este soluția:
+  standardul îl definește doar pentru ieșire, deci pe Linux nu face nimic.
+- Bucla se oprește la capătul liniei greșite, deci nu aruncă și ce urmează după ea.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Scheletul de Laborator
+
+:: content ::
+
+Forma pe care o veți scrie de acum înainte, ori de câte ori un program cere date
+de la utilizator.
+
+<div class="max-w-3xl mx-auto mt-8 text-left">
+
+```c
+int valoare = 0;
+
+printf("Introduceti ...: ");
+
+if (scanf("%d", &valoare) != 1) {    // am primit forma ceruta?
+    printf("Date invalide.\n");
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) { }   // curatam bufferul
+    return 1;
+}
+
+if (/* conditia problemei */ 0) {    // are sens valoarea?
+    printf("Valoare in afara intervalului.\n");
+    return 1;
+}
+```
+
+</div>
+
+---
 transition: slide-left
 layout: cover
 color: blue-light
