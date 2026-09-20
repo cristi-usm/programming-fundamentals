@@ -117,7 +117,7 @@ if (nota >= 5) {
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Parantezele rotunde sunt **obligatorii**, chiar și pentru o condiție de un
   singur caracter.
@@ -201,7 +201,7 @@ if (nota >= 5)
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Cu acolade, tot ce este între `{` și `}` se execută sau este sărit împreună.
 - Regula practică din acest curs: **acolade întotdeauna**, chiar și pentru o
@@ -235,7 +235,7 @@ if (nota >= 5) { … }
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Comparația se calculează **întâi**, ca orice altă expresie, iar `if` primește
   doar numărul rezultat.
@@ -272,7 +272,7 @@ columns: is-5
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Toți șase produc `1` sau `0`, niciodată altceva.
 - Se scriu din două caractere lipite: `> =` cu spațiu între ele nu se compilează.
@@ -334,7 +334,7 @@ rezultatul, dreapta nu mai este evaluată deloc.
 if (x != 0 && 10 / x > 2) { … }
 ```
 
-<div class="text-base mt-4" v-click>
+<div class="text-base mt-4">
 
 - Dacă `x` este 0, stânga dă `0`, iar `&&` se oprește: împărțirea nu se face
   niciodată.
@@ -372,7 +372,7 @@ if (numar % 2 == 0) {
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - `else` nu are condiție proprie: el prinde tot ce a rămas.
 - Nu poate exista singur. Un `else` fără `if` deasupra lui nu se compilează.
@@ -408,7 +408,7 @@ if (nota == 10) {
 }
 ```
 
-<div class="text-base mt-6 max-w-4xl mx-auto text-left" v-click>
+<div class="text-base mt-6 max-w-4xl mx-auto text-left">
 
 - Fiecare `else if` este citit doar dacă toate condițiile dinaintea lui au dat `0`.
 - De aceea `nota >= 8` nu are nevoie de `&& nota < 10`: cazul 10 a fost deja luat.
@@ -443,7 +443,7 @@ if (nota >= 5) {
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Pentru `nota = 9` se alege prima ramură, iar lanțul se termină acolo.
 - A doua ramură nu este cod greșit, ci cod **inaccesibil**: nu există valoare
@@ -477,7 +477,7 @@ if (nota >= 8) {
 }
 ```
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Când se ajunge la a doua condiție, prima a fost deja falsă, deci `nota >= 5`
   înseamnă aici, de fapt, "între 5 și 7". Ramurile de sub ea îngustează singure
@@ -513,7 +513,7 @@ if (varsta >= 18) {
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - `if`-ul din interior se atinge doar când cel din afară a fost adevărat, deci
   cele două condiții se cer amândouă.
@@ -541,7 +541,7 @@ if (varsta >= 18 && are_bilet) {
 }
 ```
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Cele două variante fac exact același lucru, iar `&&` se oprește la fel de
   devreme ca `if`-ul din afară.
@@ -576,7 +576,7 @@ printf("%s\n", n % 2 == 0 ? "par" : "impar");
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Se citește: dacă condiția este `≠ 0`, valoarea este cea dinaintea lui `:`,
   altfel cea de după.
@@ -585,6 +585,51 @@ printf("%s\n", n % 2 == 0 ? "par" : "impar");
 - Merită folosit când alegeți o **valoare**. Când alegeți un **drum**, `if` se
   citește mai bine.
 - Ternarele puse unul în altul devin ilizibile imediat. Un nivel, cel mult.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Aceeași Alegere, Două Forme
+
+:: left ::
+
+Același rezultat, scris în ambele feluri. Diferența nu este de viteză, ci de ce
+anume alegeți: o valoare sau un drum.
+
+```c
+// cu if-else
+int maxim;
+if (a > b) {
+    maxim = a;
+} else {
+    maxim = b;
+}
+```
+
+```c
+// cu operatorul ternar
+int maxim = (a > b) ? a : b;
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Când ambele ramuri scriu în **aceeași** variabilă, ternarul spune asta o
+  singură dată, iar `maxim` poate fi chiar inițializat pe loc.
+- Când ramurile fac lucruri diferite, de exemplu afișează mesaje și schimbă mai
+  multe variabile, ternarul nu se mai poate folosi.
+- Ternarul nu poate conține `printf` și un calcul în aceeași ramură, pentru că
+  fiecare ramură este o singură expresie.
+- Nu este o formă "mai avansată". Este o unealtă pentru un caz îngust.
 
 </div>
 
@@ -619,7 +664,7 @@ switch (zi) {
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - `switch` nu evaluează o condiție, ci o **valoare**, și sare direct la
   `case`-ul potrivit.
@@ -628,6 +673,51 @@ switch (zi) {
 - `default`: se execută când niciun `case` nu se potrivește.
 - Etichetele `case` cer valori **constante**, cunoscute la compilare. `case n:`
   nu compilează.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# switch pe Caractere
+
+:: left ::
+
+`char` este un tip întreg, deci merge și el în `switch`. Așa se scrie un meniu,
+iar la laborator veți scrie multe.
+
+```c
+char optiune = 'a';
+
+switch (optiune) {
+    case 'a':
+        printf("Adunare\n");
+        break;
+    case 's':
+        printf("Scadere\n");
+        break;
+    default:
+        printf("Optiune necunoscuta\n");
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Etichetele se scriu cu apostrof: `case 'a':`, nu `case "a":`. Al doilea este
+  text, iar textul nu merge în `switch`.
+- `'a'` și `'A'` sunt valori diferite, deci un meniu care acceptă ambele are
+  nevoie de două `case` unul sub altul.
+- Caracterul se citește cu `scanf(" %c", &optiune)`. Spațiul dinaintea lui `%c`
+  sare peste Enter-ul rămas în buffer.
+- `default` prinde tot ce nu ați prevăzut, inclusiv o tastă apăsată din greșeală.
 
 </div>
 
@@ -719,6 +809,95 @@ int main(void) {
 ```
 
 ---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Când switch și Când else if
+
+:: left ::
+
+Întrebarea are un singur criteriu: comparați aceeași variabilă cu valori fixe,
+sau evaluați condiții diferite?
+
+```c
+// switch: aceeasi variabila, valori fixe
+switch (zi) {
+    case 1: …
+    case 2: …
+}
+
+// else if: conditii diferite
+if (nota >= 9) { … }
+else if (temperatura < 0) { … }
+else if (a > b && c != 0) { … }
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `switch` nu poate exprima un interval. `case 5 … 9:` nu există în C standard,
+  deci notele de la 5 la 9 cer `else if`.
+- `switch` nu poate compara `double` și nu poate compara text.
+- Când `switch` se potrivește, se citește mai bine: variabila apare o singură
+  dată, iar cazurile stau unul sub altul.
+- Compilatorul poate transforma un `switch` cu multe cazuri într-un salt direct,
+  în timp ce un lanț `else if` verifică pe rând. Pe măsurile acestui curs
+  diferența nu se simte, dar motivul există.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Variabilă Nouă Într-un case
+
+:: left ::
+
+`case` este o etichetă, nu un bloc, deci nu are acolade ale lui. O declarație
+imediat după etichetă nu se compilează.
+
+```c
+switch (optiune) {
+    case 1:
+        int rezultat = a + b;   // eroare
+        printf("%d\n", rezultat);
+        break;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Mesajul compilatorului sună ciudat: `a label can only be part of a statement`.
+  O declarație nu este o instrucțiune, iar eticheta cere una.
+- Soluția este o pereche de acolade în jurul cazului, care creează un bloc
+  adevărat.
+- Toate `case`-urile unui `switch` împart același scope, deci fără acolade două
+  cazuri nu pot declara amândouă `rezultat`.
+
+```c
+case 1: {
+    int rezultat = a + b;
+    break;
+}
+```
+
+</div>
+
+---
 layout: top-title
 color: blue-light
 align: c
@@ -741,7 +920,7 @@ Este cea mai frecventă eroare de anul întâi.
 if (nota = 10) { … }
 ```
 
-  <div class="text-sm mt-2">Atribuie 10 lui <code>nota</code>, iar atribuirea este ea însăși o expresie cu valoarea 10. Condiția devine <code>if (10)</code>, deci mereu adevărată. Nota a fost și stricată pe drum.</div>
+  <div class="text-sm mt-2">Atribuie 10 lui <code>nota</code>, iar atribuirea este ea însăși o expresie cu valoarea 10. Condiția devine <code>if (10)</code>, deci mereu adevărată. Pe deasupra, valoarea de dinainte a lui <code>nota</code> s-a pierdut: după linia asta <code>nota</code> este 10, oricare ar fi fost nota reală.</div>
   </div>
   <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]" v-click>
     <div class="font-bold text-[var(--neversink-text-color)]">Ce voiam</div>
@@ -779,7 +958,7 @@ if (nota >= 5);          // <- corpul lui if
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - `;` singur este o instrucțiune validă în C: instrucțiunea vidă. De aceea nimic
   nu se plânge.
@@ -815,7 +994,7 @@ else
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Aici `else` aparține lui `if (are_bani)`, deși este aliniat sub `if (are_cont)`.
 - Un client cu cont și fără bani primește mesajul "Nu aveti cont".
@@ -857,7 +1036,7 @@ if (0 < nota < 10) { … }   // mereu adevarat
 
 :: right ::
 
-<div class="text-base" v-click="2">
+<div class="text-base">
 
 - Prima comparație produce `1` sau `0`, iar acel număr ajunge în a doua
   comparație.
@@ -887,13 +1066,48 @@ if (nota >= 1 && nota <= 10)      { … }   // capetele intra si ele
 if (nota < 1 || nota > 10)        { … }   // in afara intervalului
 ```
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Variabila se repetă în ambele comparații. `nota >= 1 && <= 10` nu se compilează.
 - Negarea unui interval schimbă și operatorul logic: `&&` devine `||`, iar
   fiecare comparație se inversează.
 - Comparațiile se calculează înaintea lui `&&` și `||`, deci parantezele în
   jurul fiecăreia nu sunt necesare.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Negarea unei Condiții Compuse
+
+:: content ::
+
+Când negați o condiție cu `&&` sau `||`, nu este destul să puneți `!` în față și
+să schimbați comparațiile. Se schimbă și operatorul logic.
+
+<div class="ns-c-table text-base mt-6 max-w-3xl mx-auto">
+
+| condiția | negarea ei corectă |
+|---|---|
+| `nota >= 1 && nota <= 10` | `nota < 1 \|\| nota > 10` |
+| `a == 0 \|\| b == 0` | `a != 0 && b != 0` |
+| `!(x > 5)` | `x <= 5` |
+
+</div>
+
+<div class="text-base mt-6">
+
+- `&&` devine `||`, iar `||` devine `&&`. Fiecare comparație se inversează și ea.
+- Verificarea se face pe un exemplu: pentru `nota = 0`, condiția inițială este
+  falsă, deci negarea trebuie să fie adevărată.
+- `!` scris în față funcționează întotdeauna și el: `!(nota >= 1 && nota <= 10)`
+  este corect. Doar că se citește mai greu decât forma desfăcută.
 
 </div>
 
@@ -923,7 +1137,7 @@ if (x == 0.3) {
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Cele două valori diferă cu aproximativ `0.00000000000000004`, iar `==` cere
   identitate pe toți biții.
@@ -955,7 +1169,7 @@ if (fabs(x - 0.3) < 1e-9) {
 }
 ```
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - `fabs` vine din `<math.h>` și dă valoarea absolută, adică distanța dintre cele
   două valori, fără semn.
@@ -996,7 +1210,7 @@ if (nota < 1 || nota > 10) {
 
 :: right ::
 
-<div class="text-base" v-click>
+<div class="text-base">
 
 - Prima întrebare este despre **formă**: `scanf` întoarce câte valori a citit,
   deci `!= 1` înseamnă că `abc` nu a fost un întreg.
@@ -1016,32 +1230,81 @@ align: c
 
 :: title ::
 
-# Totul la un Loc
+# Un Calculator cu switch
 
 :: content ::
 
-Verificarea intrării, apoi lanțul `else if`. Rulați blocul și scrieți o notă
-când programul o cere.
+Operatorul este citit ca `char`, iar împărțirea la zero este oprită înainte de a se întâmpla.
 
-```c {monaco-run} {autorun:false, height:'290px'}
+```c {monaco-run} {autorun:false, height:'300px'}
 #include <stdio.h>
+#include <math.h>
 int main(void) {
-    int nota = 0;
-    printf("Introduceti nota (1-10): ");
-    if (scanf("%d", &nota) != 1) {
-        printf("Nu ati introdus un numar.\n");
-        return 1;
-    }
-    if (nota >= 9) {
-        printf("Excelent\n");
-    } else if (nota >= 5) {
-        printf("Promovat\n");
-    } else {
-        printf("Nepromovat\n");
+    double a = 0, b = 0;
+    char op = ' ';
+    printf("Introduceti a op b: ");
+    // scrieti, de exemplu:  12 / 4
+    if (scanf("%lf %c %lf", &a, &op, &b) != 3) { printf("Date invalide.\n"); return 1; }
+    if (op == '/' && fabs(b) < 1e-9) { printf("Impartire la zero.\n"); return 1; }
+    switch (op) {
+        case '+': printf("%.2f\n", a + b); break;
+        case '-': printf("%.2f\n", a - b); break;
+        case '*': printf("%.2f\n", a * b); break;
+        case '/': printf("%.2f\n", a / b); break;
+        default: printf("Operator necunoscut: %c\n", op);
     }
     return 0;
 }
 ```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Afișează Fiecare
+
+:: left ::
+
+Trei fragmente scurte. Ce apare pe ecran și de ce?
+
+```c
+// A
+int n = 4;
+if (n = 0) {
+    printf("zero\n");
+} else {
+    printf("altceva\n");
+}
+
+// B
+int x = 7;
+switch (x > 5) {
+    case 1: printf("mare\n");
+    case 0: printf("mic\n");
+}
+
+// C
+printf("%d\n", 3 > 2 > 1);
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- **A**: `altceva`. `n = 0` atribuie, iar valoarea atribuirii este `0`, adică
+  fals. După linia asta `n` nu mai este 4, ci 0.
+- **B**: `mare` și `mic`. Condiția produce `1`, deci se intră la `case 1`, iar de
+  acolo execuția curge mai departe: lipsește `break`.
+- **C**: `0`. Se calculează `3 > 2`, care este `1`, apoi `1 > 1`, care este fals.
+- Toate trei compilează fără nicio eroare. Asta este ideea: compilatorul verifică
+  forma, nu intenția.
+
+</div>
 
 ---
 layout: center
