@@ -77,8 +77,8 @@
       "port": 3035,
       "module": 1,
       "icon": "i-ph-arrows-clockwise-duotone",
-      "title": "Lecția 5: Cicluri",
-      "description": "Instrucțiuni ciclice — while, do-while, for",
+      "title": "Lecția 5: Bucle",
+      "description": "while, do-while, for, break și continue",
       "status": "ready",
       "published": false
     },
