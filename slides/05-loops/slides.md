@@ -47,45 +47,117 @@ align: c
 
 :: title ::
 
-# Același Cod, Scris de Cinci Ori
+# Media a Trei Note
 
 :: content ::
 
-Un program care afișează același mesaj de cinci ori nu are cinci idei în el. Are
-una singură, copiată.
+Media a două note am calculat-o deja. Pentru trei, citim fiecare notă și o
+adunăm la sumă. Observați că pentru fiecare notă scriem **aceleași două linii**.
 
-<div class="grid grid-cols-2 gap-8 mt-6 text-left">
-  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
-    <div class="font-bold text-[var(--neversink-text-color)]">Fără buclă</div>
+<div class="max-w-2xl mx-auto mt-6 text-left">
 
 ```c
-printf("Salut\n");
-printf("Salut\n");
-printf("Salut\n");
-printf("Salut\n");
-printf("Salut\n");
+int nota = 0;
+int suma = 0;
+
+scanf("%d", &nota);
+suma = suma + nota;
+scanf("%d", &nota);
+suma = suma + nota;
+scanf("%d", &nota);
+suma = suma + nota;
+
+printf("Media: %.2f\n", (double)suma / 3);
 ```
 
-  </div>
-  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]" v-click>
-    <div class="font-bold text-[var(--neversink-text-color)]">Cu buclă</div>
-
-```c
-int i = 0;
-
-while (i < 5) {
-    printf("Salut\n");
-    i = i + 1;
-}
-```
-
-  </div>
 </div>
 
-<div class="mt-6 text-base">
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
 
-Diferența adevărată se vede când numărul de repetări nu este 5, ci o valoare
-citită de la utilizator. Prima variantă nu se poate scrie deloc.
+:: title ::
+
+# Aceeași Instrucțiune, de 30 de Ori
+
+:: left ::
+
+O grupă poate avea 30 de studenți. Programul rămâne corect, dar aceleași două
+linii se scriu de 30 de ori.
+
+```c
+scanf("%d", &nota);   // nota 1
+suma = suma + nota;
+scanf("%d", &nota);   // nota 2
+suma = suma + nota;
+
+// ... inca 27 de note, citite la fel
+
+scanf("%d", &nota);   // nota 30
+suma = suma + nota;
+
+printf("Media: %.2f\n", (double)suma / 30);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- 60 de linii care spun un singur lucru. Cine citește programul trebuie să le
+  numere ca să afle câte note se citesc.
+- Dacă la copiere sărim peste o notă, compilatorul nu spune nimic. Programul
+  împarte la 30 o sumă de 29 de note și afișează o medie greșită.
+- Orice schimbare se face de 30 de ori. Dacă vrem să respingem notele mai mici
+  de 1 sau mai mari de 10, același `if` se adaugă după fiecare dintre cele 30
+  de citiri.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Numărul de Note Se Află Abia la Rulare
+
+:: left ::
+
+Acum utilizatorul spune câte note are grupa. Programul are însă tot trei citiri,
+scrise dinainte.
+
+```c
+int n = 0, nota = 0, suma = 0;
+
+printf("Cate note are grupa? ");
+scanf("%d", &n);
+
+scanf("%d", &nota);   // trei citiri,
+suma = suma + nota;   // oricat ar fi n
+scanf("%d", &nota);
+suma = suma + nota;
+scanf("%d", &nota);
+suma = suma + nota;
+
+printf("Media: %.2f\n", (double)suma / n);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pentru `n = 3`, rezultatul este corect.
+- Pentru `n = 25`, citește doar 3 note și împarte suma lor la 25. Media iese
+  mult prea mică.
+- Pentru `n = 2`, programul rămâne blocat și așteaptă o a treia notă.
+- Numărul de citiri se fixează când **scriem** codul, iar `n` se află abia când
+  programul **rulează**. Oricâte copii am scrie, pentru alt `n` tot greșim.
 
 </div>
 
@@ -97,30 +169,147 @@ align: c
 
 :: title ::
 
-# Orice Repetiție Are Patru Părți
+# Bucla, un Nou Tip de Instrucțiune
 
 :: content ::
 
-Indiferent de forma pe care o scrieți, o buclă conține aceleași patru lucruri.
-Cine le pierde din vedere scrie bucle care nu se opresc.
+Copiile nu rezolvă problema. Avem nevoie de o instrucțiune care execută același
+cod de mai multe ori: **bucla**. C are trei forme, iar prima este `while`.
 
-<div class="mt-6">
+<div class="grid grid-cols-3 gap-5 mt-10 text-left">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">while</div>
+    <div class="text-sm mt-2">Repetă cât timp o condiție este adevărată. Începem cu ea.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">do-while</div>
+    <div class="text-sm mt-2">Execută o dată, apoi verifică. O vedem mai târziu în lecție.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">for</div>
+    <div class="text-sm mt-2">Numără pașii pe un singur rând. O vedem mai târziu în lecție.</div>
+  </div>
+</div>
 
-<Definition term="Buclă" source="loop">
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
 
-O instrucțiune care execută un bloc de cod de mai multe ori. Are o
-**inițializare**, care pregătește valoarea de pornire, o **condiție**, verificată
-înaintea fiecărei repetări, un **corp**, care face treaba propriu-zisă, și o
-**actualizare**, care apropie condiția de momentul în care devine falsă.
+:: title ::
 
-</Definition>
+# Cum Se Scrie un while
+
+:: left ::
+
+Cuvântul cheie, o condiție între paranteze rotunde și un bloc între acolade,
+exact ca la `if`.
+
+```c
+while (conditie) {
+    // instructiunile care se repeta
+}
+// aici continua programul
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Mai întâi se verifică **condiția**.
+- Dacă este adevărată, se execută **corpul**, apoi programul se întoarce la
+  condiție și o verifică din nou.
+- Dacă este falsă, bucla se încheie, iar programul continuă cu instrucțiunea de
+  după `}`.
+- Diferența față de `if`: `if` execută blocul cel mult o dată, `while` îl
+  execută cât timp condiția rămâne adevărată.
 
 </div>
 
-<div class="mt-6 text-base">
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
 
-Dacă actualizarea lipsește, condiția rămâne adevărată la infinit, iar programul
-nu mai iese niciodată din bloc.
+:: title ::
+
+# Media Pentru Orice Număr de Note
+
+:: left ::
+
+Cu `while`, cele două linii se scriu o singură dată, iar bucla le execută de `n`
+ori.
+
+```c
+int n = 0;
+int nota = 0;
+int suma = 0;
+
+scanf("%d", &n);
+
+int i = 0;
+while (i < n) {
+    scanf("%d", &nota);
+    suma = suma + nota;
+    i = i + 1;
+}
+
+printf("Media: %.2f\n", (double)suma / n);
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- Corpul buclei conține exact cele două linii copiate până acum.
+- `n` poate fi 3, 30 sau 300, iar programul nu se schimbă deloc.
+- `i` numără notele citite deja. Bucla se oprește când a ajuns la `n`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Orice Repetiție Are Patru Părți
+
+:: left ::
+
+Bucla din programul mediei, cu fiecare parte marcată. O execuție a corpului se
+numește **iterație**.
+
+```c
+int i = 0;                // 1. initializare
+
+while (i < n) {           // 2. conditie
+    scanf("%d", &nota);   // 3. corp
+    suma = suma + nota;
+    i = i + 1;            // 4. actualizare
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+1. **Inițializarea** atribuie contorului valoarea de pornire. Se execută o
+   singură dată, înainte de buclă: `i = 0`, deoarece nu a fost citită nicio notă.
+2. **Condiția** este o expresie evaluată înainte de fiecare iterație. Cât timp
+   este adevărată, corpul se execută. Când devine falsă, bucla se încheie.
+3. **Corpul** conține instrucțiunile care se repetă: citirea unei note și
+   adăugarea ei la `suma`.
+4. **Actualizarea** modifică contorul, astfel încât condiția să devină falsă
+   după un număr finit de iterații. Fără ea, `i` rămâne 0 și bucla nu se mai
+   termină.
 
 </div>
 
@@ -142,10 +331,10 @@ rulați din nou.
 ```c {monaco-run} {autorun:false}
 #include <stdio.h>
 int main(void) {
-    int i = 0;                  // initializare
-    while (i < 5) {             // conditie
-        printf("Pasul %d\n", i);  // corp
-        i = i + 1;              // actualizare
+    int i = 0;
+    while (i < 5) {
+        printf("Pasul %d\n", i);
+        i = i + 1;
     }
     printf("Gata\n");
     return 0;
@@ -322,8 +511,8 @@ align: c
 
 :: content ::
 
-Nu știm dinainte câte numere vine utilizatorul să introducă. Bucla se oprește
-la o valoare convenită, numită santinelă.
+Nu știm dinainte câte numere va introduce utilizatorul. Bucla se oprește când
+primește o **valoare de oprire**, stabilită dinainte: aici `0`.
 
 ```c {monaco-run} {autorun:false, height:'300px'}
 #include <stdio.h>
@@ -372,9 +561,49 @@ while (numar != 0) {
 <div class="text-base">
 
 - Citirea din corp este **actualizarea** buclei, chiar dacă nu arată ca un `i++`.
-- Santinela nu intră în sumă: bucla se oprește înainte de a o aduna.
-- Alegeți o santinelă care nu poate fi un răspuns valid. Pentru o sumă de note,
+- Valoarea de oprire nu intră în sumă: bucla se oprește înainte de a o aduna.
+- Alegeți o valoare de oprire care nu poate fi un răspuns valid. Pentru o sumă de note,
   `0` este potrivit, iar pentru temperaturi nu este.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Cifrele unui Număr
+
+:: left ::
+
+Am văzut deja că `% 10` și `/ 10` desfac un număr în cifre. O buclă le repetă
+până nu mai rămâne nicio cifră.
+
+```c
+int n = 385;
+int suma = 0;
+
+while (n > 0) {
+    suma = suma + n % 10;   // ultima cifra
+    n = n / 10;             // o taiem
+}
+// suma este 3 + 8 + 5 = 16
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Actualizarea este `n = n / 10`: fiecare pas scurtează numărul cu o cifră, deci
+  `n` ajunge sigur la 0.
+- Bucla face câte un pas pentru fiecare cifră, iar numărul de cifre nu se știe
+  dinainte. De aceea `while`, nu `for`.
+- La final `n` este 0. Dacă mai aveți nevoie de numărul inițial, lucrați pe o
+  copie a lui.
 
 </div>
 
@@ -435,7 +664,7 @@ do {
 
 <div class="text-base">
 
-- La `do-while`, `;` după paranteza finală este **obligatoriu**. Este singurul
+- La `do-while`, `;` după paranteza finală este **obligatoriu**. Este singura
   buclă care se termină cu punct și virgulă.
 - Alegeți `do-while` când acțiunea trebuie făcută înainte de a avea ce verifica,
   de exemplu o citire.
@@ -472,78 +701,6 @@ int main(void) {
     return 0;
 }
 ```
-
----
-layout: top-title-two-cols
-color: blue-light
-align: c-lm-lm
-columns: is-7
----
-
-:: title ::
-
-# Curățarea Bufferului
-
-:: left ::
-
-Scoatem caracterele unul câte unul, până la capătul liniei greșite.
-
-```c
-int c;
-
-while ((c = getchar()) != '\n' && c != EOF) {
-    // aruncăm tot până la capătul liniei
-}
-```
-
-:: right ::
-
-<div class="ns-c-tight text-base">
-
-- `getchar()` scoate un caracter din buffer și îl întoarce.
-- `c` este `int`, nu `char`, pentru că `EOF` nu încape într-un `char`.
-- `fflush(stdin)`, pe care îl veți găsi pe internet, **nu** este soluția:
-  standardul îl definește doar pentru ieșire, deci pe Linux nu face nimic.
-- Bucla se oprește la capătul liniei greșite, deci nu aruncă și ce urmează după ea.
-
-</div>
-
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Scheletul de Laborator
-
-:: content ::
-
-Forma pe care o veți scrie de acum înainte, ori de câte ori un program cere date
-de la utilizator.
-
-<div class="max-w-3xl mx-auto mt-8 text-left">
-
-```c
-int valoare = 0;
-
-printf("Introduceti ...: ");
-
-if (scanf("%d", &valoare) != 1) {    // am primit forma ceruta?
-    printf("Date invalide.\n");
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF) { }   // curatam bufferul
-    return 1;
-}
-
-if (/* conditia problemei */ 0) {    // are sens valoarea?
-    printf("Valoare in afara intervalului.\n");
-    return 1;
-}
-```
-
-</div>
 
 ---
 layout: top-title
@@ -654,6 +811,52 @@ columns: is-6
 
 :: title ::
 
+# Nicio Parte a lui for Nu Este Obligatorie
+
+:: left ::
+
+Oricare dintre cele trei expresii poate lipsi. Cele două `;` din paranteză
+rămân însă obligatorii.
+
+```c
+int i = 0;
+for (; i < 5; i++) {        // fara initializare
+    printf("%d\n", i);
+}
+
+for (int j = 0; j < 5;) {   // fara actualizare
+    printf("%d\n", j);
+    j++;
+}
+
+for (;;) {                  // fara nicio parte
+    printf("la infinit\n");
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Fără inițializare, contorul se pregătește înainte de buclă, ca la `while`.
+- Fără actualizare, contorul trebuie modificat în corp. Altfel bucla nu se mai
+  oprește.
+- Fără condiție, `for` o consideră mereu adevărată. `for (;;)` este deci o
+  buclă infinită, la fel ca `while (1)`.
+- La `while`, condiția nu poate lipsi: `while ()` nu compilează.
+- Dintr-o buclă infinită se iese cu `break`, pe care îl vedem în curând.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
 # Când Alegeți Fiecare Formă
 
 :: left ::
@@ -739,7 +942,7 @@ align: c
 Un `for` peste un interval fix, cu un număr citit de la utilizator. Rulați și
 introduceți un număr când programul îl cere.
 
-```c {monaco-run} {autorun:false, height:'300px'}
+```c {monaco-run} {autorun:false, height:'200px'}
 #include <stdio.h>
 int main(void) {
     int n = 0;
@@ -762,7 +965,7 @@ columns: is-6
 
 :: title ::
 
-# break Oprește Bucla pe Loc
+# `break` Oprește Bucla pe Loc
 
 :: left ::
 
@@ -784,7 +987,8 @@ printf("Continuam programul\n");
 <div class="text-base">
 
 - Execuția sare la prima instrucțiune de **după** corpul buclei.
-- Actualizarea nu se mai face, deci contorul rămâne la valoarea de la ieșire.
+- Actualizarea nu se mai face. `i` există însă doar în buclă, deci valoarea
+  găsită se salvează într-o variabilă declarată înainte de `for`.
 - Este același `break` pe care l-ați văzut la `switch`, dar aici oprește bucla,
   nu cazul.
 - O buclă fără `break` este mai ușor de citit. Folosiți-l când chiar scurtează
@@ -796,6 +1000,7 @@ printf("Continuam programul\n");
 layout: top-title
 color: blue-light
 align: c
+margin: tight
 ---
 
 :: title ::
@@ -807,14 +1012,14 @@ align: c
 Căutăm cel mai mic divizor mai mare ca 1. Dacă nu există niciunul, numărul este
 prim.
 
-```c {monaco-run} {autorun:false, height:'320px'}
+```c {monaco-run} {autorun:false, height:'336px'}
 #include <stdio.h>
 int main(void) {
-    int n = 0;
-    int divizor = 0;
+    int n = 0, divizor = 0;
     printf("Introduceti un numar: ");
     // scrieti, de exemplu:  91
     scanf("%d", &n);
+    if (n < 2) { printf("%d nu este prim\n", n); return 0; }
     for (int i = 2; i < n; i++) {
         if (n % i == 0) {
             divizor = i;
@@ -839,7 +1044,7 @@ columns: is-6
 
 :: title ::
 
-# continue Sare Peste Restul Pasului
+# `continue` Sare Peste Restul Pasului
 
 :: left ::
 
@@ -875,7 +1080,7 @@ columns: is-6
 
 :: title ::
 
-# continue Poate Îngheța un while
+# `continue` Poate Îngheța un while
 
 :: left ::
 
@@ -1027,7 +1232,7 @@ columns: is-6
 
 :: title ::
 
-# break Iese Dintr-un Singur Nivel
+# `break` Iese Dintr-un Singur Nivel
 
 :: left ::
 
@@ -1066,7 +1271,50 @@ columns: is-6
 
 :: title ::
 
-# goto Există, dar Nu Îl Folosim
+# `break` Din switch Nu Iese din Buclă
+
+:: left ::
+
+Un meniu repetă întrebarea până la alegerea de ieșire, iar alegerea se tratează
+cu un `switch`. Aici `break` are doi stăpâni posibili.
+
+```c
+int optiune = 0;
+
+do {
+    printf("1 = salut, 0 = iesire: ");
+    scanf("%d", &optiune);
+    switch (optiune) {
+        case 1: printf("Salut\n"); break;
+        case 0: break;      // iese din switch, nu din bucla
+        default: printf("Optiune necunoscuta\n");
+    }
+} while (optiune != 0);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `break` iese din construcția cea mai apropiată care îl conține, fie ea `switch`
+  **sau** buclă. Aici aceea este `switch`.
+- Bucla se oprește la `0` din cauza condiției `optiune != 0`, nu din cauza lui
+  `break`.
+- `continue` nu ține cont de `switch`: sare direct la pasul următor al buclei.
+- Meniul este forma tipică de `do-while`: opțiunile se afișează cel puțin o dată.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `goto` Există, dar Nu Îl Folosim
 
 :: left ::
 
@@ -1125,8 +1373,10 @@ for (int i = 0; i < 5; i++);   // <- corpul lui for
 
 <div class="text-base">
 
-- `;` singur este instrucțiunea vidă, deci `for` și-a primit corpul și nimic nu
-  se plânge.
+- `;` singur este instrucțiunea vidă, deci `for` și-a primit corpul și codul
+  compilează.
+- Cu `-Wall`, gcc avertizează `this 'for' clause does not guard...`. Citiți
+  avertismentele: ele văd exact ce ochiul sare.
 - Bucla chiar rulează de 5 ori, dar nu face nimic de fiecare dată.
 - La `while` aceeași greșeală este mai gravă: dacă actualizarea rămâne în blocul
   de sub `;`, programul nu se mai oprește.
@@ -1233,7 +1483,7 @@ for (unsigned int i = 5; i >= 0; i--) {
 - Când `i` este 0 și se face `i--`, valoarea nu devine -1, ci cea mai mare
   valoare reprezentabilă.
 - Condiția `i >= 0` este adevărată pentru orice `unsigned`, deci bucla nu are
-  cum să se termine.
+  cum să se termine. Cu `-Wextra`, compilatorul chiar vă spune asta.
 - Pentru numărătoare inversă folosiți `int`, sau opriți-vă la `i > 0` și lucrați
   cu `i - 1` în corp.
 
@@ -1266,6 +1516,8 @@ for (double x = 0.0; x != 1.0; x = x + 0.1) {
 
 - După zece pași `x` este `0.9999999999999999`, deci `x != 1.0` rămâne adevărat
   și bucla merge mai departe.
+- Pe ecran apare totuși `1.000000`: `%f` rotunjește la șase zecimale, deci
+  valoarea afișată nu este cea comparată.
 - Este aceeași problemă pe care ați văzut-o la compararea numerelor reale cu
   `==`.
 - Numărați cu un `int`, iar valoarea reală calculați-o din el:
@@ -1282,7 +1534,7 @@ columns: is-6
 
 :: title ::
 
-# Verificați Ce Ați Citit
+# Ce Afișează Fiecare
 
 :: left ::
 
@@ -1324,6 +1576,7 @@ do {
 layout: top-title
 color: blue-light
 align: c
+margin: tight
 ---
 
 :: title ::
@@ -1332,26 +1585,20 @@ align: c
 
 :: content ::
 
-Citirea verificată, un `for` cu contor și o buclă imbricată, în același program.
+O citire repetată cu `do-while`, un `for` cu contor și o buclă imbricată, în
+același program.
 
-```c {monaco-run} {autorun:false, height:'330px'}
+```c {monaco-run} {autorun:false, height:'270px'}
 #include <stdio.h>
 int main(void) {
     int n = 0;
-    printf("Introduceti inaltimea (1-10): ");
-    // scrieti, de exemplu:  5
-    if (scanf("%d", &n) != 1) {
-        printf("Date invalide.\n");
-        return 1;
-    }
-    if (n < 1 || n > 10) {
-        printf("Valoare in afara intervalului.\n");
-        return 1;
-    }
+    do {
+        printf("Introduceti inaltimea (1-5): ");
+        // scrieti, de exemplu:  7  apoi  3
+        scanf("%d", &n);
+    } while (n < 1 || n > 5);
     for (int rand = 1; rand <= n; rand++) {
-        for (int col = 1; col <= rand; col++) {
-            printf("%d ", col);
-        }
+        for (int col = 1; col <= rand; col++) { printf("%d ", col); }
         printf("\n");
     }
     return 0;
