@@ -43,6 +43,11 @@ const COMPILE_URL = 'https://coliru.stacked-crooked.com/compile'
 const RUN_MARKER = '__FP_RUN__'
 const EXIT_MARKER = '\n__FP_MARK__:'
 
+/** Slide px kept clear under the terminal: the page counter and the output padding. */
+const OUTPUT_BOTTOM_RESERVE_PX = 56
+/** Never shrink the terminal below ~4 lines, even on a crowded slide. */
+const OUTPUT_MIN_HEIGHT_PX = 90
+
 type Lang = 'c' | 'cpp'
 
 interface RunnerConfig {
@@ -207,13 +212,36 @@ function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunner
   const showStatus = (text: string) => {
     status.textContent = text
     status.style.display = 'inline'
+    scrollToEnd()
   }
   const hideStatus = () => {
     status.style.display = 'none'
   }
 
+  // The terminal grows under the editor, and a program that prints more than
+  // the slide has room for runs off the bottom of the canvas. Cap it at the
+  // space left above the page counter and scroll it like a real terminal,
+  // keeping the newest line (and the caret) in view.
+  root.style.overflowY = 'auto'
+  const fitToSlide = () => {
+    const page = root.closest<HTMLElement>('.slidev-page')
+    if (!page || !page.offsetHeight) return
+    const pageRect = page.getBoundingClientRect()
+    if (!pageRect.height) return // hidden tab: nothing to measure
+    // The slide is scaled with a transform; offsetHeight is the unscaled size.
+    const scale = pageRect.height / page.offsetHeight
+    const top = (root.getBoundingClientRect().top - pageRect.top) / scale
+    const room = page.offsetHeight - top - OUTPUT_BOTTOM_RESERVE_PX
+    root.style.maxHeight = `${Math.max(OUTPUT_MIN_HEIGHT_PX, room)}px`
+  }
+  const scrollToEnd = () => {
+    fitToSlide()
+    root.scrollTop = root.scrollHeight
+  }
+
   const print = (text: string) => {
     out.textContent += text
+    scrollToEnd()
   }
 
   let shownProgOut = ''
@@ -274,7 +302,8 @@ function runTerminal(code: string, lang: Lang, config: RunnerConfig): CodeRunner
         input.style.width = '2ch'
         // Says the whole block is clickable, and that typing goes here.
         root.style.cursor = 'text'
-        input.focus()
+        scrollToEnd()
+        input.focus({ preventScroll: true })
       }
       else {
         finishSession()
