@@ -1329,7 +1329,7 @@ int main(void) {
 
 Nu comparați niciodată două numere reale cu `==`. Întrebați în schimb dacă
 **diferența dintre ele este destul de mică**, exact ca rețeta rădăcinii pătrate
-din lecția 1.
+de data trecută.
 
 </AdmonitionType>
 

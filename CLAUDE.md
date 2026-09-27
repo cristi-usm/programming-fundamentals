@@ -76,6 +76,20 @@ number already appears in the hub grid and in the navigation.
 The numbered form (`Lecția 5: Tablouri`) belongs **only** in `common/lessons.json` and in
 the generated frontmatter `title` / `info`, which drive the browser tab and the hub card.
 
+### No lesson numbers in prose either
+
+The same holds for the body of a slide. A reference to another lesson says only whether it
+is **behind** the class or **ahead** of it, never which number it has.
+
+```
+❌ La lecția 2 am calculat media a două note.   ✅ Media a două note am calculat-o deja.
+❌ asta cere o buclă: lecția 5.                 ✅ asta cere o buclă, pe care o vom învăța în curând.
+```
+
+Lessons get reordered, split and renumbered; a relative reference survives that, while
+`lecția 4` quietly starts pointing at the wrong deck. Use `am văzut deja`, `de data
+trecută`, `mai târziu`, `în curând`, `vom vedea`.
+
 ## 4. Slide conventions
 
 - ✅ `color: blue-light` and `align: c` on every content slide
@@ -513,6 +527,7 @@ Upstream: [Slidev](https://sli.dev/) ·
 - [ ] Slide previewed in a browser — a slide that overflows still builds clean
 - [ ] Slide content in **Romanian**, technical terms in **English**
 - [ ] Slide titles carry **only the title** — no `Lecția N`, no numbering
+- [ ] Other lessons referred to as done or upcoming, never by number (`am văzut deja`)
 - [ ] `color: blue-light` and `align: c` on every content slide
 - [ ] Quotes are straight `"`, never `„…"`
 - [ ] No `<!-- … -->` speaker notes anywhere in the deck

@@ -501,7 +501,7 @@ int citite = scanf("%d", &nota);
 - La `scanf("%d %d", &a, &b)` valoarea așteptată este `2`.
 - `EOF` apare când intrarea s-a terminat, de exemplu când vine dintr-un fișier.
 - Orice `scanf` dintr-un program real ar trebui verificat. Cum se scrie
-  verificarea vedem în lecția 4, odată cu `if`.
+  verificarea vedem mai târziu, odată cu `if`.
 
 </div>
 
@@ -532,7 +532,7 @@ printf("%d\n", nota);  // afiseaza gunoiul
 
 <div class="ns-c-tight text-base">
 
-- Din lecția 2: o variabilă neinițializată conține ce era în acei bytes înainte.
+- Am văzut deja că o variabilă neinițializată conține ce era în acei bytes înainte.
 - Pe calculatorul vostru poate afișa `0` și pare că merge. Aceasta este cea mai
   urâtă formă de bug: una care se ascunde.
 - `int nota = 0;` la declarare nu înlocuiește verificarea, însă face
@@ -575,7 +575,7 @@ acolo, iar apelul următor dă peste exact același lucru.
 <AdmonitionType type="important" title="Consecința">
 
 Nu este de ajuns să **observați** eșecul. Trebuie și să **scoateți** din
-buffer ce a rămas, iar asta cere o buclă: lecția 5.
+buffer ce a rămas, iar asta cere o buclă, pe care o vom învăța în curând.
 
 </AdmonitionType>
 
@@ -636,7 +636,7 @@ iar trei dintre ele se pot omite.
   { text: '8', label: 'lățimea minimă', optional: true },
   { text: '.2', label: 'precizia', optional: true },
   { text: 'f', label: 'conversia: cum se citește valoarea' },
-]" caption="fără piesele opționale rămâne %f, adică exact forma cunoscută din lecția 2" />
+]" caption="fără piesele opționale rămâne %f, adică exact forma pe care o cunoașteți deja" />
 
 ---
 layout: top-title-two-cols
