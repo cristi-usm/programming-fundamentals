@@ -729,12 +729,13 @@ align: c
 
 :: title ::
 
-# break Nu Este Opțional
+# Ce Se Întâmplă Fără break
 
 :: content ::
 
-`case` este o **etichetă**, nu un bloc. Execuția ajunge acolo și continuă prin
-etichetele următoare, până dă de un `break`.
+`break` nu este obligatoriu, dar lipsa lui schimbă ce face programul. `case` este
+doar o **etichetă**: execuția intră acolo și continuă prin etichetele următoare,
+până la primul `break` sau până la `}`.
 
 <div class="grid grid-cols-2 gap-8 mt-6 items-start text-left">
 <div>
@@ -749,7 +750,7 @@ switch (2) {
 ```
 
 <div class="text-base mt-3">
-Afișează <code>doi</code>, <code>trei</code> și <code>alta</code>.
+Fără niciun <code>break</code>, afișează <code>doi</code>, <code>trei</code> și <code>alta</code>.
 </div>
 
 </div>
@@ -767,8 +768,9 @@ switch (zi) {
 ```
 
 <div class="text-base mt-3">
-Aici continuarea este intenționată: două valori, același cod, fără să îl scriem
-de două ori.
+Aici lipsa lui <code>break</code> după <code>case 6</code> este intenționată: două
+valori, același cod. <code>break</code> de după <code>printf</code> oprește execuția
+înainte de <code>default</code>.
 </div>
 
 </div>
