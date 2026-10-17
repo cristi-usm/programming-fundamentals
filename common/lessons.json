@@ -57,6 +57,8 @@
       "icon": "i-ph-keyboard-duotone",
       "title": "Lecția 3: Input/Output",
       "description": "printf, scanf și bufferul de intrare.",
+      "sheet": "https://elearning.usm.md/pluginfile.php/861742/mod_resource/content/4/Laboratorul%203.pdf",
+      "sheetTitle": "Bucle",
       "status": "ready",
       "published": true
     },
@@ -68,6 +70,8 @@
       "icon": "i-ph-git-branch-duotone",
       "title": "Lecția 4: Condiționale",
       "description": "if, else, switch, operatori logici și capcanele lor",
+      "sheet": "https://elearning.usm.md/pluginfile.php/866100/mod_resource/content/5/Laboratorul%204.pdf",
+      "sheetTitle": "Tablouri",
       "status": "ready",
       "published": true
     },
