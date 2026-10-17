@@ -30,21 +30,11 @@ const open = computed(() => !props.disabled && isPublished(lesson.value))
 const href = computed(() => (open.value && props.slug ? deckUrl(props.slug) : undefined))
 
 /**
- * An unreleased lab gives nothing away — a neutral icon and its number, no
- * subject and no description. The grid shows how many labs there are and how
- * far we've got, not what is coming.
+ * A locked card names its subject (icon and title) so students see the whole
+ * semester, but keeps its description back and cannot be opened.
  */
-const icon = computed(() => {
-  if (props.icon) return props.icon
-  if (!open.value) return 'i-ph-circle-dashed-duotone'
-  return lesson.value?.icon ?? 'i-ph-question-duotone'
-})
+const icon = computed(() => props.icon ?? lesson.value?.icon ?? 'i-ph-question-duotone')
 
-/**
- * A locked card shows nothing but skeleton bars — no subject, no description.
- * The grid says how many lessons there are and how far we've got, not what is
- * coming. `title` is therefore only ever read for an open card.
- */
 const title = computed(() => {
   if (props.title) return props.title
   return lesson.value?.title ?? 'În curând'
@@ -77,19 +67,12 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
     :class="{ complete: isCompleted, current: isCurrent, locked: !href }"
     :aria-disabled="href ? undefined : 'true'"
   >
-    <span v-if="open" class="lesson-card-icon" :class="icon" />
-    <!-- The number is all a locked card gives away — it keeps the rows countable. -->
-    <span v-else class="lesson-card-num">{{ lesson?.num ?? '·' }}</span>
+    <span class="lesson-card-icon" :class="icon" />
 
-    <div v-if="open" class="lesson-card-content">
+    <div class="lesson-card-content">
       <h3 :title="title">{{ title }}</h3>
-      <!-- Kept even when empty, so a locked card is the same height as an open one. -->
-      <p :title="description">{{ description }}</p>
-    </div>
-    <!-- Same box, same height — only the content is a placeholder. -->
-    <div v-else class="lesson-card-content lesson-card-skeleton" aria-label="Se deschide mai târziu">
-      <span class="skeleton-bar skeleton-title" />
-      <span class="skeleton-bar skeleton-desc" />
+      <!-- A locked card has no description; its title takes the second line instead. -->
+      <p v-if="open" :title="description">{{ description }}</p>
     </div>
     <span v-if="isCompleted && open" class="lesson-card-status i-ph-check-circle-fill" />
     <span v-else-if="isCurrent && open" class="lesson-card-status i-ph-play-circle-fill" />
@@ -158,79 +141,26 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
 
 /* Locked cards still read as part of the semester — just not openable yet. */
 .lesson-card.locked {
-  background: color-mix(in srgb, var(--neversink-admon-bg-color) 30%, #fff);
+  background: color-mix(in srgb, var(--neversink-admon-bg-color) 35%, #fff);
   border-style: dashed;
-  border-color: color-mix(in srgb, var(--neversink-admon-border-color) 70%, transparent);
+  border-color: var(--neversink-admon-border-color);
   cursor: default;
 }
 
-.lesson-card-num {
-  width: 1.25rem;
-  margin-right: 0.6rem;
-  flex-shrink: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-  opacity: 0.35;
+/* Named, readable, only slightly quieter than an open card: the dashed border
+   and the lock are what say "not yet", not a washed-out title. */
+.lesson-card.locked .lesson-card-icon {
+  opacity: 0.75;
 }
 
-/* Placeholder bars stand in for the title and the description. */
-.lesson-card-skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding: 0.12rem 0;
-}
-
-.skeleton-bar {
-  display: block;
-  height: 0.5rem;
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--neversink-highlight-color) 12%, transparent) 0%,
-    color-mix(in srgb, var(--neversink-highlight-color) 26%, transparent) 50%,
-    color-mix(in srgb, var(--neversink-highlight-color) 12%, transparent) 100%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-sweep 2.4s linear infinite;
-}
-
-.skeleton-title {
-  width: 78%;
-}
-
-.skeleton-desc {
-  width: 52%;
-  height: 0.4rem;
-  opacity: 0.7;
-}
-
-/* Stagger the columns a little so the grid breathes instead of pulsing as one block. */
-.lesson-card:nth-child(even) .skeleton-bar {
-  animation-delay: 0.6s;
-}
-
-.lesson-card:nth-child(3n) .skeleton-bar {
-  animation-delay: 1.1s;
-}
-
-/* One full tile of travel (120% → -80% is a 200% shift), so the last frame is
-   pixel-identical to the first and the loop has no seam. */
-@keyframes skeleton-sweep {
-  0% {
-    background-position: 120% 0;
-  }
-  100% {
-    background-position: -80% 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-bar {
-    animation: none;
-  }
+.lesson-card.locked h3 {
+  opacity: 0.85;
+  margin-bottom: 0;
+  /* No description below, so a long title wraps to two lines, not "…". */
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .lesson-card.complete {
@@ -260,6 +190,12 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
   flex: 1;
   min-width: 0;
   overflow: hidden;
+  /* Two lines tall either way (title + description, or a wrapped title), so
+     open and locked cards line up, and a one-line title sits centred. */
+  min-height: 1.95rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .lesson-card h3 {
@@ -302,6 +238,6 @@ const isCurrent = computed(() => !props.disabled && props.slug === THEME_CONFIG.
 
 .lesson-card-lock {
   color: var(--neversink-text-color);
-  opacity: 0.35;
+  opacity: 0.5;
 }
 </style>
