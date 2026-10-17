@@ -1288,8 +1288,8 @@ do {
         case 1: printf("Salut\n"); break;
         case 0: break;      // iese din switch, nu din bucla
         default: printf("Optiune necunoscuta\n");
-    }
-} while (optiune != 0);
+    }Xiaomi H40
+} while (optiune != 0);Xiaomi H40
 ```
 
 :: right ::

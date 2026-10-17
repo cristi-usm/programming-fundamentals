@@ -35,25 +35,21 @@ importers:
 
   slides/05-loops: {}
 
-  slides/06-functions: {}
+  slides/06-arrays: {}
 
-  slides/07-debugging: {}
+  slides/07-functions: {}
 
-  slides/08-arrays: {}
+  slides/08-strings: {}
 
-  slides/09-n-arrays: {}
+  slides/09-pointers: {}
 
-  slides/10-strings: {}
+  slides/10-dynamic-memory: {}
 
-  slides/11-pointers: {}
+  slides/11-structs: {}
 
-  slides/12-dynamic-memory: {}
+  slides/12-files: {}
 
-  slides/13-structs-enums: {}
-
-  slides/14-files: {}
-
-  slides/15-project: {}
+  slides/13-project: {}
 
 packages:
 

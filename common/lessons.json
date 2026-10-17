@@ -9,18 +9,18 @@
     },
     {
       "id": 2,
-      "icon": "i-ph-wrench-duotone",
-      "title": "Funcții și instrumente"
+      "icon": "i-ph-stack-duotone",
+      "title": "Bucle, tablouri și funcții"
     },
     {
       "id": 3,
-      "icon": "i-ph-squares-four-duotone",
-      "title": "Tablouri și șiruri"
+      "icon": "i-ph-memory-duotone",
+      "title": "Șiruri și memorie"
     },
     {
       "id": 4,
       "icon": "i-ph-database-duotone",
-      "title": "Memorie și date complexe"
+      "title": "Date, fișiere și proiect"
     }
   ],
   "lessons": [
@@ -75,7 +75,7 @@
       "num": 5,
       "slug": "05-loops",
       "port": 3035,
-      "module": 1,
+      "module": 2,
       "icon": "i-ph-arrows-clockwise-duotone",
       "title": "Lecția 5: Bucle",
       "description": "while, do-while, for, break și continue",
@@ -84,108 +84,87 @@
     },
     {
       "num": 6,
-      "slug": "06-functions",
+      "slug": "06-arrays",
       "port": 3036,
       "module": 2,
+      "icon": "i-ph-list-numbers-duotone",
+      "title": "Lecția 6: Tablouri",
+      "description": "Tablouri unidimensionale, bidimensionale și N-dimensionale",
+      "status": "ready",
+      "published": true
+    },
+    {
+      "num": 7,
+      "slug": "07-functions",
+      "port": 3037,
+      "module": 2,
       "icon": "i-ph-puzzle-piece-duotone",
-      "title": "Lecția 6: Funcții și recursivitate",
+      "title": "Lecția 7: Funcții și recursivitate",
       "description": "Parametri, scope, stiva de apeluri, recursivitate",
       "status": "ready",
       "published": false
     },
     {
-      "num": 7,
-      "slug": "07-debugging",
-      "port": 3037,
-      "module": 2,
-      "icon": "i-ph-bug-duotone",
-      "title": "Lecția 7: Debugging și bune practici",
-      "description": "gdb, assert, testare, stil de cod.",
-      "published": false
-    },
-    {
       "num": 8,
-      "slug": "08-arrays",
+      "slug": "08-strings",
       "port": 3038,
       "module": 3,
-      "icon": "i-ph-list-numbers-duotone",
-      "title": "Lecția 8: Tablouri",
-      "description": "Tablouri unidimensionale și căutarea liniară",
-      "status": "ready",
-      "published": false
-    },
-    {
-      "num": 9,
-      "slug": "09-n-arrays",
-      "port": 3039,
-      "module": 3,
-      "icon": "i-ph-grid-four-duotone",
-      "title": "Lecția 9: Tablouri multidimensionale",
-      "description": "Matrice și tablouri cu mai multe dimensiuni",
-      "status": "ready",
-      "published": false
-    },
-    {
-      "num": 10,
-      "slug": "10-strings",
-      "port": 3040,
-      "module": 3,
       "icon": "i-ph-text-aa-duotone",
-      "title": "Lecția 10: Șiruri de caractere",
+      "title": "Lecția 8: Șiruri de caractere",
       "description": "Stringuri în C și funcțiile din <string.h>",
       "status": "ready",
       "published": false
     },
     {
-      "num": 11,
-      "slug": "11-pointers",
-      "port": 3041,
-      "module": 4,
+      "num": 9,
+      "slug": "09-pointers",
+      "port": 3039,
+      "module": 3,
       "icon": "i-ph-map-pin-duotone",
-      "title": "Lecția 11: Pointeri",
+      "title": "Lecția 9: Pointeri",
       "description": "Adrese, dereferențiere, pointeri ca parametri",
       "status": "ready",
       "published": false
     },
     {
-      "num": 12,
-      "slug": "12-dynamic-memory",
-      "port": 3042,
-      "module": 4,
+      "num": 10,
+      "slug": "10-dynamic-memory",
+      "port": 3040,
+      "module": 3,
       "icon": "i-ph-hard-drives-duotone",
-      "title": "Lecția 12: Memorie dinamică",
+      "title": "Lecția 10: Memorie dinamică",
       "description": "malloc, free, memory leaks, tablouri dinamice",
       "published": false
     },
     {
-      "num": 13,
-      "slug": "13-structs-enums",
-      "port": 3043,
+      "num": 11,
+      "slug": "11-structs",
+      "port": 3041,
       "module": 4,
       "icon": "i-ph-cards-duotone",
-      "title": "Lecția 13: Structuri și enum",
-      "description": "Organizarea datelor complexe",
+      "title": "Lecția 11: Structuri, typedef și enum",
+      "description": "Tipuri proprii: struct, typedef și enum",
       "status": "ready",
       "published": false
     },
     {
-      "num": 14,
-      "slug": "14-files",
-      "port": 3044,
+      "num": 12,
+      "slug": "12-files",
+      "port": 3042,
       "module": 4,
       "icon": "i-ph-file-text-duotone",
-      "title": "Lecția 14: Fișiere",
-      "description": "Citirea și scrierea datelor pe disc",
+      "title": "Lecția 12: Fișiere și header-e",
+      "description": "Fișiere pe disc, #include și programe pe mai multe fișiere",
       "published": false
     },
     {
-      "num": 15,
-      "slug": "15-project",
-      "port": 3045,
+      "num": 13,
+      "slug": "13-project",
+      "port": 3043,
       "module": 4,
-      "icon": "i-ph-buildings-duotone",
-      "title": "Lecția 15: Proiect integrator",
-      "description": "Aplicație completă și pregătire pentru atestare",
+      "icon": "i-ph-terminal-window-duotone",
+      "title": "Lecția 13: Proiect: catalogul",
+      "description": "Un tool în linia de comandă, construit din tot ce știm",
       "published": false
     }
   ]

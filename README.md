@@ -41,16 +41,14 @@ pnpm dev --lazy                 # doar cuprinsul; restul le pornești din mprocs
 | 3 | Input/Output *(schelet)* | 3033 |
 | 4 | Condiționale | 3034 |
 | 5 | Cicluri | 3035 |
-| 6 | Funcții și recursivitate | 3036 |
-| 7 | Debugging și bune practici *(schelet)* | 3037 |
-| 8 | Tablouri | 3038 |
-| 9 | Tablouri multidimensionale | 3039 |
-| 10 | Șiruri de caractere | 3040 |
-| 11 | Pointeri | 3041 |
-| 12 | Memorie dinamică *(schelet)* | 3042 |
-| 13 | Structuri și enum | 3043 |
-| 14 | Fișiere *(schelet)* | 3044 |
-| 15 | Proiect integrator *(schelet)* | 3045 |
+| 6 | Tablouri | 3036 |
+| 7 | Funcții și recursivitate | 3037 |
+| 8 | Șiruri de caractere | 3038 |
+| 9 | Pointeri | 3039 |
+| 10 | Memorie dinamică *(schelet)* | 3040 |
+| 11 | Structuri, typedef și enum | 3041 |
+| 12 | Fișiere și header-e *(schelet)* | 3042 |
+| 13 | Proiect: catalogul *(schelet)* | 3043 |
 
 Lista este generată din `common/lessons.json` — acolo se adaugă o lecție nouă.
 

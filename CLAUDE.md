@@ -251,7 +251,7 @@ programming-fundamentals/
 ├── slides/                    # one independent deck per lesson
 │   ├── 00-hub/                # landing page / table of contents (port 3030)
 │   ├── 01-intro/              (port 3031)
-│   └── …                      # up to 15-project (port 3045)
+│   └── …                      # up to 13-project (port 3043)
 ├── common/                    # shared across every deck
 │   ├── lessons.json              # ⭐ single source of truth for the lesson structure
 │   ├── lessons.ts                # navigation logic between decks
@@ -333,7 +333,7 @@ In `common/components/`, auto-imported in every deck — **no import needed** in
 | Component | What it does |
 |---|---|
 | `<LessonGrid />` | Grid of all lessons, grouped by module (used by the hub) |
-| `<LessonCard slug="08-arrays" />` | A single card in that grid |
+| `<LessonCard slug="06-arrays" />` | A single card in that grid |
 | `<DeckNav />` | End-of-deck navigation: previous lesson / hub / next lesson |
 | `<HomeButton />` | 🏠 back to the hub; rendered on every slide via `global-bottom.vue` |
 | `<GithubLink />` | Repository link icon (repo URL comes from `lessons.json`) |
@@ -420,7 +420,7 @@ pnpm dev                        # all decks (mprocs TUI if installed)
 pnpm dev --lazy                 # only the hub; start the rest from the mprocs UI
 node scripts/dev.mjs hub 5 6    # only the hub and lessons 5 and 6
 pnpm dev:hub                    # a single deck
-pnpm dev:08-arrays
+pnpm dev:06-arrays
 ```
 
 Ports: `3030` hub, `3030 + lesson number` for lessons. Cross-deck links point at
@@ -439,14 +439,14 @@ its `v-click` reveals (§4).
 
 ```bash
 pnpm build                                   # everything into dist/
-node scripts/build.mjs --only 08-arrays      # rebuild a single deck in place
+node scripts/build.mjs --only 06-arrays      # rebuild a single deck in place
 BASE_PATH=/programming-fundamentals pnpm build
 pnpm preview
 ```
 
 The hub builds to `dist/`, each lesson to `dist/<slug>/`. `scripts/fix-spa-routing.mjs`
 then gives every deck a `404.html` copy of its own `index.html` and writes a root
-dispatcher, so deep links like `/08-arrays/12` survive on static hosts.
+dispatcher, so deep links like `/06-arrays/12` survive on static hosts.
 
 GitHub Pages serves the site from a repository subpath — `.github/workflows/deploy.yml`
 passes it through `BASE_PATH`. That is the only deploy target; another static host needs

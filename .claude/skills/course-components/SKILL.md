@@ -18,7 +18,7 @@ components are in the `slide-components` skill.
 | `<MemoryCells :cells [caption] [size] />` | Strip of memory boxes: name, content, address |
 | `<FlowSteps :steps [caption] [size] />` | Horizontal pipeline: labelled nodes + animated arrows |
 | `<LessonGrid />` | Grid of all lessons, grouped by module (used by the hub) |
-| `<LessonCard slug="08-arrays" />` | A single card in that grid |
+| `<LessonCard slug="06-arrays" />` | A single card in that grid |
 | `<DeckNav />` | End-of-deck navigation: previous lesson / hub / next lesson |
 | `<HomeButton />` | 🏠 back to the hub; rendered on every slide via `global-bottom.vue` |
 | `<GithubLink />` | Repository link icon (repo URL comes from `lessons.json`) |
