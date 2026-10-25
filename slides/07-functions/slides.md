@@ -37,408 +37,120 @@ cpp:
 ---
 
 ### Funcții în C
-
-#### Modularizarea și refolosirea codului
+#### Un nume pentru o bucată de program
 
 ---
-layout: top-title
-align: c
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
+
 :: title ::
 
-# Problema Codului Repetitiv
+# Aceeași Validare, de Trei Ori
 
-:: content ::
+:: left ::
 
-Imaginați-vă că trebuie să calculăm și să afișăm puterea a doua sau mai multor numere în programul nostru.
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-
-int main() {
-    int a = 5;
-    int a_patrat = a * a;
-    printf("Patratul lui %d este %d\n", a, a_patrat);
-
-    int b = 10;
-    int b_patrat = b * b;
-    printf("Patratul lui %d este %d\n", b, b_patrat);
-
-    int c = 12;
-    int c_patrat = c * c;
-    printf("Patratul lui %d este %d\n", c, c_patrat);
-
-    return 0;
-}
-```
-
----
-layout: center
-color: blue-light
----
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)] text-[var(--neversink-text-color)] text-center">
-
-**Observați repetiția?** Logica de calcul și afișare este aceeași, doar valoarea de intrare se schimbă.
-
-<p class="mt-2">Acest mod de a scrie cod este ineficient, greu de citit și foarte greu de modificat. Dacă am vrea să schimbăm mesajul afișat, ar trebui să o facem în trei locuri!</p>
-</div>
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Soluția: Funcțiile
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Ce este o Funcție?
-
-:: content ::
-
-O **funcție** este un bloc de cod **independent** și **reutilizabil** care efectuează o anumită sarcină. Funcțiile ne ajută să ne structurăm programele, să eliminăm repetiția și să facem codul mai ușor de înțeles și de întreținut.
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)] text-[var(--neversink-text-color)] text-center">
-Gândiți-vă la o funcție ca la o "mini-mașinărie" sau o "rețetă": îi dai niște ingrediente (date de intrare), ea face o treabă specifică și îți poate da un rezultat înapoi (dată de ieșire).
-</div>
-<br/>
-
-**Avantaje:**
-<div class="ns-c-tight">
-
-- **Modularitate**: Împarte un program complex în bucăți mai mici și mai ușor de gestionat.
-- **Reutilizare**: O funcție poate fi "chemată" (apelată) de mai multe ori, din diferite locuri ale programului.
-- **Lizibilitate**: Codul devine mai curat și mai ușor de urmărit. `calculeazaTVA()` este mai clar decât un bloc de formule matematice.
-- **Mentenanță**: Dacă trebuie să corectăm o eroare sau să modificăm o logică, o facem într-un singur loc - în corpul funcției.
-
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sintaxa unei Funcții
-
-:: content ::
-
-O funcție în C are următoarele părți:
-
-<br/>
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)] text-center font-mono text-lg">
-  <span class="text-red-500 font-bold">tip_returnat</span> <span class="text-blue-500 font-bold">nume_functie</span>(<span class="text-green-500 font-bold">tip_parametru1 nume_parametru1</span>, ...);
-</div>
-<br/>
-
-<div class="ns-c-tight">
-
-- **`tip_returnat`**: Tipul de dată al valorii pe care funcția o "întoarce" la final. Dacă funcția nu returnează nimic, folosim cuvântul cheie **`void`**.
-- **`nume_functie`**: Un nume descriptiv care indică ce face funcția.
-- **`parametri`** (în paranteze `()`): O listă de variabile care reprezintă datele de intrare ale funcției. Dacă funcția nu primește nicio dată, lăsăm parantezele goale sau scriem `void`.
-- **Corpul funcției** (între acolade `{}`): Blocul de cod care conține instrucțiunile executate de funcție.
-- **`return`**: Instrucțiunea care trimite o valoare înapoi în locul unde a fost apelată funcția.
-
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Parametri vs. Argumente
-
-:: content ::
-
-Deși adesea folosiți interschimbabil, acești termeni au semnificații distincte:
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">Parametri</h3>
-    <div class="text-sm mt-2">
-
-Sunt variabilele listate în **definiția** funcției. Ei acționează ca niște "locuri goale" (placeholders) pentru valorile pe care funcția se așteaptă să le primească.
-   
-</div>
-  </div>
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">Argumente</h3>
-    <div class="text-sm mt-2">
-
-Sunt valorile **reale** pe care le trimitem funcției atunci când o **apelăm** (o chemăm). Aceste valori "umplu" locurile goale definite de parametri.
-    
-</div>
-  </div>
-</div>
-
-<br/>
+Un program citește nota, anul și grupa. Fiecare citire are nevoie de bucla de
+validare pe care o știm deja.
 
 ```c
-// Aici, 'a' si 'b' sunt PARAMETRI
-int aduna(int a, int b) {
-    return a + b;
-}
+int nota = 0, an = 0, grupa = 0;
+do {
+    printf("Numar intre 1 si 10: ");
+    scanf("%d", &nota);
+} while (nota < 1 || nota > 10);
 
-int main() {
-    int x = 5, y = 10;
-    
-    // Aici, 'x' si '10' sunt ARGUMENTE
-    int rezultat = aduna(x, 10);
+do {
+    printf("Numar intre 1 si 4: ");
+    scanf("%d", &an);
+} while (an < 1 || an > 4);
 
-    return 0;
-}
+do {
+    printf("Numar intre 1 si 30: ");
+    scanf("%d", &grupa);
+} while (grupa < 1 || grupa > 30);
 ```
 
----
-transition: slide-left
-layout: cover
-color: blue-light
----
+:: right ::
 
-## Exemple de Funcții
+<div class="text-base">
 
----
-layout: cover
----
+- Cele trei bucle diferă doar prin limite și prin variabila citită.
+- O buclă nu le poate uni: fiecare citire are limitele ei și poate sta în alt
+  loc din program.
+- O schimbare se face în trei locuri. Dacă uităm unul, compilatorul nu observă.
+- Ne trebuie un **nume** pentru bucla de validare și o cale de a-i da limitele.
 
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-// Definitia unei functii care nu returneaza nimic (void) si nu primeste parametri (void).
-void afiseazaSalut() {
-    printf("-------------------\n");
-    printf("Salut din functie!\n");
-    printf("-------------------\n");
-}
-
-// Definitia unei functii care returneaza un int si primeste un parametru de tip int.
-int calculeazaPatrat(int numar) {
-    int rezultat = numar * numar;
-    return rezultat; // Returneaza valoarea calculata
-}
-
-int main() {
-    // Apelarea (chemarea) primei functii
-    afiseazaSalut();
-    int x = 5;
-    // Apelarea functiei a doua si stocarea rezultatului
-    int patrat_x = calculeazaPatrat(x);
-    printf("Patratul lui %d este %d\n", x, patrat_x);
-    // Putem apela functia si direct in printf
-    printf("Patratul lui 12 este %d\n", calculeazaPatrat(12));
-    return 0;
-}
-```
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Scopul Variabilelor (Scope)
+</div>
 
 ---
 layout: top-title
-align: c
 color: blue-light
+align: c
 ---
+
 :: title ::
 
-# Variabile Locale vs. Globale
+# Am Folosit Deja Funcții
 
 :: content ::
 
-**Scopul (scope)** unei variabile se referă la regiunea din cod unde acea variabilă este vizibilă și poate fi accesată.
+`printf` și `scanf` sunt bucăți de program cu un nume, scrise de altcineva. Le
+folosim fără să știm ce conțin.
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">Variabile Locale</h3>
-    <div class="text-sm mt-2">
-    
-Sunt declarate **în interiorul** unei funcții (inclusiv parametrii). Ele **există doar pe parcursul execuției acelei funcții**. Odată ce funcția se termină, variabilele locale sunt distruse. Funcțiile diferite pot avea variabile locale cu același nume, fără a intra în conflict.
-    
-</div>
+<div class="grid grid-cols-3 gap-5 mt-10 text-left">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">printf("%d", x)</div>
+    <div class="text-sm mt-2">Primește un șablon și valori, apoi le afișează.</div>
   </div>
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">Variabile Globale</h3>
-    <div class="text-sm mt-2">
-
-Sunt declarate **în afara** oricărei funcții. Ele sunt vizibile și pot fi modificate din **orice** funcție din fișier.
-  
-</div>
-    <AdmonitionType type="danger">
-    Folosirea excesivă a variabilelor globale este considerată o practică proastă, deoarece face programul greu de urmărit și crește riscul de erori.
-    </AdmonitionType>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">scanf("%d", &x)</div>
+    <div class="text-sm mt-2">Citește și <strong>întoarce</strong> un rezultat: câte valori a citit.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">int main()</div>
+    <div class="text-sm mt-2">O scriem noi în fiecare program. Este apelată automat când pornește programul.</div>
   </div>
 </div>
 
 ---
-layout: cover
----
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-// 'variabila_globala' este vizibila oriunde in acest fisier
-int variabila_globala = 100;
-
-void functieExemplu() {
-    // 'variabila_locala' exista doar in interiorul acestei functii
-    int variabila_locala = 10;
-    printf("In functie: globala = %d, locala = %d\n", variabila_globala, variabila_locala);
-    // Putem modifica variabila globala
-    variabila_globala = 200;
-}
-
-int main() {
-    printf("Inainte de apel: globala = %d\n", variabila_globala);
-    functieExemplu();
-    printf("Dupa apel: globala = %d\n", variabila_globala);
-    // EROARE DE COMPILARE! 'variabila_locala' nu este vizibila aici.
-    // printf("In main: locala = %d\n", variabila_locala); 
-
-    return 0;
-}
-```
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Declararea vs. Definirea Funcțiilor
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Declararea (Prototipul)
-
-:: content ::
-
-Compilatorul C citește fișierul de sus în jos. Ce se întâmplă dacă încercăm să apelăm o funcție **înainte** ca ea să fie definită (implementată)?
-
-```c
-#include <stdio.h>
-
-int main() {
-    // EROARE! Compilatorul ajunge aici si nu stie
-    // ce este 'aduna'. Nu stie ce parametri primeste
-    // sau ce tip de data returneaza.
-    int suma = aduna(5, 10); 
-    printf("Suma este: %d\n", suma);
-    return 0;
-}
-
-// Definitia este prea jos
-int aduna(int a, int b) {
-    return a + b;
-}
-```
-
----
 layout: top-title
 align: c
 color: blue-light
 ---
 
 :: title ::
-# Cum rezolvăm această problemă?
+
+# Ce Este o Funcție
 
 :: content ::
 
-Soluția este **declararea funcției** (numită și **prototip**). Un prototip este ca o "promisiune" pe care i-o facem compilatorului. Îi spunem "va exista o funcție cu acest nume, care primește acești parametri și returnează acest tip de dată".
+<div class="max-w-4xl mx-auto mt-6">
 
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)]">
-<h3 class="font-bold text-center text-[var(--neversink-text-color)]">Sintaxa Prototipului</h3>
+<Definition term="Funcție" source="Pe scurt" emphasis>
 
-```c
-tip_returnat nume_functie(tip_parametru1, tip_parametru2, ...);
-```
+O bucată de cod **reutilizabilă**, cu **un nume**. Primește valori prin
+**parametri** și poate **întoarce** un rezultat.
+
+</Definition>
 
 </div>
 
----
-layout: cover
----
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-
-// DECLARAREA (Prototipul) functiei 'aduna'
-// Acum compilatorul stie despre ea de la inceput.
-int aduna(int a, int b);
-
-int main() {
-    // Acum apelul este valid!
-    int suma = aduna(5, 10); 
-    printf("Suma este: %d\n", suma);
-    return 0;
-}
-
-// DEFINITIA (Implementarea) functiei
-// Poate fi oriunde in fisier, dupa declarare.
-int aduna(int a, int b) {
-    return a + b;
-}
-```
-
-<AdmonitionType type="info">
-
-Prototipurile sunt esențiale atunci când lucrăm cu mai multe fișiere sursă și cu fișiere header (`.h`).
-
-</AdmonitionType>
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Stiva de Apeluri (Call Stack)
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Cum ține minte programul unde să se întoarcă?
-
-:: content ::
-
-Când o funcție (ex: `main`) apelează o altă funcție (ex: `functieA`), programul trebuie să pună `main` "pe pauză" și să sară la codul din `functieA`. Când `functieA` se termină, programul trebuie să știe exact unde a rămas în `main` pentru a continua.
-
-Acest mecanism este gestionat cu ajutorul unei structuri de date numită **stivă de apeluri (call stack)**.
-
-<div class="ns-c-tight">
-
-- Când o funcție este apelată, ea este "împinsă" pe stivă, împreună cu variabilele ei locale.
-- Când funcția se termină (cu `return`), ea este "scoasă" de pe stivă, iar controlul revine la funcția de sub ea.
-
-</div>
-
-<br/>
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)] text-center">
-
-Stiva funcționează pe principiul **"Ultimul intrat, primul ieșit" (LIFO - Last-In, First-Out)**.
-
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Se scrie o dată</div>
+    <div class="mt-1">Codul stă într-un singur loc, deci se corectează într-un singur loc.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Se apelează după nume</div>
+    <div class="mt-1">Folosirea ei se numește <strong>apel</strong>. Se poate apela de oricâte ori.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Primește și întoarce valori</div>
+    <div class="mt-1">Cu alte valori primite, dă alt rezultat.</div>
+  </div>
 </div>
 
 ---
@@ -446,103 +158,1258 @@ layout: top-title
 align: c
 color: blue-light
 ---
+
 :: title ::
 
-# Reprezentarea Stivei
+# Anatomia unei Funcții
 
 :: content ::
 
-Considerăm codul:
-```c
-void funcB() { /* ... */ }
-void funcA() { funcB(); }
-int main() { funcA(); return 0; }
-```
+Prima linie spune cum se folosește funcția. Corpul spune cum lucrează.
+
+<div class="fp-anat mt-10">
+<div class="fp-anat__line">
+<div class="fp-anat__part">
+<div class="fp-anat__tok">int</div>
+<div class="fp-anat__tick"></div>
+<div class="fp-anat__lbl">tipul rezultatului</div>
+<div class="fp-anat__sub">ce fel de valoare întoarce</div>
+</div>
+<div class="fp-anat__part">
+<div class="fp-anat__tok">maxim</div>
+<div class="fp-anat__tick"></div>
+<div class="fp-anat__lbl">numele</div>
+<div class="fp-anat__sub">cum o apelăm</div>
+</div>
+<div class="fp-anat__part">
+<div class="fp-anat__tok">(int a, int b)</div>
+<div class="fp-anat__tick"></div>
+<div class="fp-anat__lbl">parametrii</div>
+<div class="fp-anat__sub">valorile pe care le primește</div>
+</div>
+<div class="fp-anat__part">
+<div class="fp-anat__tok">{ ... }</div>
+<div class="fp-anat__tick"></div>
+<div class="fp-anat__lbl">corpul</div>
+<div class="fp-anat__sub">instrucțiunile ei</div>
+</div>
+</div>
+</div>
+
+<div class="ns-c-tight text-base mt-10">
+
+- Fiecare parametru are tipul lui: `int a, int b`, nu `int a, b`.
+- Numele urmează regulile numelor de variabile. Spune ce face funcția: `maxim`,
+  `citesteNota`, `afiseaza`.
+
+</div>
 
 <style>
-.stack-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 300px;
-    font-family: monospace;
+/* Same anatomy drawing as the declaration slide in 02-data-types. */
+.fp-anat { display: flex; justify-content: center; }
+
+.fp-anat__line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.1rem 1.6rem 1rem;
+  border: 1.5px solid var(--neversink-admon-border-color);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--neversink-admon-bg-color) 30%, #fff);
 }
-.stack-frame {
-    background-color: var(--neversink-bg-code-color);
-    border: 2px solid var(--neversink-border-color);
-    color: var(--neversink-fg-code-color);
-    width: 150px;
-    padding: 15px;
-    text-align: center;
-    margin: 0 10px;
-    font-size: 1.2em;
-    font-weight: bold;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+
+.fp-anat__part { display: flex; flex-direction: column; align-items: center; }
+
+.fp-anat__tok {
+  padding: 0.35rem 0.9rem;
+  border-radius: 8px;
+  background: var(--neversink-admon-bg-color);
+  border: 1.5px solid var(--neversink-border-color);
+  font-family: monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--neversink-fg-color);
 }
-.stack-arrow {
-    font-size: 2em;
-    align-self: center;
-    margin-bottom: 100px;
+
+.fp-anat__tick {
+  width: 2px;
+  height: 1.1rem;
+  background: var(--neversink-border-color);
+  opacity: 0.6;
+}
+
+.fp-anat__lbl {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--neversink-text-color);
+}
+
+.fp-anat__sub {
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  text-align: center;
+  max-width: 9rem;
 }
 </style>
 
-<div class="grid grid-cols-3 gap-4 text-center neversink-indigo-light-scheme mb-6">
-<div>
-  <p>
+---
+layout: top-title
+color: blue-light
+align: c
+---
 
-1. Se apelează `main`
-</p>
-  <div class="stack-container">
-    <div class="stack-frame" style="height: 60px;">main()</div>
-  </div>
-</div>
-<div>
-  <p>
+:: title ::
 
-2. `main` apelează `funcA`
-</p>
-  <div class="stack-container">
-    <div class="stack-frame" style="height: 120px;">
-        <div style="height: 60px; border-bottom: 2px dashed var(--neversink-border-color); display:flex; align-items:center; justify-content:center;">funcA()</div>
-        <div style="height: 60px; display:flex; align-items:center; justify-content:center;">main()</div>
-    </div>
-  </div>
-</div>
-<div>
-  <p>
+# Prima Funcție
 
-3. `funcA` apelează `funcB`
-</p>
-  <div class="stack-container">
-    <div class="stack-frame" style="height: 180px;">
-        <div style="height: 60px; border-bottom: 2px dashed var(--neversink-border-color); display:flex; align-items:center; justify-content:center;">funcB()</div>
-        <div style="height: 60px; border-bottom: 2px dashed var(--neversink-border-color); display:flex; align-items:center; justify-content:center;">funcA()</div>
-        <div style="height: 60px; display:flex; align-items:center; justify-content:center;">main()</div>
-    </div>
-  </div>
+:: content ::
+
+Funcția se scrie deasupra lui `main`. Ca s-o **apelăm**, scriem numele ei și
+valorile între paranteze rotunde. Rulați, apoi încercați alte valori.
+
+```c {monaco-run} {autorun:false, height:'270px'}
+#include <stdio.h>
+
+int maxim(int a, int b) {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+
+int main() {
+    printf("%d\n", maxim(3, 8));
+    printf("%d\n", maxim(10, -2));
+    int m = maxim(7, 7);
+    printf("%d\n", m);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-5
+---
+
+:: title ::
+
+# Ce Se Întâmplă la un Apel
+
+:: left ::
+
+Urmărim pas cu pas linia `int m = maxim(3, 8);`.
+
+```c
+int maxim(int a, int b) {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+
+int main() {
+    int m = maxim(3, 8);
+    printf("%d\n", m);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="ns-c-table text-sm">
+
+| pas | ce se întâmplă |
+|---|---|
+| 1 | `main` se oprește în mijlocul liniei |
+| 2 | `a` primește 3, `b` primește 8 |
+| 3 | corpul rulează: `3 > 8` este fals |
+| 4 | `return b;` încheie funcția cu valoarea 8 |
+| 5 | `main` continuă cu 8 în locul apelului: `m = 8` |
+
 </div>
+
+<div class="text-base mt-4">
+
+Apelul unei funcții care întoarce ceva are o valoare, ca `3 + 5`. Poate sta
+oriunde poate sta un număr.
 
 </div>
 
 ---
-layout: center
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Parametri și Argumente
+
+:: left ::
+
+Variabilele din prima linie a funcției sunt **parametri**. Valorile date la
+apel sunt **argumente**.
+
+```c
+int maxim(int a, int b) {   // a, b: parametri
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+
+int x = 4;
+maxim(x, 9);           // a = x;      b = 9;
+maxim(x + 1, x * 2);   // a = x + 1;  b = x * 2;
+```
+
+:: right ::
+
+<div class="text-base">
+
+- La apel, fiecare parametru primește argumentul de pe aceeași **poziție**
+  printr-o **atribuire**, ca în comentariile din cod.
+- Un argument poate fi orice expresie. Întâi se calculează, apoi se atribuie:
+  `a` primește 5, `b` primește 8.
+- Numărul argumentelor trebuie să fie egal cu al parametrilor. `maxim(4)` dă
+  eroare: `too few arguments to function 'maxim'`.
+- Fiind o atribuire, un argument de alt tip se convertește: `maxim(2.9, 1)` pune
+  2 în `a`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Apel ca Argument
+
+:: left ::
+
+Rezultatul unui apel poate fi argument pentru alt apel. Apelul din interior se
+face primul.
+
+```c
+// cel mai mare dintre trei numere
+int m = maxim(maxim(a, b), c);
+
+// direct in printf
+printf("%d\n", maxim(x, 0));
+
+// GRESIT: nu stim ce primeste a doua oara
+int i = 1;
+int r = maxim(i++, i);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `maxim(a, b)` se calculează întâi. Valoarea lui devine primul argument al
+  apelului exterior.
+- Ordinea în care se calculează argumentele aceluiași apel **nu** este fixată de
+  limbaj. `maxim(f(), g())` poate apela întâi `g`.
+- De aceea nu modificăm o variabilă într-un argument pe care îl citim și în
+  altul. gcc avertizează: `operation on 'i' may be undefined`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `return` Încheie Funcția
+
+:: left ::
+
+`return` dă valoarea înapoi și **încheie** funcția pe loc. Ce urmează după el nu
+se mai execută.
+
+```c
+int semn(int x) {
+    if (x > 0) {
+        return 1;     // functia se termina aici
+    }
+    if (x < 0) {
+        return -1;
+    }
+    return 0;         // ajungem aici doar pentru x == 0
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- O funcție poate avea mai multe `return`. Se execută primul la care ajunge
+  execuția.
+- Valoarea se convertește la tipul din prima linie: `return 2.7;` într-o funcție
+  `int` întoarce 2.
+- Fără `return` pe un drum al execuției, valoarea primită de apelant este
+  nedefinită. gcc avertizează: `control reaches end of non-void function`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Funcții Care Nu Întorc Nimic
+
+:: left ::
+
+Unele funcții doar **fac** ceva, de exemplu afișează. Tipul lor este `void`,
+adică "nimic".
+
+```c
+void linie(int lungime, char simbol) {
+    for (int i = 0; i < lungime; i++) {
+        printf("%c", simbol);
+    }
+    printf("\n");
+}
+
+linie(10, '*');    // **********
+linie(5, '-');     // -----
+```
+
+:: right ::
+
+<div class="text-base">
+
+- O funcție `void` se termină la acolada de final sau mai devreme, la un
+  `return;` fără valoare.
+- Apelul ei nu are valoare. `int x = linie(3, '*');` dă eroare: `void value not
+  ignored as it ought to be`.
+- Parametrii pot avea tipuri diferite: aici un `int` și un `char`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Funcții Fără Parametri
+
+:: left ::
+
+Când funcția nu primește nimic, parantezele rămân goale, și în prima linie, și
+la apel.
+
+```c
+void separator() {
+    printf("--------------------\n");
+}
+
+int main() {
+    separator();
+    printf("Catalog\n");
+    separator();
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Se poate scrie și `void separator(void)`. Din standardul C23, cele două forme
+  înseamnă același lucru: un apel ca `separator(5)` dă eroare.
+- Până la C23, `()` însemna "parametri neprecizați", iar `separator(5)` se
+  compila fără eroare. De aceea, în cod mai vechi, apare des `(void)`.
+- Parantezele de la apel sunt obligatorii. `separator;` nu apelează nimic, iar
+  gcc avertizează: `statement with no effect`.
+- Acum se citește și `int main()`: o funcție fără parametri care întoarce un
+  `int`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Validarea, Scrisă o Singură Dată
+
+:: content ::
+
+Bucla de validare devine o funcție: limitele sunt parametri, numărul valid este
+rezultatul. Cele trei bucle de la început devin trei apeluri.
+
+```c {monaco-run} {autorun:false, height:'315px'}
+#include <stdio.h>
+
+int citesteIntre(int min, int max) {
+    int x = 0;
+    do {
+        printf("Numar intre %d si %d: ", min, max);
+        scanf("%d", &x);
+    } while (x < min || x > max);
+    return x;
+}
+
+int main() {
+    // scrieti, de exemplu:  15  apoi  9  apoi  2  apoi  12
+    int nota = citesteIntre(1, 10);
+    int an = citesteIntre(1, 4);
+    int grupa = citesteIntre(1, 30);
+    printf("Nota %d, anul %d, grupa %d\n", nota, an, grupa);
+    return 0;
+}
+```
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Funcții Care Răspund cu Da sau Nu
+
+:: content ::
+
+O funcție care întoarce 1 sau 0 se citește ca o întrebare: `if (estePrim(i))`.
+Numele unei astfel de funcții începe de obicei cu `este`, iar în engleză cu `is`:
+`isPrime`.
+
+```c {monaco-run} {autorun:false, height:'345px'}
+#include <stdio.h>
+
+int estePrim(int n) {
+    if (n < 2) { return 0; }
+    for (int d = 2; d < n; d++) {
+        if (n % d == 0) {
+            return 0;      // are un divizor, deci nu e prim
+        }
+    }
+    return 1;
+}
+
+int main() {
+    for (int i = 1; i <= 30; i++) {
+        if (estePrim(i)) { printf("%d ", i); }
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Calculează, Nu Afișa
+
+:: left ::
+
+Două funcții pentru media a două note. Doar a doua poate fi folosită mai departe.
+
+```c
+// rezultatul ajunge doar pe ecran
+void afiseazaMedia(int a, int b) {
+    printf("%.2f\n", (a + b) / 2.0);
+}
+
+// rezultatul se intoarce apelantului
+double media(int a, int b) {
+    return (a + b) / 2.0;
+}
+
+if (media(n1, n2) >= 5) {
+    printf("Promovat, media %.2f\n", media(n1, n2));
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Ce afișează prima funcție nu mai poate fi comparat, adunat sau păstrat.
+- A doua întoarce valoarea, iar apelantul decide ce face cu ea.
+- O funcție face un singur lucru. Citirea, calculul și afișarea stau în funcții
+  separate.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `main` Este Tot o Funcție
+
+:: left ::
+
+`main` are tip, nume, parametri și corp. Nu o apelăm noi: este apelată automat
+când pornește programul.
+
+```c
+int main() {
+    printf("Salut\n");
+    return 0;    // codul de iesire al programului
+}
+```
+
+```bash
+$ ./program
+Salut
+$ echo $?
+0
+$ gcc program.c -o program && ./program
+Salut
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Valoarea întoarsă de `main` ajunge la sistemul de operare, ca **cod de
+  ieșire**. 0 înseamnă succes.
+- Altă valoare semnalează o problemă, ca `return 1;` la date invalide.
+- `echo $?` afișează codul de ieșire al ultimului program rulat.
+- În terminal, `&&` rulează a doua comandă doar dacă prima a întors 0. Și gcc
+  întoarce un cod: la o eroare de compilare, `./program` nu mai pornește.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Compilatorul Citește de Sus în Jos
+
+:: left ::
+
+Aici `main` stă deasupra funcției. Compilatorul ajunge la apel înainte să afle
+că `maxim` există.
+
+```c
+#include <stdio.h>
+
+int main() {
+    printf("%d\n", maxim(3, 8));
+    return 0;
+}
+
+int maxim(int a, int b) {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- gcc oprește compilarea: `implicit declaration of function 'maxim'`.
+- La linia apelului, compilatorul nu știe încă ce parametri are `maxim` și ce
+  întoarce, deci nu poate verifica apelul.
+- Putem muta funcția deasupra lui `main`. Dar cu zece funcții, `main` ajunge la
+  capătul fișierului.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Declarația Sus, Definiția Jos
+
+:: left ::
+
+Prima linie a funcției, urmată de `;`, se numește **prototip**. Ajunge ca apelul
+să poată fi verificat. Corpul poate veni mai jos.
+
+```c
+#include <stdio.h>
+
+int maxim(int a, int b);     // prototipul
+
+int main() {
+    printf("%d\n", maxim(3, 8));
+    return 0;
+}
+
+int maxim(int a, int b) {    // definitia
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Prototipul este o **declarație**: nume, tipuri, rezultat. Funcția cu corp este
+  **definiția**.
+- În prototip, numele parametrilor sunt opționale: `int maxim(int, int);`.
+- Prototipul și definiția trebuie să se potrivească. Altfel: `conflicting types
+  for 'maxim'`.
+- Cu prototipurile sus, `main` poate sta primul și se citește ca un cuprins.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Funcții din Biblioteca Standard
+
+:: left ::
+
+Fișierele `.h` conțin, printre altele, prototipuri. `#include <math.h>` aduce
+prototipurile funcțiilor matematice.
+
+```c
+#include <stdio.h>
+#include <math.h>    // sqrt, pow, fabs, ceil, floor
+
+int main() {
+    double x = 9.0, y = -2.5;
+    printf("%.1f\n", sqrt(x));       // 3.0
+    printf("%.1f\n", pow(2.0, 10));  // 1024.0
+    printf("%.1f\n", fabs(y));       // 2.5
+    printf("%.1f\n", ceil(2.3));     // 3.0, in sus
+    printf("%.1f\n", floor(2.7));    // 2.0, in jos
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Funcțiile din `math.h` primesc și întorc `double`. Chiar și `ceil` și `floor`
+  întorc un `double`, deci se afișează cu `%f`: `ceil(2.3)` este `3.0`.
+- `math.h` aduce doar prototipurile. Codul funcțiilor stă în biblioteca `libm`,
+  iar `-lm` (`-l` de la library, plus `m`) îi cere linker-ului s-o adauge. Fără
+  el: `undefined reference to 'sqrt'`.
+- Valoarea absolută pentru `int` este `abs`, din `stdlib.h`. `fabs` este pentru
+  `double`.
+- Înainte să scrieți o funcție, verificați dacă biblioteca standard nu o are
+  deja.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Funcția Primește o Copie
+
+:: content ::
+
+La apel, valoarea argumentului se **copiază** în parametru, iar funcția lucrează
+pe copie. Rulați și priviți `x` din `main`.
+
+```c {monaco-run} {autorun:false, height:'225px'}
+#include <stdio.h>
+
+void dubleaza(int n) {
+    n = n * 2;
+    printf("in functie: n = %d\n", n);
+}
+
+int main() {
+    int x = 5;
+    dubleaza(x);
+    printf("in main:    x = %d\n", x);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Fiecare Funcție Are Variabilele Ei
+
+:: left ::
+
+O variabilă declarată într-o funcție este **locală**: există doar acolo. Alte
+funcții nu o văd.
+
+```c
+int suma(int n) {
+    int s = 0;
+    for (int i = 1; i <= n; i++) {
+        s = s + i;
+    }
+    return s;
+}
+
+int main() {
+    int s = suma(4);     // alt s, fara legatura
+    printf("%d\n", s);
+    printf("%d\n", n);   // error: 'n' undeclared
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Partea din program în care un nume poate fi folosit se numește **scope**.
+- `s` din `suma` și `s` din `main` sunt variabile diferite. Numele comun nu le
+  leagă.
+- Parametrii sunt și ei locali: `n` există doar în `suma`. La fel `i`, doar în
+  bucla `for`.
+- Un bloc interior poate declara alt `s`, care îl ascunde pe cel din afară până
+  la `}`. Funcționează, dar încurcă cititorul. Evitați-l.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Scope-ul unui Bloc
+
+:: left ::
+
+Nu doar funcțiile au variabile proprii. Orice pereche de acolade face un
+**bloc**, iar o variabilă declarată în el există doar acolo.
+
+```c
+int main() {
+    int nota = 9;
+    if (nota >= 5) {
+        int puncte = nota * 10;   // exista doar aici
+        printf("%d\n", puncte);
+    }
+    printf("%d\n", puncte);   // error: 'puncte' undeclared
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Un bloc este corpul unei funcții, al unui `if`, al unui `else` sau al unei
+  bucle.
+- Variabila există de la declarație până la `}`-ul blocului ei. După acoladă,
+  numele nu mai înseamnă nimic.
+- `nota` este declarată în blocul lui `main`, deci se vede și în blocul `if`
+  din interior.
+- Declarăm o variabilă în blocul cel mai mic în care este folosită.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Variabile Globale
+
+:: left ::
+
+O variabilă declarată **în afara** oricărei funcții este **globală**. Orice
+funcție de sub ea o poate citi și modifica.
+
+```c
+int total = 0;          // globala
+
+void adauga(int x) {
+    total = total + x;
+}
+
+int main() {
+    adauga(5);
+    adauga(3);
+    printf("%d\n", total);   // 8
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Din linia `adauga(5);` nu se vede că apelul schimbă ceva.
+- Dacă `total` iese greșit, vinovată poate fi oricare funcție.
+- O funcție care folosește doar parametrii ei se înțelege și se verifică
+  singură.
+- O globală declarată fără valoare este inițializată automat cu 0. O locală, nu.
+- În programele noastre nu folosim variabile globale. Constantele cu `#define`
+  rămân în regulă.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Același Nume, Local și Global
+
+:: left ::
+
+O funcție poate declara o variabilă locală cu numele unei globale. Sunt două
+variabile diferite.
+
+```c
+int x = 5;               // globala
+
+void f() {
+    int x = 22;          // locala, alt x
+    printf("%d\n", x);   // 22
+}
+
+int main() {
+    f();
+    printf("%d\n", x);   // 5
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- În `f`, numele `x` înseamnă variabila locală. Ea o **ascunde** pe cea globală
+  până la `}`.
+- Fără `int`, linia `x = 22;` ar fi modificat globala. Diferența stă într-un
+  singur cuvânt.
+- gcc nu avertizează, nici cu `-Wall -Wextra`. Doar `-Wshadow` semnalează
+  ascunderea.
+- Folosiți nume diferite. Și mai bine: nu folosiți globale.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Ține Minte un Apel
+
+:: left ::
+
+`main` apelează `sumaPatrate`, care apelează `patrat` de două ori. Programul
+trebuie să țină evidența mai multor apeluri deodată.
+
+```c
+int patrat(int x) {
+    return x * x;
+}
+
+int sumaPatrate(int a, int b) {
+    return patrat(a) + patrat(b);
+}
+
+int main() {
+    int r = sumaPatrate(2, 3);
+    printf("%d\n", r);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Când `patrat(2)` se termină, execuția continuă **în mijlocul** liniei din
+  `sumaPatrate`, cu 4 în locul apelului. Locul acesta trebuie reținut.
+- Cât timp rulează `patrat`, variabilele `a` și `b` din `sumaPatrate` și `r` din
+  `main` trebuie să existe în continuare.
+- Funcția apelată ultima se termină prima. Apelurile ies în ordinea inversă celei
+  în care au intrat.
+
+</div>
+
+---
+layout: top-title
+align: c
 color: blue-light
 ---
 
-<AdmonitionType type="danger">
+:: title ::
 
-**Ce se întâmplă dacă o funcție se apelează pe sine însăși la nesfârșit (recursie infinită)?** Stiva se umple, ducând la o eroare fatală numită **"stack overflow"**.
+# Ce Este o Stivă
 
-</AdmonitionType>
+:: content ::
+
+<div class="max-w-4xl mx-auto mt-6">
+
+<Definition term="Stivă (stack)" source="Pe scurt" emphasis>
+
+Un set de elemente în care se adaugă și se scoate doar la **vârf**. Ultimul
+element adăugat este primul scos.
+
+</Definition>
+
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Push</div>
+    <div class="mt-1">Adaugă un element la vârf.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Pop</div>
+    <div class="mt-1">Scoate elementul de la vârf. Celelalte rămân neatinse.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">LIFO</div>
+    <div class="mt-1"><em>Last in, first out</em>: ultimul intrat, primul ieșit. Exact ordinea apelurilor.</div>
+  </div>
+</div>
 
 ---
-layout: cover
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-5
 ---
 
-## Array-uri și Funcții
+:: title ::
+
+# Cadrul unui Apel
+
+:: left ::
+
+Fiecare apel primește pe stivă o zonă de memorie, numită **cadru** (stack
+frame). Așa arată stiva cât timp rulează `patrat(2)`:
+
+<CallStack class="mt-6" :frames="[
+  { name: 'patrat', vars: 'x = 2', note: 'se întoarce în sumaPatrate' },
+  { name: 'sumaPatrate', vars: 'a = 2   b = 3', note: 'se întoarce în main' },
+  { name: 'main', vars: 'r = ?' },
+]" />
+
+:: right ::
+
+<div class="text-base">
+
+- Un cadru ține **parametrii**, **variabilele locale** și **adresa de
+  întoarcere**: locul din apelant unde se continuă după `return`.
+- Cadrul de sus aparține funcției care rulează acum. Cele de sub el așteaptă.
+- Un apel pune un cadru nou deasupra. `return` îl scoate, iar execuția sare la
+  adresa de întoarcere.
+- `main` stă mereu la bază: este primul apel și se încheie ultimul.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Stiva Crește și Scade
+
+:: content ::
+
+Același program, pas cu pas. Un apel pune un cadru deasupra, `return` îl scoate.
+
+<div class="grid grid-cols-5 gap-3 mt-8 items-end">
+
+<div>
+<CallStack compact :frames="[{ name: 'main', vars: 'r = ?' }]" />
+<div class="text-xs text-center mt-3">pornește <code>main</code></div>
+</div>
+
+<div v-click>
+<CallStack compact :frames="[
+  { name: 'sumaPatrate', vars: 'a = 2  b = 3' },
+  { name: 'main', vars: 'r = ?' },
+]" />
+<div class="text-xs text-center mt-3"><code>main</code> apelează <code>sumaPatrate(2, 3)</code></div>
+</div>
+
+<div v-click>
+<CallStack compact :frames="[
+  { name: 'patrat', vars: 'x = 2' },
+  { name: 'sumaPatrate', vars: 'a = 2  b = 3' },
+  { name: 'main', vars: 'r = ?' },
+]" />
+<div class="text-xs text-center mt-3">se apelează <code>patrat(2)</code></div>
+</div>
+
+<div v-click>
+<CallStack compact :frames="[
+  { name: 'patrat', vars: 'x = 3' },
+  { name: 'sumaPatrate', vars: 'a = 2  b = 3', note: 'are deja 4' },
+  { name: 'main', vars: 'r = ?' },
+]" />
+<div class="text-xs text-center mt-3"><code>patrat(2)</code> a întors 4, urmează <code>patrat(3)</code></div>
+</div>
+
+<div v-click>
+<CallStack compact :frames="[{ name: 'main', vars: 'r = 13' }]" />
+<div class="text-xs text-center mt-3"><code>sumaPatrate</code> a întors 4 + 9</div>
+</div>
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Locala Dispare cu Cadrul Ei
+
+:: left ::
+
+O variabilă locală trăiește în cadrul apelului. Când `return` scoate cadrul,
+variabila dispare. Următorul apel primește un cadru nou.
+
+```c
+void numara() {
+    int contor = 0;
+    contor++;
+    printf("%d ", contor);
+}
+
+int main() {
+    numara();
+    numara();
+    numara();      // afiseaza 1 1 1
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Intervalul în care o variabilă există este **durata ei de viață**. Pentru o
+  locală, ține cât ține cadrul.
+- La fiecare apel, `contor` este o variabilă nouă și pornește iar de la 0.
+- O locală fără valoare inițială primește ce a rămas în acea zonă a stivei de la
+  un apel anterior. De aceea o inițializăm mereu.
+- Ce trebuie păstrat între apeluri stă la apelant: se trimite ca argument și se
+  primește înapoi prin `return`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Variabile Locale `static`
+
+:: left ::
+
+Cu `static` în față, variabila locală nu mai stă în cadru. Își păstrează valoarea
+de la un apel la altul.
+
+```c
+void numara() {
+    static int contor = 0;   // initializata o singura data
+    contor++;
+    printf("%d ", contor);
+}
+
+int main() {
+    numara();
+    numara();
+    numara();      // afiseaza 1 2 3
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Stă lângă globale, nu pe stivă. `return` nu o atinge, iar `= 0` se execută o
+  singură dată.
+- Scope-ul rămâne local: doar `numara` o vede, spre deosebire de o globală.
+- Ca o globală, declarată fără valoare este inițializată automat cu 0.
+- Folosiți-o rar: funcția dă alt rezultat la fiecare apel, cu aceleași argumente.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Stiva Are o Mărime Fixă
+
+:: left ::
+
+Un array local stă în cadru, cu toate elementele lui. Unul prea mare nu încape
+pe stivă.
+
+```c
+int main() {
+    int note[10000000];   // 40 MB, in cadrul lui main
+    for (int i = 0; i < 10000000; i++) {
+        note[i] = i % 10;
+    }
+    printf("%d\n", note[9999999]);
+    return 0;
+}
+```
+
+```bash
+$ ./program
+Segmentation fault (core dumped)
+$ echo $?
+139
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pe Linux, stiva are de obicei 8 MB. `ulimit -s` o afișează în kilobytes:
+  `8192`.
+- 10 milioane de `int` înseamnă 40 MB. Programul se compilează fără avertisment
+  și cade la pornire.
+- Cu `static` în față, array-ul stă lângă globale și programul merge.
+- Pe stivă stau doar variabile mici. Pentru date mari vom vedea mai târziu
+  memoria dinamică.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Funcții `inline`
+
+:: left ::
+
+Un apel costă puțin: un cadru pe stivă și un salt. La o funcție foarte scurtă,
+compilatorul poate copia corpul direct în locul apelului.
+
+```c
+static inline int patrat(int x) {
+    return x * x;
+}
+
+int main() {
+    int r = patrat(5);   // poate deveni: int r = 5 * 5;
+    printf("%d\n", r);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `inline` este doar o **sugestie**. Compilatorul decide dacă o urmează.
+- Cu optimizări (`-O2`), compilatorul copiază singur funcțiile scurte, și fără
+  `inline`. De aceea nu îl vom folosi.
+- În C se scrie `static inline`. Un `inline` singur poate da eroare de linker:
+  `undefined reference to 'patrat'`.
+- Nu are rost la funcții lungi, unde programul doar crește, și nici la funcții
+  recursive.
+
+</div>
 
 ---
 layout: top-title-two-cols
@@ -557,8 +1424,8 @@ columns: is-6
 
 :: left ::
 
-Parametrul se scrie cu parantezele pătrate goale. Mărimea se trimite separat, ca
-al doilea parametru.
+Parametrul se scrie cu parantezele pătrate goale. Mărimea se trimite separat,
+ca al doilea parametru.
 
 ```c
 double media(const int note[], int n) {
@@ -577,12 +1444,12 @@ double m = media(note, n);
 
 <div class="text-base">
 
-- Fără număr între paranteze, aceeași funcție merge pentru array-uri de orice
-  mărime.
-- Array-ul nu își aduce mărimea cu el. Funcția află câte elemente are doar din
-  `n`.
-- `const` promite că funcția doar citește elementele. O încercare de a scrie
-  într-unul este o eroare de compilare: `assignment of read-only location`.
+- Fără mărime între paranteze, funcția merge pentru array-uri de orice mărime.
+- Array-ul nu își aduce mărimea cu el. Funcția o află doar din `n`.
+- `const` promite că funcția doar citește elementele. O scriere într-unul dă
+  eroare: `assignment of read-only location`.
+- O mărime scrisă în parametru, ca `int note[5]`, este ignorată. Funcția
+  primește fără eroare și un array de 10 elemente.
 
 </div>
 
@@ -598,8 +1465,8 @@ align: c
 
 :: content ::
 
-Un parametru `int` primește o copie, deci funcția nu poate schimba variabila
-apelantului. Cu un array este altfel. Rulați și priviți valorile din `main`.
+Un parametru `int` primește o copie. Un array nu. Rulați și priviți valorile din
+`main`.
 
 ```c {monaco-run} {autorun:false}
 #include <stdio.h>
@@ -608,7 +1475,7 @@ void dubleaza(int v[], int n) {
         v[i] = v[i] * 2;
     }
 }
-int main(void) {
+int main() {
     int a[3] = {1, 2, 3};
     dubleaza(a, 3);
     printf("%d %d %d\n", a[0], a[1], a[2]);
@@ -625,52 +1492,12 @@ columns: is-6
 
 :: title ::
 
-# Funcția Primește Doar o Adresă
-
-:: left ::
-
-La apel, array-ul nu se copiază. Funcția primește **adresa primului element**,
-iar `sizeof` măsoară adresa, nu array-ul.
-
-```c
-void afiseaza(int note[]) {
-    int n = sizeof(note) / sizeof(note[0]);
-    // 8 / 4 = 2, oricate elemente ar avea
-}
-
-// warning: 'sizeof' on array function
-// parameter 'note' will return size of 'int *'
-```
-
-:: right ::
-
-<div class="text-base">
-
-- Prin adresă, funcția ajunge direct la elementele apelantului. De aceea
-  modificările rămân și după `return`.
-- Copierea a 100 de elemente la fiecare apel ar fi lentă. Adresa ocupă doar 8
-  bytes, oricât de mare ar fi array-ul.
-- `int *` din avertisment este tipul unei adrese de `int`. O variabilă care ține
-  o adresă se numește pointer și o vom studia mai târziu.
-- Concluzia practică: într-o funcție, mărimea vine **numai** din parametrul `n`.
-
-</div>
-
----
-layout: top-title-two-cols
-color: blue-light
-align: c-lt-lt
-columns: is-6
----
-
-:: title ::
-
 # Căutarea, ca Funcție
 
 :: left ::
 
-Căutarea liniară devine mai scurtă într-o funcție: `return` iese din buclă și
-din funcție dintr-o dată.
+Într-o funcție, căutarea liniară devine mai scurtă: `return` iese din buclă și
+din funcție deodată.
 
 ```c
 int cauta(const int v[], int n, int x) {
@@ -689,136 +1516,200 @@ int poz = cauta(note, n, 7);
 
 <div class="text-base">
 
-- Nu mai e nevoie nici de `break`, nici de variabila `poz` din interiorul
-  buclei.
-- `return -1` stă **după** buclă. Execuția ajunge acolo doar dacă bucla s-a
-  terminat fără să găsească nimic.
-- Funcția nu știe nimic despre note. Merge pentru orice array de `int`, oricât
-  de mare.
+- Nu mai e nevoie de `break` și de o variabilă pentru poziție.
+- `return -1` stă **după** buclă. Ajungem acolo doar dacă nu s-a găsit nimic.
+- Funcția merge pentru orice array de `int`, oricât de mare.
 
 </div>
 
 ---
-transition: slide-left
-layout: cover
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
-# Sarcini de Practică
-
----
-layout: top-title
-align: c
-color: blue-light
----
 :: title ::
 
-# Sarcina 1 (Ușor)
+# `return` Iese din Două Bucle Deodată
 
-:: content ::
+:: left ::
 
-### Cerință:
-Scrieți o funcție numită `gasesteMaxim` care primește doi parametri de tip `int` și returnează pe cel mai mare dintre ei.
+`break` iese dintr-un singur nivel. `return` încheie funcția, cu toate buclele
+ei.
 
-<br/>
-
-<AdmonitionType type="tip">
-
-În interiorul funcției, folosiți o instrucțiune `if-else` pentru a compara cele două numere și instrucțiunea `return` pentru a-l întoarce pe cel mai mare. În `main`, apelați funcția cu două numere la alegere și afișați rezultatul.
-
-</AdmonitionType>
-
-<br/>
-
-### Exemplu de interacțiune:
-```text
-Cel mai mare numar intre 15 si 7 este: 15
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 2 (Mediu)
-
-:: content ::
-
-### Cerință:
-Scrieți o funcție numită `estePar` care:
-<div class="ns-c-tight text-base">
-
-- Primește ca parametru un număr întreg.
-- Returnează `1` (adevărat) dacă numărul este par.
-- Returnează `0` (fals) dacă numărul este impar.
-
-</div>
-
-Apoi, scrieți un program `main` care cere utilizatorului un număr, apelează funcția `estePar` și afișează un mesaj corespunzător ("Numarul este par." sau "Numarul este impar.").
-
-<AdmonitionType type="tip">
-
-Folosiți operatorul modulo (`%`) pentru a verifica dacă un număr este par. Rezultatul comparației `numar % 2 == 0` va fi direct `1` sau `0`, deci îl puteți returna direct.
-</AdmonitionType>
-
-### Exemplu de interacțiune:
-```text
-Introduceti un numar: 10
-Numarul este par.
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 3 (Avansat)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care desenează o linie de o anumită lungime, folosind un anumit caracter. Programul trebuie să conțină o funcție `deseneazaLinie` care:
-
-<div class="ns-c-tight text-base">
-
-- Primește doi parametri: `lungime` (un `int`) și `simbol` (un `char`).
-- Nu returnează nimic (`void`).
-- Folosește un ciclu `for` pentru a afișa `simbolul` de `lungime` ori pe același rând.
-
-</div>
-
-În `main`, apelați această funcție de mai multe ori pentru a desena un mic desen.
-
-<div class="flex justify-around items-center my-4">
-<div>
-
-### Exemplu de output în `main`:
 ```c
-deseneazaLinie(10, '*');
-printf("MENIU\n");
-deseneazaLinie(10, '*');
-deseneazaLinie(5, '-');
-printf("SFARSIT\n");
+int apare(int m[][3], int n, int x) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (m[i][j] == x) {
+                return 1;   // iese din ambele bucle
+            }
+        }
+    }
+    return 0;
+}
 ```
+
+:: right ::
+
+<div class="text-base">
+
+- Nu mai trebuie un indicator verificat de bucla exterioară.
+- La o matrice, doar prima pereche de paranteze pătrate rămâne goală: `m[][3]`.
+  Fără lungimea rândului, `m[i][j]` nu poate fi găsit.
+- Apelul poate sta direct într-un `if`: `if (apare(note, n, 10))`.
 
 </div>
 
-<div>
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
 
-### Rezultat pe ecran:
-```text
-**********
-MENIU
-**********
------
-SFARSIT
+:: title ::
+
+# O Definiție Care Se Folosește pe Ea Însăși
+
+:: left ::
+
+`n!` este produsul `1 · 2 · ... · n`. Se poate spune și altfel: `n!` este `n`
+înmulțit cu factorialul numărului dinainte.
+
+```text {*}{lines:false}
+5! = 5 · 4!
+4! = 4 · 3!
+3! = 3 · 2!
+2! = 2 · 1!
+1! = 1
 ```
 
+:: right ::
+
+<div class="text-base">
+
+- Fiecare rând folosește factorialul unui număr **mai mic**, deci se apropie de
+  capăt.
+- La `1!` răspunsul se știe direct, fără alt factorial.
+- O funcție C poate urma exact această definiție: `factorial(n)` apelează
+  `factorial(n - 1)`.
+
 </div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Este Recursivitatea
+
+:: content ::
+
+<div class="max-w-4xl mx-auto mt-6">
+
+<Definition term="Recursivitate" source="Pe scurt" emphasis>
+
+O funcție este **recursivă** dacă se apelează pe ea însăși. Fiecare apel rezolvă
+o problemă **mai mică**, până la una care se rezolvă direct.
+
+</Definition>
+
+</div>
+
+<div class="grid grid-cols-2 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Cazul de bază</div>
+    <div class="mt-1">Problema cea mai mică, rezolvată fără alt apel. Fără el, apelurile nu se opresc.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Pasul recursiv</div>
+    <div class="mt-1">Apelul aceleiași funcții pentru o problemă mai mică, mai aproape de cazul de bază.</div>
+  </div>
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Factorialul, Recursiv
+
+:: left ::
+
+Funcția urmează definiția: un caz de bază și un pas recursiv.
+
+```c
+int factorial(int n) {
+    if (n <= 1) {
+        return 1;                    // cazul de baza
+    }
+    return n * factorial(n - 1);     // pasul recursiv
+}
+
+int main() {
+    printf("%d\n", factorial(5));    // 120
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- **Cazul de bază**: `n <= 1`, cu răspunsul 1.
+- **Pasul recursiv**: `factorial(n - 1)`, cu unu mai aproape de cazul de bază.
+- Condiția este `n <= 1`, nu `n == 1`, ca să acopere și `0! = 1`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-5
+---
+
+:: title ::
+
+# Factorialul pe Stivă
+
+:: left ::
+
+Fiecare apel are cadrul lui, cu propriul `n`. Apelurile coboară până la cazul de
+bază, iar înmulțirile se fac la întoarcere.
+
+<CallStack class="mt-6" :frames="[
+  { name: 'factorial', vars: 'n = 1', note: 'cazul de bază: întoarce 1' },
+  { name: 'factorial', vars: 'n = 2', note: 'așteaptă 2 * factorial(1)' },
+  { name: 'factorial', vars: 'n = 3', note: 'așteaptă 3 * factorial(2)' },
+  { name: 'main', note: 'așteaptă factorial(3)' },
+]" />
+
+:: right ::
+
+<div class="ns-c-table text-sm mt-4">
+
+| cadrul care se încheie | întoarce |
+|---|---|
+| `factorial(1)` | `1` |
+| `factorial(2)` | `2 * 1` = `2` |
+| `factorial(3)` | `3 * 2` = `6` |
+
+</div>
+
+<div class="text-base mt-6">
+
+Cele trei `n` sunt variabile diferite, în cadre diferite, deci nu se încurcă.
+Cadrele se închid în ordinea inversă deschiderii.
 
 </div>
 
@@ -826,16 +1717,314 @@ SFARSIT
 layout: top-title
 color: blue-light
 align: c
+margin: tight
 ---
 
 :: title ::
 
-# Mai departe
+# Recursivitatea, în Execuție
 
 :: content ::
 
-<div class="mt-12">
+Fiecare apel afișează un mesaj la intrare și unul la ieșire. Rulați și urmăriți
+ordinea.
+
+```c {monaco-run} {autorun:false, height:'270px'}
+#include <stdio.h>
+
+int factorial(int n) {
+    printf("intra factorial(%d)\n", n);
+    int r = 1;
+    if (n > 1) {
+        r = n * factorial(n - 1);
+    }
+    printf("iese  factorial(%d) = %d\n", n, r);
+    return r;
+}
+
+int main() {
+    printf("Rezultat: %d\n", factorial(3));
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Suma Cifrelor, Recursiv
+
+:: left ::
+
+Cifrele unui număr le-am separat deja cu `% 10` și `/ 10`, într-o buclă. Același
+calcul, recursiv:
+
+```c
+int sumaCifre(int n) {
+    if (n < 10) {
+        return n;                        // o singura cifra
+    }
+    return n % 10 + sumaCifre(n / 10);   // ultima + restul
+}
+```
+
+:: right ::
+
+<div class="ns-c-table text-sm">
+
+| apel | întoarce |
+|---|---|
+| `sumaCifre(472)` | `2 + sumaCifre(47)` |
+| `sumaCifre(47)` | `7 + sumaCifre(4)` |
+| `sumaCifre(4)` | `4`, cazul de bază |
+
+</div>
+
+<div class="text-base mt-4">
+
+Adunările se fac la întoarcere: `7 + 4 = 11`, apoi `2 + 11 = 13`. Problema mai
+mică este numărul fără ultima cifră.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Fibonacci: Același Calcul de Multe Ori
+
+:: left ::
+
+Fiecare termen este suma celor doi dinainte. Definiția are două cazuri de bază
+și **două** apeluri recursive.
+
+```c
+int fib(int n) {
+    if (n < 2) {
+        return n;         // fib(0) = 0, fib(1) = 1
+    }
+    return fib(n - 1) + fib(n - 2);
+}
+```
+
+```text {*}{lines:false}
+fib(4)
+├── fib(3)
+│   ├── fib(2)
+│   │   ├── fib(1)
+│   │   └── fib(0)
+│   └── fib(1)
+└── fib(2)
+    ├── fib(1)
+    └── fib(0)
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `fib(2)` se calculează de două ori, `fib(1)` de trei ori. Apelurile nu își
+  împart rezultatele.
+- Numărul de apeluri aproape se dublează la fiecare `n` în plus. `fib(40)` face
+  peste 300 de milioane de apeluri.
+- O buclă care ține ultimii doi termeni ajunge la `fib(40)` în 40 de pași.
+- Recursivitatea scurtă nu înseamnă și rapidă. Numărați apelurile.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Fără Caz de Bază, Stiva Se Umple
+
+:: left ::
+
+Dacă apelurile nu ajung la cazul de bază, fiecare adaugă încă un cadru pe stivă.
+
+```c
+// cazul de baza lipseste
+int f1(int n) {
+    return n * f1(n - 1);
+}
+
+// cazul de baza nu este atins pentru n < 1
+int f2(int n) {
+    if (n == 1) {
+        return 1;
+    }
+    return n * f2(n - 1);
+}
+
+f2(-3);   // -3, -4, -5, ... fara sfarsit
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Cei 8 MB ai stivei ajung pentru zeci de mii de cadre mici, dar nu pentru un
+  șir fără sfârșit.
+- Când stiva se umple, programul este oprit: **stack overflow**. În terminal
+  apare de obicei `Segmentation fault`.
+- Verificați două lucruri: cazul de bază există și **fiecare** apel se apropie
+  de el, pentru orice valoare primită.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Recursiv sau cu Buclă
+
+:: left ::
+
+Același factorial, în cele două feluri.
+
+```c
+// recursiv
+int factorial(int n) {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+// cu bucla
+int factorial(int n) {
+    int p = 1;
+    for (int i = 2; i <= n; i++) {
+        p = p * i;
+    }
+    return p;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Rezultatul este același. Bucla folosește un singur cadru, recursivitatea câte
+  unul pentru fiecare `n`.
+- Orice recursivitate se poate rescrie fără ea, uneori cu efort. Alegem forma
+  mai ușor de citit.
+- Recursivitatea se potrivește când problema conține o problemă mai mică **de
+  aceeași formă**.
+- În ambele forme, `13!` depășește un `int`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Afișează Fiecare
+
+:: left ::
+
+Ce afișează fiecare fragment și de ce?
+
+```c
+// A
+void f(int x) { x = x + 1; }
+int a = 5;
+f(a);
+printf("%d\n", a);
+
+// B
+int g(int n) {
+    if (n == 0) { return 0; }
+    return n + g(n - 1);
+}
+printf("%d\n", g(4));
+
+// C
+void h(int n) {
+    if (n > 0) { h(n - 1); printf("%d ", n); }
+}
+h(3);
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- **A**: `5`. `f` modifică o copie a lui `a`.
+- **B**: `10`, adică `4 + 3 + 2 + 1 + 0`.
+- **C**: `1 2 3`. `printf` vine **după** apelul recursiv, deci rulează la
+  întoarcere, începând cu apelul cel mai adânc, `h(1)`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Totul la un Loc
+
+:: content ::
+
+Validarea și media, fiecare în funcția ei. `main` doar le apelează și se citește
+ca o descriere a programului.
+
+```c {monaco-run} {autorun:false, height:'345px'}
+#include <stdio.h>
+#define MAX 30
+int citesteIntre(int min, int max) {
+    int x = 0;
+    do { printf("Numar intre %d si %d: ", min, max); scanf("%d", &x); }
+    while (x < min || x > max);
+    return x;
+}
+double media(const int v[], int n) {
+    int suma = 0;
+    for (int i = 0; i < n; i++) { suma += v[i]; }
+    return (double)suma / n;
+}
+int main() {
+    int note[MAX];
+    // scrieti, de exemplu:  3  apoi  8  10  7
+    int n = citesteIntre(1, MAX);
+    for (int i = 0; i < n; i++) { note[i] = citesteIntre(1, 10); }
+    printf("Media: %.2f\n", media(note, n));
+    return 0;
+}
+```
+
+---
+layout: center
+color: blue-light
+---
 
 <DeckNav />
-
-</div>
