@@ -354,8 +354,6 @@ nimic din program nu o semnalează.
 layout: top-title
 color: blue-light
 align: c
-c:
-  stdin: "9\nd"
 ---
 
 :: title ::
@@ -364,9 +362,9 @@ c:
 
 :: content ::
 
-Afișăm **codul** caracterului citit, fiindcă un `\n` afișat nu se vede. Intrarea
-este pregătită: `9` pe prima linie, `d` pe a doua. Apăsați **Run**, apoi
-schimbați `"%c"` în `" %c"` și rulați din nou.
+Afișăm **codul** caracterului citit, fiindcă un `\n` afișat nu se vede. Apăsați
+**Run** și introduceți o notă. Apoi schimbați `"%c"` în `" %c"`, rulați din nou și
+răspundeți cu `d`.
 
 ```c {monaco-run} {autorun:false, height:'250px'}
 #include <stdio.h>
@@ -376,7 +374,7 @@ int main(void) {
     char raspuns;
 
     printf("Nota: ");
-    scanf("%d", &nota);
+    scanf("%d", &nota);       // ex: 9
     printf("Salvam? (d/n): ");
     scanf("%c", &raspuns);    // ia Enter-ul ramas, nu litera
 

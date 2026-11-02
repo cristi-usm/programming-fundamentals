@@ -385,8 +385,10 @@ program`, diagnostics, `$ ./program`, then the program's real output — and whe
 blocks on `scanf`, an inline caret exactly where the local cursor would be (same line
 if the prompt has no `\n`). Each typed line costs one Coliru round trip (the program is
 re-run with accumulated input), so runnable input examples must be **deterministic**.
-A slide can pre-feed input — `c: { stdin: '9 8' }` in the **slide's own frontmatter**
-(headmatter reaches slide 1 only), one line per read. See the `cpp-runner` skill.
+The runner can pre-feed input (`c: { stdin: '9 8' }`), but **this course does not use
+it**: the student types the input when the program asks for it. Put a sample value in a
+comment on the reading line instead (`scanf("%d", &nota);   // ex: 9`) and say in the
+lead sentence what to type. See the `cpp-runner` skill.
 
 - ✅ Use `{monaco-run}` only when *running and editing it live* is the point
 - ✅ Plain ` ```c ` blocks for syntax, comparisons and short fragments

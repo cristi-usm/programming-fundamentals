@@ -25,7 +25,8 @@
  * program finished. Deterministic programs replay identically, so the
  * simulation is exact; the cost is one Coliru round trip per input line.
  *
- * A slide can pre-feed input (each line answers one wait) and skip typing:
+ * A slide can pre-feed input (each line answers one wait) and skip typing.
+ * The course does not use this: students type, and the code shows `// ex:` values.
  *
  *   ---
  *   c:

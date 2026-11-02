@@ -40,7 +40,10 @@ same prefix — no `rand()`/time-dependent output before reads); a clean program
 legitimately runs longer than ~2s reads as "waiting". No source-detection heuristics —
 whether it waits is decided by actual runtime behaviour.
 
-**Pre-fed input** — line N answers the Nth wait, no typing needed:
+**Pre-fed input** — line N answers the Nth wait, no typing needed. ⚠️ **Not used in
+this course**: every runnable block waits for the student to type, and the reading line
+carries a sample value in a comment (`scanf("%d", &nota);   // ex: 9`). The mechanism is
+documented only so it is recognised:
 
 ```yaml
 ---
