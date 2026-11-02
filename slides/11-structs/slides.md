@@ -36,219 +36,559 @@ cpp:
   alwaysShowCompilerOutput: true
 ---
 
-### Enumuri, Structuri și Fișiere
-#### Organizarea datelor complexe și persistența
+### Structuri, `typedef` și `enum`
+#### Tipuri de date construite de noi
 
 ---
-layout: cover
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
-### Cum grupăm datele care au sens împreună?
-
----
-layout: top-title
-align: c
-color: blue-light
----
 :: title ::
 
-# Enumerații (enum)
+# Un Student în Trei Array-uri
 
-:: content ::
+:: left ::
 
-În programare, adesea lucrăm cu seturi de valori constante care au o semnificație logică (ex: zilele săptămânii, stările unui proces, culorile semaforului).
+Pentru fiecare student ținem numele, grupa și media. Cu ce știm până acum, asta
+înseamnă trei array-uri.
 
-Putem folosi numere "magice" (0, 1, 2), dar acest lucru face codul greu de citit. Aici intervin **Enumerațiile**.
+```c
+#define MAX 30
 
-<br/>
+char nume[MAX][20];
+int grupa[MAX];
+double medie[MAX];
 
-<div class="ns-c-tight">
+// studentul 0 este format din:
+strcpy(nume[0], "Ana");
+grupa[0] = 1;
+medie[0] = 9.25;
+```
 
-- **Definiție**: Un tip de date definit de utilizator care constă într-un set de constante cu nume (enumeratori).
-- **Sub capotă**: Compilatorul asignează automat numere întregi numelor, începând de la 0 (dacă nu specificăm altfel).
-- **Scop**: Crește lizibilitatea codului și reduce erorile.
+:: right ::
+
+<div class="text-base">
+
+- Un student este împrăștiat în trei locuri. Ce le leagă este doar indexul
+  comun, pe care trebuie să-l ținem noi minte.
+- O funcție care afișează un student primește trei array-uri și un index.
+- Un câmp nou, de exemplu anul, înseamnă încă un array și modificări în fiecare
+  funcție.
+- Array-urile trebuie ținute **sincronizate**. Compilatorul nu ne ajută cu asta.
 
 </div>
 
-<br/>
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)] text-[var(--neversink-text-color)]">
-
-**Exemplu:** În loc să verificăm `if (stare == 1)`, verificăm `if (stare == FINALIZAT)`.
-</div>
-
 ---
-layout: cover
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
+:: title ::
 
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-// Putem folosi `typedef` pentru a crea un nume de tip mai scurt, evitând scrierea cuvântului `enum`
-//  la fiecare declarare de variabilă.
-typedef enum { // Definim enum-ul
+# Ordonăm Mediile, Uităm Numele
 
-    LUNI = 1,    // Putem forta inceperea de la 1
-    MARTI,       // Va fi 2
-    MIERCURI,    // Va fi 3
-    JOI,
-    VINERI,
-    SAMBATA,
-    DUMINICA
-} ZiSaptamana;
+:: left ::
 
-int main() {
-    ZiSaptamana zi_curenta = MIERCURI;
+Vrem studenții în ordinea mediilor. Interschimbăm două medii și uităm de
+celelalte două array-uri.
 
-    printf("Ziua curenta este a %d-a zi din saptamana.\n", zi_curenta);
-
-    if (zi_curenta == SAMBATA || zi_curenta == DUMINICA) {
-        printf("Este weekend!\n");
-    } else {
-        printf("Este zi lucratoare.\n");
-    }
-
-    return 0;
+```c
+if (medie[1] > medie[0]) {
+    double tmp = medie[0];
+    medie[0] = medie[1];
+    medie[1] = tmp;
+    // nume[0] si nume[1] au ramas pe loc
 }
 ```
 
----
-transition: slide-left
-layout: cover
-color: blue-light
----
+:: right ::
 
-## Structuri (`struct`)
+<div class="ns-c-table text-sm">
+
+| index | `nume` | `medie` înainte | `medie` după |
+|---|---|---|---|
+| 0 | Ana | 8.50 | **9.75** |
+| 1 | Ion | 9.75 | **8.50** |
+
+</div>
+
+<div class="text-base mt-4">
+
+- Ana a primit media lui Ion. Programul rulează mai departe fără nicio eroare.
+- Fiecare interschimbare trebuie repetată pe **toate** array-urile.
+- Ne trebuie o singură variabilă care să țină tot ce știm despre un student.
+
+</div>
 
 ---
 layout: top-title
 align: c
 color: blue-light
 ---
+
 :: title ::
 
-# Structuri: Dincolo de Vectori
+# Ce Este o Structură
 
 :: content ::
 
-Vectorii (Arrays) sunt utili, dar au o limitare majoră: pot stoca doar elemente de **același tip**.
+<div class="max-w-4xl mx-auto mt-6">
 
-Dar dacă vrem să descriem un **Student**? Un student are:
-<div class="ns-c-tight">
+<Definition term="Structură (struct)" source="Pe scurt" emphasis>
 
-- Nume (șir de caractere / `char[]`)
-- Vârstă (`int`)
-- Medie (`float`)
+Un tip de date **construit de noi**, care grupează sub un singur nume mai multe
+valori, de tipuri **diferite**. Fiecare valoare are numele ei și se numește
+**câmp**.
+
+</Definition>
 
 </div>
 
-O **Structură** (`struct`) ne permite să grupăm variabile de **tipuri diferite** sub un singur nume. Este "planul" (blueprint-ul) unui obiect complex.
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Câmpuri cu nume</div>
+    <div class="mt-1">Un câmp se alege după nume, nu după index: media, nu elementul 2.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Tipuri diferite</div>
+    <div class="mt-1">Un string, un <code>int</code> și un <code>double</code> stau în același obiect. Un array ține doar valori de același tip.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Se mută împreună</div>
+    <div class="mt-1">Se atribuie, se trimite unei funcții și se întoarce dintr-o bucată, cu toate câmpurile.</div>
+  </div>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Anatomia unei Structuri
+
+:: content ::
+
+Definiția spune ce câmpuri are un student. Fiecare câmp se scrie ca o declarație
+de variabilă.
+
+<div class="fp-anat mt-8">
+<div class="fp-anat__line">
+<div class="fp-anat__part">
+<div class="fp-anat__tok">struct</div>
+<div class="fp-anat__tick"></div>
+<div class="fp-anat__lbl">cuvântul cheie</div>
+<div class="fp-anat__sub">anunță o structură</div>
+</div>
+<div class="fp-anat__part">
+<div class="fp-anat__tok">Student</div>
+<div class="fp-anat__tick"></div>
+<div class="fp-anat__lbl">numele structurii</div>
+<div class="fp-anat__sub">cu majusculă, prin convenție</div>
+</div>
+<div class="fp-anat__part">
+<div class="fp-anat__tok fp-anat__tok--code">{ char nume[20];<br>&nbsp;&nbsp;int grupa;<br>&nbsp;&nbsp;double medie; }</div>
+<div class="fp-anat__tick"></div>
+<div class="fp-anat__lbl">câmpurile</div>
+<div class="fp-anat__sub">fiecare cu tipul și numele lui</div>
+</div>
+<div class="fp-anat__part">
+<div class="fp-anat__tok">;</div>
+<div class="fp-anat__tick"></div>
+<div class="fp-anat__lbl">punct și virgulă</div>
+<div class="fp-anat__sub">obligatoriu după acoladă</div>
+</div>
+</div>
+</div>
+
+<div class="ns-c-tight text-base mt-8">
+
+- Definiția descrie **forma** unui student. Nu creează nicio variabilă și nu
+  ocupă memorie.
+- Se scrie în afara funcțiilor, deasupra lui `main`, ca să o vadă toate funcțiile.
+
+</div>
 
 <style>
-.struct-viz-container {
+/* Same anatomy drawing as the function slide in 07-functions. */
+.fp-anat { display: flex; justify-content: center; }
+
+.fp-anat__line {
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
-  font-family: 'Segoe UI', sans-serif;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.1rem 1.6rem 1rem;
+  border: 1.5px solid var(--neversink-admon-border-color);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--neversink-admon-bg-color) 30%, #fff);
 }
 
-.struct-box {
-  background-color: var(--neversink-bg-color);
-  border: 2px solid var(--neversink-border-color);
-  border-radius: 10px;
-  width: 250px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
+.fp-anat__part { display: flex; flex-direction: column; align-items: center; }
 
-.struct-header {
-  background-color: var(--neversink-fg-code-color);
-  color: white;
-  padding: 10px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.struct-body {
-  padding: 15px;
-}
-
-.struct-field {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--neversink-admon-border-color);
+.fp-anat__tok {
+  padding: 0.35rem 0.9rem;
+  border-radius: 8px;
+  background: var(--neversink-admon-bg-color);
+  border: 1.5px solid var(--neversink-border-color);
+  font-family: monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
   color: var(--neversink-fg-color);
 }
 
-.struct-field:last-child {
-  border-bottom: none;
+.fp-anat__tok--code {
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: left;
 }
 
-.field-type {
-  color: var(--neversink-highlight-color);
-  font-size: 0.9em;
-  opacity: 0.8;
+.fp-anat__tick {
+  width: 2px;
+  height: 1.1rem;
+  background: var(--neversink-border-color);
+  opacity: 0.6;
+}
+
+.fp-anat__lbl {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--neversink-text-color);
+}
+
+.fp-anat__sub {
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  text-align: center;
+  max-width: 9rem;
 }
 </style>
 
-<div class="neversink-blue-light-scheme struct-viz-container">
-  <div class="struct-box">
-    <div class="struct-header">struct Student</div>
-    <div class="struct-body">
-      <div class="struct-field">
-        <span>nume</span>
-        <span class="field-type">char[50]</span>
-      </div>
-      <div class="struct-field">
-        <span>varsta</span>
-        <span class="field-type">int</span>
-      </div>
-      <div class="struct-field">
-        <span>medie</span>
-        <span class="field-type">float</span>
-      </div>
-    </div>
-  </div>
-</div>
-
 ---
-layout: cover
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-#include <string.h>
+:: title ::
 
-// Definirea structurii (Planul)
+# Tipul Se Numește `struct Student`
+
+:: left ::
+
+După definiție, `struct Student` este un tip, ca `int`. Declarăm variabile de
+acest tip la fel ca pe oricare altele.
+
+```c
 struct Student {
-    char nume[50];
-    int varsta;
-    float medie;
+    char nume[20];
+    int grupa;
+    double medie;
 };
 
 int main() {
-    // Declararea unei variabile de tip struct Student
-    struct Student s1;
+    struct Student a;      // un student
+    struct Student b, c;   // inca doi
+    return 0;
+}
+```
 
-    // Atribuirea valorilor
-    s1.varsta = 20;
-    s1.medie = 9.50;
-    // Pentru string-uri folosim strcpy, nu =
-    strcpy(s1.nume, "Popescu Ion");
+:: right ::
 
-    // Accesarea si afisarea
-    printf("Student: %s\n", s1.nume);
-    printf("Varsta: %d\n", s1.varsta);
-    printf("Medie: %.2f\n", s1.medie);
+<div class="text-base">
 
+- Numele tipului are două cuvinte: `struct Student`. Doar `Student` nu ajunge,
+  vom vedea de ce în curând.
+- Fiecare variabilă are câmpurile ei. `a` și `b` au fiecare câte un nume, o
+  grupă și o medie.
+- Ca orice variabilă locală, `a` primește memorie abia la declarație, iar
+  câmpurile ei pornesc cu valori necunoscute.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Operatorul Punct
+
+:: left ::
+
+Un câmp se alege cu `.` între variabilă și numele câmpului. Rezultatul este o
+variabilă obișnuită, de tipul câmpului.
+
+```c
+struct Student s;
+
+s.grupa = 3;                // scriere
+s.medie = 9.25;
+printf("%d\n", s.grupa);    // citire
+s.medie = s.medie + 0.5;
+
+scanf("%d", &s.grupa);      // adresa campului
+scanf("%19s", s.nume);      // nume e un array: fara &
+strcpy(s.nume, "Ana");
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `s.grupa` este un `int` și merge oriunde merge un `int`: în calcule, în
+  condiții, în `printf`.
+- `&s.grupa` este adresa câmpului. Punctul se aplică primul, deci nu sunt
+  necesare paranteze.
+- `s.nume` este un array de `char`, adică un string. Îl citim fără `&` și îl
+  scriem cu `strcpy`, ca pe orice string.
+- `%19s` lasă un loc pentru `'\0'` în cele 20 de caractere.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Prima Structură
+
+:: content ::
+
+Un student, cu toate câmpurile completate pe rând. Rulați, apoi schimbați
+valorile.
+
+```c {monaco-run} {autorun:false, height:'280px'}
+#include <stdio.h>
+#include <string.h>
+
+struct Student {
+    char nume[20];
+    int grupa;
+    double medie;
+};
+
+int main() {
+    struct Student s;
+    strcpy(s.nume, "Ana");
+    s.grupa = 1;
+    s.medie = 9.25;
+    printf("%s, grupa %d, media %.2f\n", s.nume, s.grupa, s.medie);
     return 0;
 }
 ```
 
 ---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Inițializarea la Declarare
+
+:: left ::
+
+Ca la un array, o structură primește valori la declarare, între acolade, în
+**ordinea** câmpurilor din definiție.
+
+```c
+struct Student a = {"Ana", 1, 9.25};
+
+// medie devine 0, cu avertisment
+struct Student b = {"Ion", 2};
+
+// toate campurile devin 0
+struct Student c = {0};
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Prima valoare merge în primul câmp, a doua în al doilea și tot așa.
+- Câmpurile rămase fără valoare devin 0, ca elementele unui array.
+- La `b`, gcc avertizează: `missing initializer for field 'medie' of 'struct
+  Student'`. Poate am uitat o valoare, poate nu.
+- `{0}` este forma obișnuită pentru "totul zero" și nu dă avertisment.
+- Un string poate inițializa `nume` aici, la declarare. Mai târziu, cu `=`, nu
+  mai merge.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Inițializarea cu Nume
+
+:: left ::
+
+Fiecare valoare poate purta numele câmpului ei: `.camp = valoare`. Ordinea nu
+mai contează.
+
+```c
+struct Student a = {
+    .nume = "Ana",
+    .grupa = 1,
+    .medie = 9.25,
+};
+
+struct Student b = {.medie = 7.5, .nume = "Ion"};
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Se numește **designated initializer**. Există în C din standardul C99.
+- Se citește singură: nu trebuie să ne amintim al câtelea câmp este `grupa`.
+- Câmpurile nenumite devin 0, fără avertisment. La `b`, `grupa` este 0.
+- Dacă ordinea câmpurilor se schimbă în definiție, inițializarea rămâne
+  corectă.
+- Virgula după ultima valoare este permisă.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# O Structură în Memorie
+
+:: content ::
+
+Câmpurile stau unul după altul, în ordinea din definiție. Fiecare `int` ocupă
+patru bytes, deci câmpurile încep din patru în patru.
+
+```c
+struct Data { int zi, luna, an; };
+struct Data d = {12, 3, 2006};
+```
+
+<MemoryCells class="mt-6" :size="110" label=""
+  :cells="[
+    { value: '12', addr: '1000' },
+    { value: '3', addr: '1004' },
+    { value: '2006', addr: '1008' },
+  ]"
+  :vars="[
+    { start: 0, len: 1, name: 'd.zi', type: 'int' },
+    { start: 1, len: 1, name: 'd.luna', type: 'int', highlight: true },
+    { start: 2, len: 1, name: 'd.an', type: 'int' },
+  ]"
+  :axis="false"
+/>
+
+<div class="ns-c-tight text-base mt-6">
+
+- Fiecare cutie este aici un `int` întreg, nu un byte. `d` ocupă 12 bytes, de la
+  1000 la 1011.
+- Câmpurile de același tip se pot declara pe o linie: `int zi, luna, an;`.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Cât Ocupă o Structură
+
+:: content ::
+
+`sizeof` merge și pe o structură. Valorile de mai jos sunt calculate cu gcc, pe
+Linux, 64 de biți.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-6">
+
+| tipul | câmpurile | suma lor | `sizeof` |
+|---|---|---|---|
+| `struct Data` | `int zi, luna, an;` | 4 + 4 + 4 = 12 | 12 |
+| `struct Student` | `char nume[20]; int grupa; double medie;` | 20 + 4 + 8 = 32 | 32 |
+| `struct Nota` | `char materie; int valoare;` | 1 + 4 = 5 | **8** |
+
+</div>
+
+<div class="ns-c-tight text-base mt-6">
+
+- De obicei, `sizeof` este suma câmpurilor. La `struct Nota` apar 3 bytes în
+  plus, care nu aparțin niciunui câmp.
+- De aceea mărimea unei structuri nu se calculează de mână. Se scrie mereu
+  `sizeof(struct Nota)`.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Bytes de Umplutură
+
+:: content ::
+
+Procesorul citește un `int` cel mai repede de la o adresă multiplu de 4. Compilatorul
+lasă bytes liberi ca `valoare` să înceapă la 1004, nu la 1001.
+
+```c
+struct Nota { char materie; int valoare; };
+struct Nota n = {'M', 7};
+```
+
+<MemoryCells class="mt-6" :base="1000" :size="64"
+  :cells="[
+    { value: '\'M\'' }, { value: '?' }, { value: '?' }, { value: '?' },
+    { value: '0' }, { value: '0' }, { value: '0' }, { value: '7' },
+  ]"
+  :vars="[
+    { start: 0, len: 1, name: 'materie', type: 'char' },
+    { start: 1, len: 3, name: 'padding' },
+    { start: 4, len: 4, name: 'valoare', type: 'int', highlight: true },
+  ]"
+/>
+
+<div class="ns-c-tight text-base mt-6">
+
+- Bytes adăugați se numesc **padding**. Nu au nume și nu se folosesc.
+- Ordinea câmpurilor contează: `{char a; int b; char c;}` ocupă 12 bytes, iar
+  `{int b; char a; char c;}` doar 8.
+
+</div>
+
+---
 layout: top-title
 color: blue-light
 align: c
@@ -256,334 +596,1260 @@ align: c
 
 :: title ::
 
-# typedef: un nume nou pentru un tip
+# Atribuirea Copiază Tot
 
 :: content ::
 
-`typedef` nu creează un tip nou, ci doar îi dă tipului existent un alt nume.
+Un array nu se poate atribui dintr-o bucată. O structură, da: `b = a` copiază
+fiecare câmp, **inclusiv** array-ul `nume`. Rulați și comparați.
 
-> **Schelet**: de completat.
-
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# typedef struct
-
-:: content ::
-
-Cu `typedef`, scriem `Student s;` în loc de `struct Student s;`.
-
-> **Schelet**: de completat.
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Vectori de Structuri
-
-:: content ::
-
-Puterea structurilor devine evidentă când le combinăm cu vectorii. Putem crea o bază de date simplă în memorie.
-
-`struct Student clasa[30];` -> Un vector care conține 30 de structuri de tip Student.
-
----
-layout: cover
----
-
-```c {monaco-run} {autorun:false}
+```c {monaco-run} {autorun:false, height:'280px'}
 #include <stdio.h>
 
+struct Student {
+    char nume[20];
+    int grupa;
+    double medie;
+};
+
+int main() {
+    struct Student a = {"Ana", 1, 9.25};
+    struct Student b = a;       // copie, cu tot cu nume
+    b.nume[0] = 'I';
+    b.grupa = 2;
+    printf("a: %s, grupa %d\n", a.nume, a.grupa);
+    printf("b: %s, grupa %d\n", b.nume, b.grupa);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Structurile Nu Se Compară cu `==`
+
+:: left ::
+
+Atribuirea merge, comparația nu. Două date se compară câmp cu câmp, într-o
+funcție scrisă de noi.
+
+```c
+struct Data a = {12, 3, 2006};
+struct Data b = {12, 3, 2006};
+
+if (a == b) { ... }   // eroare de compilare
+
+int aceeasiData(struct Data x, struct Data y) {
+    return x.zi == y.zi && x.luna == y.luna
+        && x.an == y.an;
+}
+
+if (aceeasiData(a, b)) { ... }
+```
+
+:: right ::
+
+<div class="text-base">
+
+- gcc oprește compilarea: `invalid operands to binary == (have 'struct Data'
+  and 'struct Data')`.
+- C nu știe ce înseamnă "egal" pentru tipul nostru. Pentru doi studenți, poate
+  contează doar numele. Decidem noi.
+- Un câmp string se compară cu `strcmp`: `strcmp(x.nume, y.nume) == 0`.
+- Nici `<`, `+` sau `printf("%d", a)` nu merg pe o structură întreagă. Lucrăm cu
+  câmpurile.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Array de Structuri
+
+:: left ::
+
+Cele trei array-uri de la început devin unul singur. Fiecare element este un
+student întreg.
+
+```c
+#define MAX 30
+struct Student s[MAX];
+
+strcpy(s[0].nume, "Ana");
+s[0].grupa = 1;
+s[0].medie = 9.25;
+
+for (int i = 0; i < n; i++) {
+    printf("%s %.2f\n", s[i].nume, s[i].medie);
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `s[i]` este un `struct Student`. `s[i].medie` se citește de la stânga la
+  dreapta: elementul `i`, apoi câmpul `medie`.
+- `s[0].nume[0]` este prima literă a primului nume: `'A'`.
+- Elementele stau unul după altul, câte 32 de bytes fiecare. `sizeof(s)` este
+  960.
+- Numele, grupa și media unui student nu se mai pot despărți.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Cea Mai Mare Medie
+
+:: content ::
+
+Citim `n` studenți, apoi căutăm media cea mai mare. Ținem minte **indexul**
+celui mai bun, ca să avem acces și la numele lui.
+
+```c {monaco-run} {autorun:false, height:'315px'}
+#include <stdio.h>
+#define MAX 30
+struct Student { char nume[20]; int grupa; double medie; };
+int main() {
+    struct Student s[MAX];
+    int n = 0;
+    // scrieti, de exemplu:  3  apoi  Ana 1 9.25  Ion 2 7.50  Eva 1 9.80
+    scanf("%d", &n);
+    if (n < 1 || n > MAX) { return 1; }
+    for (int i = 0; i < n; i++) {
+        scanf("%19s %d %lf", s[i].nume, &s[i].grupa, &s[i].medie);
+    }
+    int iMax = 0;
+    for (int i = 1; i < n; i++) {
+        if (s[i].medie > s[iMax].medie) { iMax = i; }
+    }
+    printf("Cea mai mare medie: %s, %.2f\n", s[iMax].nume, s[iMax].medie);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ordonarea după Medie
+
+:: left ::
+
+Aceeași ordonare pe care am văzut-o deja la nume: pentru fiecare poziție `i`,
+căutăm după ea o medie mai mare și le interschimbăm.
+
+```c
+for (int i = 0; i < n - 1; i++) {
+    for (int j = i + 1; j < n; j++) {
+        if (s[j].medie > s[i].medie) {
+            struct Student tmp = s[i];
+            s[i] = s[j];
+            s[j] = tmp;
+        }
+    }
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- După fiecare pas al buclei exterioare, pe poziția `i` stă cea mai mare medie
+  dintre cele rămase.
+- Interschimbarea mută **structura întreagă**: numele, grupa și media pleacă
+  împreună. Problema de la început nu mai poate apărea.
+- `tmp` este și el un `struct Student`. Trei atribuiri mută tot studentul.
+- Pentru ordine crescătoare se schimbă doar `>` în `<`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Studenții în Ordine
+
+:: content ::
+
+Patru studenți, ordonați descrescător după medie. Rulați, apoi ordonați după
+nume, cu `strcmp`.
+
+```c {monaco-run} {autorun:false, height:'300px'}
+#include <stdio.h>
+struct Student { char nume[20]; int grupa; double medie; };
+int main() {
+    struct Student s[4] = {
+        {"Ana", 1, 8.50}, {"Ion", 2, 9.75}, {"Eva", 1, 7.20}, {"Dan", 2, 9.10}
+    };
+    for (int i = 0; i < 3; i++) {
+        for (int j = i + 1; j < 4; j++) {
+            if (s[j].medie > s[i].medie) {
+                struct Student tmp = s[i];    // toata structura
+                s[i] = s[j];
+                s[j] = tmp;
+            }
+        }
+    }
+    for (int i = 0; i < 4; i++) { printf("%s %.2f\n", s[i].nume, s[i].medie); }
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Funcția Primește o Copie a Structurii
+
+:: left ::
+
+Am văzut deja că un parametru primește o copie a argumentului. O structură se
+copiază și ea, cu toate câmpurile.
+
+```c
+void mareste(struct Student s) {
+    s.medie = s.medie + 1;   // modifica doar copia
+}
+
+int main() {
+    struct Student a = {"Ana", 1, 8.00};
+    mareste(a);
+    printf("%.2f\n", a.medie);   // 8.00
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `s` este o variabilă nouă, în cadrul lui `mareste`. La `return`, dispare cu
+  tot cu modificarea.
+- Un array trimis singur ajunge pe original. Un array **dintr-o structură** se
+  copiază, ca orice câmp.
+- Copia costă: la fiecare apel se copiază `sizeof(struct Student)` bytes, aici
+  32. Cu note și alte câmpuri, mult mai mult.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Funcție Întoarce o Structură
+
+:: left ::
+
+`return` poate da înapoi o structură întreagă. Așa o funcție întoarce trei
+valori deodată.
+
+```c
+struct Data citesteData() {
+    struct Data d = {0, 0, 0};
+    scanf("%d.%d.%d", &d.zi, &d.luna, &d.an);
+    return d;          // se copiaza la apelant
+}
+
+int main() {
+    struct Data nastere = citesteData();   // 12.3.2006
+    printf("%d\n", nastere.an);            // 2006
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Variabila `d` dispare la `return`, dar valoarea ei se copiază în `nastere`.
+- Punctele din `"%d.%d.%d"` trebuie să apară exact așa în ce scrie
+  utilizatorul.
+- O funcție poate întoarce o structură. Nu poate întoarce un array.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Pointer la o Structură
+
+:: left ::
+
+Ca funcția să modifice originalul, îi trimitem adresa lui, ca la orice variabilă.
+`*p` este chiar structura din `main`.
+
+```c
+void mareste(struct Student *p) {
+    (*p).medie = (*p).medie + 1;
+}
+
+int main() {
+    struct Student a = {"Ana", 1, 8.00};
+    mareste(&a);
+    printf("%.2f\n", a.medie);   // 9.00
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Funcția primește doar o adresă, 8 bytes, oricât de mare ar fi structura.
+- Parantezele din `(*p).medie` sunt obligatorii. Punctul se aplică înaintea lui
+  `*`, deci `*p.medie` ar însemna `*(p.medie)`.
+- Fără paranteze, gcc spune: `'p' is a pointer; did you mean to use '->'?`
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Operatorul `->`
+
+:: left ::
+
+`(*p).medie` apare atât de des încât are o prescurtare: `p->medie`. Cele două
+forme înseamnă exact același lucru.
+
+```c
+void mareste(struct Student *p) {
+    p->medie = p->medie + 1;
+}
+
+void citeste(struct Student *p) {
+    scanf("%19s %d %lf", p->nume, &p->grupa, &p->medie);
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `->` se scrie cu minus și semnul mai mare, fără spațiu între ele.
+- Regula: pe o variabilă structură, `.`. Pe un **pointer** la structură, `->`.
+- `&p->grupa` este adresa câmpului `grupa`. Săgeata se aplică prima, ca punctul.
+- În programele noastre scriem mereu `p->camp`. Forma cu `(*p).` doar explică
+  ce înseamnă săgeata.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Copie sau Pointer
+
+:: content ::
+
+Două funcții care măresc media cu 1. Prima primește o copie, a doua o adresă.
+Rulați și comparați.
+
+```c {monaco-run} {autorun:false, height:'300px'}
+#include <stdio.h>
+struct Student { char nume[20]; int grupa; double medie; };
+
+void maresteCopia(struct Student s) {
+    s.medie = s.medie + 1;
+}
+void mareste(struct Student *p) {
+    p->medie = p->medie + 1;
+}
+
+int main() {
+    struct Student a = {"Ana", 1, 8.00};
+    maresteCopia(a);
+    printf("dupa maresteCopia: %.2f\n", a.medie);
+    mareste(&a);
+    printf("dupa mareste:      %.2f\n", a.medie);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `const` pentru Structuri Doar Citite
+
+:: left ::
+
+O funcție care doar afișează nu are nevoie de o copie. Primește un pointer, iar
+`const` promite că nu modifică nimic prin el.
+
+```c
+void afiseaza(const struct Student *s) {
+    printf("%s, grupa %d, media %.2f\n",
+           s->nume, s->grupa, s->medie);
+}
+
+int main() {
+    struct Student a = {"Ana", 1, 9.25};
+    afiseaza(&a);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Este aceeași promisiune ca la `const int v[]`: funcția doar citește.
+- O scriere prin `s` dă eroare: `assignment of member 'medie' in read-only
+  object`.
+- Funcția modifică structura: `struct Student *`. Doar o citește: `const struct
+  Student *`.
+- O structură mică, ca `struct Data`, se poate trimite și prin copie. Copia
+  are doar 12 bytes.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Structură în Altă Structură
+
+:: left ::
+
+Un câmp poate fi el însuși o structură. Data nașterii devine un câmp al
+studentului.
+
+```c
+struct Data { int zi, luna, an; };
+
+struct Student {
+    char nume[20];
+    struct Data nastere;
+    double medie;
+};
+
+struct Student s = {"Ana", {12, 3, 2006}, 9.25};
+printf("%02d.%02d.%d\n", s.nastere.zi,
+       s.nastere.luna, s.nastere.an);    // 12.03.2006
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `s.nastere.an` se citește de la stânga la dreapta: câmpul `nastere` al lui
+  `s`, apoi câmpul `an` al datei.
+- Printr-un pointer: `p->nastere.an`. Săgeata pentru pointer, punctul pentru
+  structura din interior.
+- La inițializare, structura din interior primește propriile acolade.
+- `struct Data` trebuie definită **înainte** de `struct Student`, care o
+  folosește.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Notele și Numărul Lor
+
+:: left ::
+
+Un array cu capacitate fixă are nevoie de un număr de elemente folosite. Într-o
+structură, cele două stau împreună.
+
+```c
+#define MAX_NOTE 10
+
+struct Student {
+    char nume[20];
+    int note[MAX_NOTE];
+    int nrNote;              // cate note sunt folosite
+};
+
+void adaugaNota(struct Student *s, int nota) {
+    if (s->nrNote < MAX_NOTE) {
+        s->note[s->nrNote] = nota;
+        s->nrNote++;
+    }
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `s->note[i]` este nota `i` a studentului. Săgeata se aplică întâi, apoi
+  indexul.
+- Array-ul și numărul lui nu se mai pot despărți. O funcție primește un singur
+  argument în loc de două.
+- `struct Student a = {.nume = "Ana"};` pornește cu `nrNote` 0 și nicio notă.
+- Media nu mai este un câmp: se calculează din note, la nevoie.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `typedef` Dă un Nume Nou unui Tip
+
+:: left ::
+
+`typedef` în fața unei declarații face din numele declarat un **alias** pentru
+tip, nu o variabilă.
+
+```c
+typedef int Nota;                  // Nota inseamna int
+typedef struct Student Student;    // Student inseamna struct Student
+
+Nota n = 9;            // la fel ca: int n = 9;
+Student s;             // la fel ca: struct Student s;
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `typedef` nu creează un tip nou. `Nota` și `int` sunt același tip, sub două
+  nume.
+- Biblioteca standard îl folosește des: `size_t` este un `typedef` pentru un
+  tip întreg fără semn.
+- La tipurile simple, un alias ajută rar. Folosiți-l când numele spune ceva în
+  plus.
+- La structuri, ne scapă de cuvântul `struct` scris peste tot.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Structura Definită cu `typedef`
+
+:: left ::
+
+Definiția și alias-ul se pot scrie deodată. Structura nu mai are nevoie de nume
+după `struct`, iar numele tipului vine la sfârșit.
+
+```c
 typedef struct {
-    char marca[20];
-    int an_fabricatie;
-} Masina;
+    char nume[20];
+    int grupa;
+    double medie;
+} Student;
 
-int main() {
-    Masina parc_auto[3]; // Vector de 3 masini
+Student a = {"Ana", 1, 9.25};
+Student *p = &a;
+void afiseaza(const Student *s);
+```
 
-    // Initializare manuala pentru primul element
-    // sprintf scrie intr-un string (buffer) in loc de consola
-    sprintf(parc_auto[0].marca, "Dacia");
-    parc_auto[0].an_fabricatie = 2020;
+:: right ::
 
-    // Parcurgerea vectorului de structuri
-    for(int i = 0; i < 1; i++) {
-        printf("Masina %d: %s din %d\n", i+1, parc_auto[i].marca, parc_auto[i].an_fabricatie);
+<div class="text-base">
+
+- `Student` stă între `}` și `;`. Este numele tipului, folosit fără `struct`.
+- Cu această formă, `struct Student a;` dă eroare: `storage size of 'a' isn't
+  known`. Structura nu are nume după `struct`.
+- Este forma pe care o folosim de aici înainte, inclusiv în proiect.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Numere Care Înseamnă Ceva
+
+:: left ::
+
+Situația unui student este promovat, restant sau absent. Pentru program, le
+codificăm cu numere.
+
+```c
+int situatie = 2;
+
+if (situatie == 2) {      // 2 inseamna... ?
+    printf("absent\n");
+}
+
+// cu #define, numerele primesc nume:
+#define PROMOVAT 0
+#define RESTANT  1
+#define ABSENT   2
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `situatie == 2` nu spune nimic cititorului. Trebuie să caute ce înseamnă 2.
+- `#define` dă nume numerelor, dar cele trei constante nu știu că sunt legate.
+- Valorile le scriem de mână, iar două constante pot primi din greșeală același
+  număr.
+- `int situatie` poate primi și 7. Nimic nu spune care valori au sens.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Este un `enum`
+
+:: content ::
+
+<div class="max-w-4xl mx-auto mt-6">
+
+<Definition term="Enumerare (enum)" source="Pe scurt" emphasis>
+
+Un tip ale cărui valori sunt o listă de **constante cu nume**, scrise de noi.
+Fiecare constantă este un număr întreg, dat automat.
+
+</Definition>
+
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Nume în loc de numere</div>
+    <div class="mt-1"><code>situatie == ABSENT</code> se citește fără să cauți ce înseamnă 2.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Valori grupate</div>
+    <div class="mt-1">Toate valorile posibile stau într-o singură listă, sub numele tipului.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Verificate în <code>switch</code></div>
+    <div class="mt-1">Compilatorul observă când un <code>switch</code> uită una dintre valori.</div>
+  </div>
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Valorile Încep de la 0
+
+:: left ::
+
+Prima constantă primește 0, iar fiecare următoare cu 1 mai mult. O valoare
+scrisă explicit mută numărătoarea de acolo.
+
+```c
+enum Situatie { PROMOVAT, RESTANT, ABSENT };
+//                 0         1        2
+
+enum Luna { IANUARIE = 1, FEBRUARIE, MARTIE };
+//               1            2         3
+
+enum Situatie s = ABSENT;
+printf("%d\n", s);       // 2
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Constantele se scriu cu majuscule, ca cele din `#define`.
+- `printf` afișează numărul, nu numele. Pentru text ne trebuie un `switch`.
+- C nu verifică valorile: `enum Situatie s = 7;` se compilează fără niciun
+  avertisment.
+- Și aici merge `typedef`: `typedef enum { PROMOVAT, RESTANT, ABSENT }
+  Situatie;`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `enum` în `switch`
+
+:: left ::
+
+Un `switch` pe un `enum` are câte un `case` pentru fiecare constantă. Aici
+lipsește unul.
+
+```c
+void afiseaza(enum Situatie s) {
+    switch (s) {
+        case PROMOVAT:
+            printf("promovat\n");
+            break;
+        case RESTANT:
+            printf("restant\n");
+            break;
     }
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- gcc avertizează: `enumeration value 'ABSENT' not handled in switch`. Opțiunea
+  este `-Wswitch`, inclusă în `-Wall`.
+- Cu un `int` în loc de `enum`, compilatorul nu ar avea de unde ști că lipsește
+  ceva.
+- Când adăugăm o valoare nouă în `enum`, gcc arată fiecare `switch` care trebuie
+  completat.
+- Un `default:` oprește avertismentul. Pe un `enum`, scrieți toate cazurile în
+  loc de `default`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# `enum` sau `#define`
+
+:: content ::
+
+Pentru valori care merg împreună, `enum`. Pentru o constantă singură, ca `MAX`,
+`#define` sau `const`.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-6">
+
+| | `#define` | `enum` |
+|---|---|---|
+| ce este | text înlocuit înainte de compilare | constante întregi ale unui tip |
+| grupare | fiecare constantă separat | toate sub numele tipului |
+| valorile | scrise de mână | numerotate automat |
+| în `switch` | nicio verificare | cazul lipsă e semnalat |
+| tipul valorii | orice: `30`, `3.14`, `"text"` | doar întregi |
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Trei Variabile Devin Una
+
+:: left ::
+
+Array-ul dinamic de data trecută avea trei variabile care mergeau mereu
+împreună. Acum devin câmpurile unei structuri.
+
+```c
+// de data trecuta: trei variabile separate
+int *note = NULL;
+int nr = 0, cap = 0;
+
+// acum: o singura structura
+typedef struct {
+    Student *date;   // elementele, pe heap
+    int n;           // cate sunt folosite
+    int cap;         // cate incap
+} Catalog;
+
+Catalog c = {NULL, 0, 0};
+```
+
+:: right ::
+
+<div class="text-base">
+
+- O funcție primește un singur argument, `&c`, în loc de trei.
+- Nu mai putem schimba `date` și uita de `cap`. Toate trei se modifică prin
+  același pointer.
+- Elementele sunt acum structuri: fiecare `c.date[i]` este un `Student`.
+- Acesta este catalogul din proiectul final.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Adăugarea în Catalog
+
+:: left ::
+
+Când array-ul este plin, `realloc` îi dublează capacitatea. Apoi studentul se
+copiază pe prima poziție liberă.
+
+```c
+int adauga(Catalog *c, Student s) {
+    if (c->n == c->cap) {
+        int capNou = (c->cap == 0) ? 4 : c->cap * 2;
+        Student *nou = realloc(c->date,
+                               capNou * sizeof(Student));
+        if (nou == NULL) {
+            return 0;          // c->date e inca valid
+        }
+        c->date = nou;
+        c->cap = capNou;
+    }
+    c->date[c->n] = s;         // copiaza structura
+    c->n++;
+    return 1;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `capNou * sizeof(Student)` cere bytes pentru `capNou` structuri întregi, cu
+  tot cu padding.
+- Rezultatul lui `realloc` merge întâi în `nou`. Dacă este `NULL`, array-ul vechi
+  rămâne neatins în `c->date`.
+- `c->date[c->n]` este un `Student`. Atribuirea copiază toate câmpurile lui `s`.
+- Funcția întoarce 1 la succes și 0 dacă memoria nu a ajuns.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Catalogul Crește
+
+:: left ::
+
+Adăugăm cinci studenți și urmărim câmpurile catalogului după fiecare.
+
+```c
+int main() {
+    Catalog c = {NULL, 0, 0};
+    Student s = {"Ana", 1, 9.25};
+    for (int i = 0; i < 5; i++) {
+        if (!adauga(&c, s)) { break; }
+        printf("n = %d, cap = %d\n", c.n, c.cap);
+    }
+    free(c.date);
     return 0;
 }
 ```
 
----
-transition: slide-left
-layout: cover
-color: blue-light
----
+```text {*}{lines:false}
+n = 1, cap = 4
+n = 2, cap = 4
+n = 3, cap = 4
+n = 4, cap = 4
+n = 5, cap = 8
+```
 
-## Lucrul cu Fișiere
+:: right ::
 
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
+<div class="text-base">
 
-# De ce avem nevoie de fișiere?
-
-:: content ::
-
-Până acum, toate datele programelor noastre au fost stocate în **memoria RAM**.
-
-<div class="ns-c-tight">
-
-- **RAM (Volatilă)**: Datele se pierd instantaneu când programul se termină sau calculatorul se oprește.
-- **HDD/SSD (Persistentă)**: Fișierele ne permit să salvăm datele permanent și să le recitim la o rulare ulterioară a programului.
+- `realloc` rulează doar de două ori: la primul student și la al cincilea.
+- La primul apel, `c->date` este `NULL`, iar `realloc(NULL, ...)` lucrează ca
+  `malloc`.
+- Un singur `free` eliberează tot array-ul, cu toți studenții din el.
+- `c` stă pe stivă, ca orice variabilă locală. Pe heap stau doar elementele, la
+  adresa din `c.date`.
 
 </div>
 
-<br/>
-
-<div class="neversink-blue-light-scheme grid grid-cols-2 gap-4 mt-4">
-  <div class="bg-[var(--neversink-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)]">
-    <h3 class="text-center font-bold text-[var(--neversink-text-color)]">Scriere (Output)</h3>
-    <p class="text-center text-sm mt-2">Program ➡️ Fișier</p>
-  </div>
-  <div class="bg-[var(--neversink-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)]">
-    <h3 class="text-center font-bold text-[var(--neversink-text-color)]">Citire (Input)</h3>
-    <p class="text-center text-sm mt-2">Fișier ➡️ Program</p>
-  </div>
-</div>
-
 ---
-layout: top-title
-align: c
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
+
 :: title ::
 
-# Operații de Bază: `fopen`, `fclose`
+# `;` După Acolada Structurii
 
-:: content ::
+:: left ::
 
-În C, lucrăm cu fișiere folosind un pointer special: **`FILE *`**.
-
-<div class="neversink-blue-light-scheme">
-
-| Mod | Descriere | Comportament dacă nu există | Comportament dacă există |
-|-----|-----------|---------------------------|--------------------------|
-| `"r"` | **Read** (Citire) | Returnează `NULL` (Eroare) | Deschide pentru citire |
-| `"w"` | **Write** (Scriere) | Creează fișier nou | **Șterge** conținutul vechi! |
-| `"a"` | **Append** (Adăugare) | Creează fișier nou | Adaugă la final |
-
-</div>
-
-<br/>
-
-<AdmonitionType type="warning">
-
-Este obligatoriu să închidem fișierul folosind `fclose()` după ce am terminat lucrul cu el pentru a evita coruperea datelor sau scurgerile de memorie.
-
-</AdmonitionType>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Scrierea în Fișier (`fprintf`)
-
-:: content ::
+O funcție se termină la `}`. O definiție de structură se termină abia la `;`
+de după acoladă.
 
 ```c
 #include <stdio.h>
 
+struct Student {
+    char nume[20];
+    int grupa;
+    double medie;
+}                       // lipseste ;
+
 int main() {
-    // 1. Deschidem fisierul pentru scriere ("w")
-    FILE *fisier = fopen("date.txt", "w");
-
-    // Verificam daca s-a deschis corect
-    if (fisier == NULL) {
-        printf("Eroare la deschiderea fisierului!\n");
-        return 1;
-    }
-
-    // 2. Scriem date in fisier
-    fprintf(fisier, "Salut, Lume!\n");
-    int an = 2024;
-    fprintf(fisier, "Anul curent este: %d\n", an);
-
-    // 3. Inchidem fisierul
-    fclose(fisier);
-    
-    printf("Datele au fost scrise cu succes.\n");
     return 0;
 }
 ```
 
+```bash
+error: expected ';', identifier or '(' before 'int'
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Eroarea apare pe linia lui `main`, nu pe cea cu acolada. Compilatorul
+  observă lipsa abia la următorul cuvânt.
+- Între `}` și `;` se poate declara o variabilă, de aceea gcc așteaptă un nume.
+- Când gcc se plânge de ceva aflat chiar sub o structură, priviți întâi
+  acolada de deasupra.
+
+</div>
+
 ---
-layout: top-title
-align: c
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
 :: title ::
 
-# Citirea din Fișier (`fscanf`)
+# `.` și `->` Inversate
 
-:: content ::
+:: left ::
+
+Punctul cere o structură, săgeata cere un pointer. gcc le deosebește și spune
+care trebuia.
 
 ```c
+struct Student s = {"Ana", 1, 9.5};
+struct Student *p = &s;
+
+printf("%f\n", p.medie);    // gresit
+printf("%f\n", s->medie);   // gresit
+
+printf("%f\n", p->medie);   // corect
+printf("%f\n", s.medie);    // corect
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `p.medie`: `'p' is a pointer; did you mean to use '->'?`
+- `s->medie`: `invalid type argument of '->' (have 'struct Student')`.
+- Întrebarea este mereu aceeași: ce este în stânga? O structură cere `.`, un
+  pointer cere `->`.
+- Într-o funcție care primește `struct Student *s`, `s` este un pointer, deși
+  numele seamănă cu o structură.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un String Nu Se Atribuie cu `=`
+
+:: left ::
+
+`nume` este un array de `char`. Ca orice array, nu primește o valoare nouă cu
+`=` după declarare.
+
+```c
+struct Student s = {"Ana", 1, 9.25};   // corect
+
+s.nume = "Ion";          // eroare
+strcpy(s.nume, "Ion");   // corect
+
+struct Student t = s;    // corect: copiaza tot
+```
+
+:: right ::
+
+<div class="text-base">
+
+- gcc spune: `assignment to expression with array type`.
+- La declarare, `"Ana"` este o **inițializare**, nu o atribuire, și este
+  permisă.
+- `strcpy` copiază caracterele. Numele nou trebuie să încapă în 20 de
+  caractere, cu tot cu `'\0'`.
+- Ciudat, dar adevărat: `t = s` copiază și `nume`. Atribuirea structurii
+  întregi merge chiar dacă array-ul ei nu se poate atribui singur.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Fără `typedef`, `struct` Este Obligatoriu
+
+:: left ::
+
+Cu `struct Student { ... };`, numele tipului este `struct Student`. Numele
+`Student` singur nu există.
+
+```c
+struct Student {
+    char nume[20];
+    int grupa;
+    double medie;
+};
+
+Student a;           // eroare
+struct Student b;    // corect
+```
+
+```bash
+error: unknown type name 'Student'; use 'struct'
+keyword to refer to the type
+```
+
+:: right ::
+
+<div class="text-base">
+
+- gcc ghicește greșeala și propune exact remedierea.
+- Sunt două variante corecte: scriem `struct` peste tot sau definim structura
+  cu `typedef`.
+- Greșeala inversă: cu `typedef struct { ... } Student;`, scrierea `struct
+  Student b;` dă `storage size of 'b' isn't known`.
+- Alegeți o formă și folosiți-o în tot programul.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Mesajele Compilatorului
+
+:: content ::
+
+Greșelile cu structuri se recunosc după mesaj. Toate sunt erori de compilare,
+deci programul nu pornește.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-6 text-sm">
+
+| greșeala | mesajul gcc |
+|---|---|
+| `;` lipsă după `}` | `expected ';', identifier or '(' before 'int'` |
+| `.` pe un pointer | `'p' is a pointer; did you mean to use '->'?` |
+| `->` pe o structură | `invalid type argument of '->' (have 'struct Student')` |
+| `a == b` | `invalid operands to binary == (have 'struct Student' and 'struct Student')` |
+| `s.nume = "Ion"` | `assignment to expression with array type` |
+| `Student` fără `struct` | `unknown type name 'Student'; use 'struct' keyword to refer to the type` |
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Afișează Fiecare
+
+:: left ::
+
+Ce afișează fiecare fragment și de ce?
+
+```c
+struct Data { int zi, luna, an; };
+
+// A
+struct Data a = {12, 3, 2006};
+struct Data b = a;
+b.an = 2007;
+printf("%d %d\n", a.an, b.an);
+
+// B
+enum Culoare { ROSU, VERDE = 5, ALBASTRU };
+printf("%d %d\n", ROSU, ALBASTRU);
+
+// C
+void f(struct Data d) { d.zi = d.zi + 1; }
+void g(struct Data *d) { d->luna = 1; }
+struct Data c = {25, 12, 2005};
+f(c);
+g(&c);
+printf("%d.%d\n", c.zi, c.luna);
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- **A**: `2006 2007`. `b` este o copie. Modificarea ei nu ajunge în `a`.
+- **B**: `0 6`. `ROSU` este primul, deci 0. `VERDE` mută numărătoarea la 5,
+  iar `ALBASTRU` vine după el.
+- **C**: `25.1`. `f` primește o copie, deci `zi` rămâne 25. `g` primește
+  adresa și schimbă `luna` din original.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Totul la un Loc
+
+:: content ::
+
+Un `Student` cu note, o funcție care calculează media printr-un pointer `const`
+și un `enum` pentru situație.
+
+```c {monaco-run} {autorun:false, height:'330px'}
 #include <stdio.h>
-
+typedef enum { PROMOVAT, RESTANT } Situatie;
+typedef struct { char nume[20]; int note[10]; int nrNote; } Student;
+double media(const Student *s) {
+    int suma = 0;
+    for (int i = 0; i < s->nrNote; i++) { suma += s->note[i]; }
+    return (double)suma / s->nrNote;
+}
+Situatie situatie(const Student *s) {
+    return media(s) >= 5 ? PROMOVAT : RESTANT;
+}
 int main() {
-    FILE *fisier = fopen("date.txt", "r");
-    char buffer[100];
-    int numar;
-
-    if (fisier == NULL) {
-        printf("Fisierul nu exista!\n");
-        return 1;
+    Student grupa[3] = {{"Ana", {9, 10, 8}, 3}, {"Ion", {4, 5}, 2}, {"Eva", {7}, 1}};
+    for (int i = 0; i < 3; i++) {
+        Situatie st = situatie(&grupa[i]);
+        printf("%-4s %5.2f %s\n", grupa[i].nume, media(&grupa[i]),
+               st == PROMOVAT ? "promovat" : "restant");
     }
-
-    // Presupunem ca in fisier avem: "Nota 10"
-    // fscanf returneaza numarul de elemente citite cu succes
-    while (fscanf(fisier, "%s %d", buffer, &numar) != EOF) {
-        printf("Am citit: %s si %d\n", buffer, numar);
-    }
-
-    fclose(fisier);
     return 0;
 }
 ```
 
-<AdmonitionType type="tip">
-`EOF` (End Of File) este o constantă care semnalează că am ajuns la sfârșitul fișierului.
-</AdmonitionType>
-
 ---
-transition: slide-left
-layout: cover
+layout: center
 color: blue-light
 ---
-
-# Sarcini de Practică
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 1 (Ușor)
-
-:: content ::
-
-### Cerință: Structura "Carte"
-Definiți o structură numită `Carte` care să conțină:
-<div class="ns-c-tight">
-
-- Titlu (sir de caractere)
-- Autor (sir de caractere)
-- Anul publicării (int)
-- Preț (float)
-
-</div>
-
-În funcția `main`, declarați o variabilă de tip `Carte`, inițializați-o cu datele cărții preferate și afișați informațiile pe ecran într-un format frumos.
-
-<br/>
-
-### Exemplu output:
-
-```text
-Cartea "Ion", scrisa de Liviu Rebreanu.
-Publicata in: 1920
-Pret: 45.50 RON
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 2 (Mediu)
-
-:: content ::
-
-### Cerință: Catalog Studenți
-Creați un program care gestionează un catalog mic.
-<div class="ns-c-tight">
-
-1. Definiți structura `Student` (nume, notă).
-2. Declarați un vector de 3 studenți.
-3. Citiți de la tastatură numele și nota pentru fiecare student.
-4. Calculați media notelor și afișați-o.
-5. Afișați numele studentului cu nota cea mai mare.
-
-</div>
-
-<br/>
-
-<AdmonitionType type="tip">
-
-Folosiți un `for` pentru citire și un alt `for` (sau același) pentru calculul sumei și găsirea maximului.
-</AdmonitionType>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 3 (Avansat)
-
-:: content ::
-
-### Cerință: Jurnal Persistent
-Scrieți un program care funcționează ca un jurnal digital simplu.
-<div class="ns-c-tight">
-
-1. Programul deschide un fișier `jurnal.txt` în modul **append** (`"a"`).
-2. Cere utilizatorului să introducă un text (o intrare în jurnal).
-3. Scrie textul introdus în fișier, pe o linie nouă.
-4. Dacă utilizatorul introduce cuvântul "STOP", programul se oprește.
-
-</div>
-
-<br/>
-
-### Verificare:
-Rulați programul de 2-3 ori. Deschideți manual fișierul `jurnal.txt` din folderul proiectului și verificați dacă toate mesajele au fost salvate, unul sub altul.
-
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Mai departe
-
-:: content ::
-
-<div class="mt-12">
 
 <DeckNav />
-
-</div>

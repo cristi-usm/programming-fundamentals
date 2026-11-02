@@ -37,83 +37,1938 @@ cpp:
 ---
 
 ### Memorie dinamică
-#### `malloc`, `free` și tablourile de dimensiune variabilă
+#### Memorie cerută în timpul rulării
 
 ---
-layout: top-title
+layout: top-title-two-cols
 color: blue-light
-align: c
+align: c-lt-lt
+columns: is-6
 ---
 
 :: title ::
 
-# Când nu știm dimensiunea de la compilare
+# Câte Note Încap în `note[MAX]`
 
-:: content ::
+:: left ::
 
-Un array declarat `int v[100]` fixează limita înainte ca programul să ruleze.
-Dacă utilizatorul are 1000 de valori, programul e greșit.
+Programele cu note de până acum rezervă loc pentru `MAX` elemente, cu `MAX`
+ales de noi înainte de compilare.
 
-> **Schelet** — de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
+```c
+#define MAX 30
 
-:: title ::
+int main() {
+    int note[MAX];
+    int n = citesteIntre(1, MAX);
+    for (int i = 0; i < n; i++) {
+        note[i] = citesteIntre(1, 10);
+    }
+    ...
+}
+```
 
-# Stack vs heap
+:: right ::
 
-:: content ::
+<div class="text-base">
 
-Unde stau variabilele locale și unde stă memoria cerută explicit.
-
-> **Schelet** — de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# `malloc`, `calloc`, `realloc`, `free`
-
-:: content ::
-
-Cerem memorie, verificăm rezultatul, o eliberăm.
-
-> **Schelet** — de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Memory leaks și dangling pointers
-
-:: content ::
-
-Ce se întâmplă dacă uităm `free`, și ce se întâmplă dacă îl apelăm de două ori.
-
-> **Schelet** — de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Mai departe
-
-:: content ::
-
-<div class="mt-12">
-
-<DeckNav />
+- 30 este o presupunere. Pentru o facultate cu 10 000 de studenți, programul
+  trebuie modificat și recompilat.
+- Cu `MAX` 10 000, o grupă de 3 studenți ține ocupați 40 000 de bytes ca să
+  folosească 12.
+- Dacă notele se citesc până la un 0, numărul lor se află abia la final. Niciun
+  `MAX` nu este sigur.
+- Ne trebuie memorie a cărei mărime se alege **în timpul rulării**.
 
 </div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Ce Știm Deja Nu Ajunge
+
+:: content ::
+
+Am văzut deja trei feluri de a declara un array. Niciunul nu are o mărime
+aleasă la rulare și, în același timp, sigură.
+
+<div class="grid grid-cols-3 gap-5 mt-10 text-left">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">int note[MAX];</div>
+    <div class="text-sm mt-2">Mărimea este fixată la compilare. Prea mică nu ajunge, prea mare stă nefolosită.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">int note[n];</div>
+    <div class="text-sm mt-2">Mărimea vine de la rulare, dar array-ul stă pe stivă. Un <code>n</code> prea mare oprește programul cu <strong>segmentation fault</strong>, fără nicio verificare posibilă.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">static int note[N];</div>
+    <div class="text-sm mt-2">Nu mai stă pe stivă, dar mărimea este tot fixă și memoria rămâne ocupată până la final.</div>
+  </div>
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Array Local Nu Poate Fi Întors
+
+:: left ::
+
+O funcție care citește notele ar trebui să le dea înapoi apelantului. Array-ul
+ei local dispare însă la `return`.
+
+```c
+int *citesteNote(int n) {
+    int note[MAX];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &note[i]);
+    }
+    return note;     // adresa unei variabile locale
+}
+
+int *p = citesteNote(3);   // adresa invalida
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Am văzut deja: o locală trăiește cât cadrul ei. După `return`, adresa ei nu
+  mai înseamnă nimic.
+- gcc avertizează: `function returns address of local variable`. Ba chiar
+  întoarce `NULL` în locul adresei.
+- Ne trebuie memorie care **nu** dispare la `return` și care rămâne a noastră
+  până spunem noi că s-a terminat.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Este Heap-ul
+
+:: content ::
+
+<div class="max-w-4xl mx-auto mt-6">
+
+<Definition term="Heap" source="Pe scurt" emphasis>
+
+O zonă de memorie din care programul **cere** blocuri în timpul rulării și le
+**eliberează** când nu mai are nevoie de ele. Un bloc trăiește până este
+eliberat, nu până la `}`.
+
+</Definition>
+
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Cerut la rulare</div>
+    <div class="mt-1">Mărimea blocului poate fi o variabilă, citită de la tastatură.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Eliberat de program</div>
+    <div class="mt-1">Nimic nu se eliberează automat. Programul spune când blocul nu mai trebuie.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Fără nume</div>
+    <div class="mt-1">Blocul nu are nume de variabilă. Îl găsim doar prin <strong>adresa</strong> lui, ținută într-un pointer.</div>
+  </div>
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Unde Stă Fiecare Variabilă
+
+:: content ::
+
+Memoria unui program este împărțită în zone. Stiva și heap-ul cresc unul spre
+celălalt, din capete opuse.
+
+<div class="dm-map mt-6">
+  <div class="dm-map__zone dm-map__zone--hot">
+    <div class="dm-map__name">stiva (stack)</div>
+    <div class="dm-map__what">parametri și variabile locale, câte un cadru pe apel</div>
+    <div class="dm-map__dir">crește în jos ↓</div>
+  </div>
+  <div class="dm-map__gap">memorie liberă</div>
+  <div class="dm-map__zone dm-map__zone--hot">
+    <div class="dm-map__name">heap</div>
+    <div class="dm-map__what">blocurile cerute cu <code>malloc</code>, până la <code>free</code></div>
+    <div class="dm-map__dir">crește în sus ↑</div>
+  </div>
+  <div class="dm-map__zone">
+    <div class="dm-map__name">globale și static</div>
+    <div class="dm-map__what">există de la pornirea programului până la final</div>
+    <div class="dm-map__dir"></div>
+  </div>
+  <div class="dm-map__zone">
+    <div class="dm-map__name">codul programului</div>
+    <div class="dm-map__what">instrucțiunile compilate ale funcțiilor</div>
+    <div class="dm-map__dir"></div>
+  </div>
+</div>
+
+<style>
+.dm-map {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dm-map__zone {
+  display: grid;
+  grid-template-columns: 11rem 1fr 8rem;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--neversink-admon-border-color);
+  background: color-mix(in srgb, var(--neversink-admon-bg-color) 30%, #fff);
+  text-align: left;
+}
+
+.dm-map__zone--hot {
+  background: var(--neversink-admon-bg-color);
+  border-color: var(--neversink-border-color);
+}
+
+.dm-map__name {
+  font-weight: 700;
+  color: var(--neversink-text-color);
+}
+
+.dm-map__what { font-size: 0.85rem; }
+
+.dm-map__dir {
+  font-size: 0.8rem;
+  text-align: right;
+  opacity: 0.7;
+}
+
+.dm-map__gap {
+  padding: 1.1rem 1rem;
+  border: 1.5px dashed var(--neversink-admon-border-color);
+  border-radius: 10px;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+</style>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Stiva și Heap-ul
+
+:: content ::
+
+Ambele sunt memorie obișnuită. Diferă prin cine se ocupă de ea și cât timp
+rămâne a noastră.
+
+<div class="ns-c-table text-base mt-6 max-w-4xl mx-auto">
+
+| | stiva (stack) | heap |
+|---|---|---|
+| cine alocă | automat, la intrarea în funcție | programul, cu `malloc` |
+| cine eliberează | automat, la `return` | programul, cu `free` |
+| cât trăiește | cât apelul | până la `free` |
+| mărimea totală | de obicei 8 MB | aproape toată memoria calculatorului |
+| mărimea unui bloc | fixă, cu excepția `int note[n]` | aleasă la rulare, poate crește |
+| viteza | foarte mare | mai mică: se caută un loc liber |
+| când nu mai e loc | segmentation fault | `malloc` întoarce `NULL` |
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Primul `malloc`
+
+:: left ::
+
+`malloc` (de la **m**emory **alloc**ation) cere un bloc de pe heap. `free` îl
+dă înapoi.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>    // malloc, free
+
+int main() {
+    int *p = malloc(sizeof(int));
+    if (p == NULL) {
+        return 1;
+    }
+    *p = 42;
+    printf("%d\n", *p);   // 42
+    free(p);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `malloc` primește **numărul de bytes** dorit. `sizeof(int)` înseamnă exact
+  cât ocupă un `int`.
+- Întoarce adresa primului byte din bloc. O ținem într-un pointer.
+- Blocul se folosește prin pointer, cu `*p`, ca orice variabilă la care avem
+  adresa.
+- `free(p)` eliberează blocul. Fiecare `malloc` are nevoie de **un** `free`.
+- Verificarea cu `NULL` o vom explica imediat. Nu lipsește din niciun exemplu.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Anatomia unui `malloc`
+
+:: content ::
+
+Un array de `n` note, cerut de pe heap. Prima parte este pointerul, a doua
+spune câți bytes cerem.
+
+<div class="dm-anat mt-10">
+<div class="dm-anat__line">
+<div class="dm-anat__part">
+<div class="dm-anat__tok">int *note</div>
+<div class="dm-anat__tick"></div>
+<div class="dm-anat__lbl">pointerul</div>
+<div class="dm-anat__sub">va ține adresa blocului</div>
+</div>
+<div class="dm-anat__part">
+<div class="dm-anat__tok">= malloc(</div>
+<div class="dm-anat__tick"></div>
+<div class="dm-anat__lbl">funcția</div>
+<div class="dm-anat__sub">cere un bloc de pe heap</div>
+</div>
+<div class="dm-anat__part">
+<div class="dm-anat__tok">n</div>
+<div class="dm-anat__tick"></div>
+<div class="dm-anat__lbl">câte elemente</div>
+<div class="dm-anat__sub">poate fi citit la rulare</div>
+</div>
+<div class="dm-anat__part">
+<div class="dm-anat__tok">* sizeof(int)</div>
+<div class="dm-anat__tick"></div>
+<div class="dm-anat__lbl">bytes pe element</div>
+<div class="dm-anat__sub">4 pentru un int</div>
+</div>
+<div class="dm-anat__part">
+<div class="dm-anat__tok">);</div>
+</div>
+</div>
+</div>
+
+<div class="ns-c-tight text-base mt-10">
+
+- Pentru `n = 5`, cerem `5 * 4 = 20` de bytes, adică loc pentru 5 `int`.
+- `malloc` nu știe că vrem un array de `int`. Știe doar câți bytes.
+
+</div>
+
+<style>
+/* Same anatomy drawing as the function slide in 07-functions. */
+.dm-anat { display: flex; justify-content: center; }
+
+.dm-anat__line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 1.1rem 1.6rem 1rem;
+  border: 1.5px solid var(--neversink-admon-border-color);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--neversink-admon-bg-color) 30%, #fff);
+}
+
+.dm-anat__part { display: flex; flex-direction: column; align-items: center; }
+
+.dm-anat__tok {
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  background: var(--neversink-admon-bg-color);
+  border: 1.5px solid var(--neversink-border-color);
+  font-family: monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--neversink-fg-color);
+  white-space: nowrap;
+}
+
+.dm-anat__tick {
+  width: 2px;
+  height: 1.1rem;
+  background: var(--neversink-border-color);
+  opacity: 0.6;
+}
+
+.dm-anat__lbl {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--neversink-text-color);
+}
+
+.dm-anat__sub {
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  text-align: center;
+  max-width: 9rem;
+}
+</style>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Pointerul pe Stivă, Blocul pe Heap
+
+:: content ::
+
+După `int *note = malloc(5 * sizeof(int));` există două lucruri în memorie,
+în zone diferite.
+
+<div class="grid grid-cols-[1fr_2.4fr] gap-8 mt-10 items-start">
+
+<div>
+
+<MemoryCells label="STIVĂ" :size="92"
+  :cells="[{ value: '0x4a0', addr: '…f8' }]"
+  :vars="[{ start: 0, len: 1, name: 'note', type: 'int *', highlight: true }]" />
+
+<div class="text-xs mt-3 text-center opacity-75">o variabilă locală obișnuită, care conține o adresă</div>
+</div>
+
+<div>
+
+<MemoryCells label="HEAP" :size="80"
+  :cells="[{ value: '?', addr: '0x4a0' }, { value: '?', addr: '0x4a4' }, { value: '?', addr: '0x4a8' }, { value: '?', addr: '0x4ac' }, { value: '?', addr: '0x4b0' }]"
+  :vars="[{ start: 0, len: 5, name: 'blocul, fără nume', type: '5 × int' }]" />
+
+<div class="text-xs mt-3 text-center opacity-75">20 de bytes, cu ce era deja acolo; prima adresă este cea din <code>note</code></div>
+</div>
+
+</div>
+
+<div class="text-base mt-10 max-w-3xl mx-auto">
+
+La `return`, `note` dispare cu cadrul. Blocul rămâne pe heap până la `free`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Blocul Se Folosește ca un Array
+
+:: left ::
+
+Am văzut deja că `v[i]` înseamnă `*(v + i)`. Funcționează la fel pe un pointer
+spre un bloc din heap.
+
+```c
+int n = 5;
+int *v = malloc(n * sizeof(int));
+if (v == NULL) {
+    return 1;
+}
+for (int i = 0; i < n; i++) {
+    v[i] = i * i;        // la fel ca *(v + i)
+}
+printf("%zu\n", sizeof v);   // 8, nu 20
+free(v);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Indexarea, buclele și funcțiile care primesc `int v[]` merg neschimbate.
+- `sizeof v` este mărimea **pointerului**, nu a blocului. Pe un sistem de 64 de
+  biți, 8.
+- Mărimea blocului nu se poate afla din pointer. O ținem separat, în `n`.
+- Ca la orice array, C nu verifică indexul: `v[5]` scrie în afara blocului.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `sizeof *p` Urmează Tipul
+
+:: left ::
+
+Tipul apare de două ori în linie. Dacă îl schimbăm doar într-un loc, cerem
+numărul greșit de bytes.
+
+```c
+// tipul schimbat doar in stanga
+double *medii = malloc(n * sizeof(int));
+// 4 bytes pe element, dar un double are 8
+
+// sizeof *medii: marimea unui element din medii
+double *medii = malloc(n * sizeof *medii);
+int    *note  = malloc(n * sizeof *note);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `*medii` este un `double`, deci `sizeof *medii` este 8. Se schimbă singur
+  odată cu tipul pointerului.
+- `sizeof` nu evaluează expresia, deci `*medii` nu citește nimic. Merge și
+  înainte ca `medii` să aibă o valoare.
+- Prima linie se compilează fără avertisment. Ce scriem după `n` elemente
+  ajunge în afara blocului.
+- De aici înainte scriem `sizeof *p`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `malloc` Întoarce `void *`
+
+:: left ::
+
+`malloc` nu știe ce tip vom pune în bloc. Întoarce un `void *`: o adresă fără
+tip.
+
+```c
+// C: corect, fara cast
+int *a = malloc(n * sizeof *a);
+
+// merge, dar cast-ul e inutil in C
+int *b = (int *)malloc(n * sizeof *b);
+```
+
+```bash
+$ gcc program.c -o program      # compilat ca C: corect
+$ g++ program.cpp -o program    # compilat ca C++:
+error: invalid conversion from 'void*' to 'int*'
+```
+
+:: right ::
+
+<div class="text-base">
+
+- În C, un `void *` se convertește automat la orice tip de pointer. Cast-ul
+  `(int *)` nu este necesar.
+- Cast-ul este doar zgomot și repetă tipul încă o dată. În C nu îl scriem.
+- C++ nu face conversia automat și cere cast-ul. Codul C++ folosește oricum
+  altceva în loc de `malloc`.
+- Blocurile din slide-uri se compilează cu `g++ -x c`: `-x c` îi cere să
+  citească sursa ca C. De aceea merg fără cast.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `malloc` Poate Eșua
+
+:: left ::
+
+Când nu poate da blocul cerut, `malloc` întoarce `NULL`. Verificăm **imediat**,
+înainte de prima folosire.
+
+```c
+int *note = malloc(n * sizeof *note);
+if (note == NULL) {
+    printf("Memorie insuficienta\n");
+    return 1;
+}
+note[0] = 10;    // aici stim sigur ca blocul exista
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `*note` cu `note` egal cu `NULL` oprește programul cu **segmentation fault**.
+- Spre deosebire de `int note[n]`, eșecul se poate vedea și trata: un mesaj, un
+  cod de ieșire, o încercare cu mai puțin.
+- Pe un calculator obișnuit, un bloc mic aproape niciodată nu eșuează. O cerere
+  uriașă, ca un `n` citit greșit, da.
+- Verificarea nu este opțională. O scriem după **fiecare** `malloc`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Când Nu Mai Este Memorie
+
+:: content ::
+
+Cerem 4000 de miliarde de bytes, mult peste memoria oricărui calculator. Rulați
+și priviți codul de ieșire.
+
+```c {monaco-run} {autorun:false, height:'240px'}
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    size_t n = 1000000000000;     // o mie de miliarde de int
+    int *v = malloc(n * sizeof *v);
+    if (v == NULL) {
+        printf("malloc a intors NULL\n");
+        return 1;
+    }
+    printf("Blocul incepe la %p\n", (void *)v);
+    free(v);
+    return 0;
+}
+```
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Un Array de Mărimea Cerută
+
+:: content ::
+
+Mărimea se citește la rulare și blocul are exact atâtea elemente. Rulați,
+scrieți un număr, apoi încercați altul.
+
+```c {monaco-run} {autorun:false, height:'300px'}
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n = 0;
+    printf("Cate elemente? ");
+    scanf("%d", &n);
+    int *v = malloc(n * sizeof *v);
+    if (v == NULL) {
+        printf("Memorie insuficienta\n");
+        return 1;
+    }
+    for (int i = 0; i < n; i++) { v[i] = i * i; }
+    for (int i = 0; i < n; i++) { printf("%d ", v[i]); }
+    printf("\n");
+    free(v);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `free` Dă Memoria Înapoi
+
+:: left ::
+
+`free` primește adresa unui bloc și îl face disponibil pentru următoarele
+cereri.
+
+```c
+int *v = malloc(n * sizeof *v);
+if (v == NULL) {
+    return 1;
+}
+// ... lucram cu v ...
+free(v);
+// v are tot adresa veche, dar blocul nu mai e al nostru
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `free` primește doar adresa, nu și mărimea. Biblioteca ține minte singură
+  cât de mare era blocul.
+- `free` nu modifică pointerul. `v` conține în continuare aceeași adresă, care
+  acum nu mai este validă.
+- Un pointer cu adresa unui bloc eliberat se numește **dangling pointer**.
+- Când programul se termină, sistemul de operare ia înapoi toată memoria lui.
+  Asta nu ne scutește de `free` cât timp rulează.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# După `free`, Pointerul Devine `NULL`
+
+:: left ::
+
+Imediat după `free`, punem pointerul pe `NULL`. Un pointer `NULL` se recunoaște,
+o adresă veche nu.
+
+```c
+free(v);
+v = NULL;
+
+if (v != NULL) {      // se poate verifica
+    printf("%d\n", v[0]);
+}
+
+free(v);              // free(NULL) nu face nimic
+```
+
+:: right ::
+
+<div class="text-base">
+
+- O folosire greșită a lui `v` cade acum imediat, cu segmentation fault, în loc
+  să citească în tăcere un bloc străin.
+- `free(NULL)` este permis și nu face nimic. Un al doilea `free` pe același
+  pointer devine inofensiv.
+- Regula ajută doar pentru **acest** pointer. Alte copii ale aceleiași adrese
+  rămân dangling.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Blocul Supraviețuiește Funcției
+
+:: left ::
+
+Problema de la început are acum o soluție: funcția cere blocul de pe heap și
+întoarce adresa lui.
+
+```c
+int *citesteNote(int n) {
+    int *note = malloc(n * sizeof *note);
+    if (note == NULL) {
+        return NULL;      // apelantul afla de esec
+    }
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &note[i]);
+    }
+    return note;          // blocul ramane dupa return
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- La `return`, dispare doar pointerul local `note`. Blocul de pe heap rămâne,
+  iar adresa lui ajunge la apelant.
+- Funcția nu tratează singură eșecul. Întoarce `NULL`, iar apelantul decide ce
+  face.
+- Blocul trece în grija apelantului: el trebuie să-l elibereze. Spuneți asta
+  într-un comentariu deasupra funcției.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# O Funcție Care Construiește un Array
+
+:: content ::
+
+`patrate` creează blocul și îl umple. `main` îl folosește și apoi îl
+eliberează. Rulați.
+
+```c {monaco-run} {autorun:false, height:'300px'}
+#include <stdio.h>
+#include <stdlib.h>
+
+int *patrate(int n) {
+    int *v = malloc(n * sizeof *v);
+    if (v == NULL) { return NULL; }
+    for (int i = 0; i < n; i++) { v[i] = i * i; }
+    return v;              // blocul ramane dupa return
+}
+
+int main() {
+    int *p = patrate(5);
+    if (p == NULL) { return 1; }
+    for (int i = 0; i < 5; i++) { printf("%d ", p[i]); }
+    printf("\n");
+    free(p);               // main a primit blocul, main il elibereaza
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `calloc`: Memorie Pusă pe Zero
+
+:: left ::
+
+`malloc` lasă în bloc ce era deja acolo. `calloc` pune fiecare byte pe 0.
+
+```c
+int *a = malloc(n * sizeof *a);   // gunoi
+int *b = calloc(n, sizeof *b);    // zerouri
+
+if (a == NULL || b == NULL) {
+    free(a);
+    free(b);
+    return 1;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `calloc` primește două argumente: **numărul** de elemente și **mărimea**
+  unuia. Face singur înmulțirea.
+- Dacă înmulțirea depășește ce încape într-un `size_t`, `calloc` întoarce
+  `NULL`. Cu `malloc(n * ...)`, rezultatul greșit trece neobservat.
+- Un bloc nou de la `malloc` pare uneori plin de zerouri. Nu este o promisiune:
+  următorul poate conține resturi.
+- Folosim `calloc` pentru contoare și sume, care trebuie să pornească de la 0.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Gunoi sau Zero
+
+:: content ::
+
+Același bloc de 4 `int`, cerut în cele două feluri.
+
+<div class="grid grid-cols-2 gap-10 mt-12">
+
+<div>
+<div class="text-sm font-mono mb-2 text-center opacity-80">malloc(4 * sizeof *a)</div>
+
+<MemoryCells :size="64" label="" :continues="false" :axis="false"
+  :cells="[{ value: '?', addr: '[0]' }, { value: '?', addr: '[1]' }, { value: '?', addr: '[2]' }, { value: '?', addr: '[3]' }]" />
+
+<div class="text-xs mt-2 text-center opacity-75">ce a rămas în memorie de la o folosire anterioară</div>
+</div>
+
+<div>
+<div class="text-sm font-mono mb-2 text-center opacity-80">calloc(4, sizeof *b)</div>
+
+<MemoryCells :size="64" label="" :continues="false" :axis="false"
+  :cells="[{ value: '0', addr: '[0]', highlight: true }, { value: '0', addr: '[1]', highlight: true }, { value: '0', addr: '[2]', highlight: true }, { value: '0', addr: '[3]', highlight: true }]" />
+
+<div class="text-xs mt-2 text-center opacity-75">fiecare byte pus pe 0, deci fiecare <code>int</code> este 0</div>
+</div>
+
+</div>
+
+<div class="text-base mt-12 max-w-3xl mx-auto">
+
+Seamănă cu `int a[4];` și `int a[4] = {0};` pe care le-am văzut deja la
+array-uri.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `realloc` Schimbă Mărimea
+
+:: left ::
+
+Când blocul se umple, `realloc` îl face mai mare. Primește blocul vechi și noua
+mărime, în bytes.
+
+```c
+int *v = malloc(3 * sizeof *v);
+// ... v[0], v[1], v[2] sunt folosite ...
+
+int *tmp = realloc(v, 6 * sizeof *v);
+if (tmp == NULL) {
+    free(v);
+    return 1;
+}
+v = tmp;      // de aici, v are 6 elemente
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Primele 3 valori se păstrează. Celelalte 3 au conținut nedefinit, ca la
+  `malloc`.
+- Dacă după bloc este loc liber, `realloc` doar îl prelungește. Altfel cere un
+  bloc nou, copiază valorile și îl eliberează pe cel vechi.
+- De aceea adresa se poate schimba. Folosim mereu pointerul **întors**.
+- `realloc(NULL, m)` face exact ce face `malloc(m)`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Blocul Se Poate Muta
+
+:: content ::
+
+Aici, după cele 3 elemente stă alt bloc. Ca să crească la 6, blocul se mută.
+
+<div class="grid grid-cols-2 gap-10 mt-12">
+
+<div>
+<div class="text-sm font-mono mb-2 text-center opacity-80">înainte: v = 0x4a0</div>
+
+<MemoryCells label="HEAP" :size="52" :continues="false" :axis="false"
+  :cells="[{ value: '8', addr: '0x4a0' }, { value: '9', addr: '0x4a4' }, { value: '10', addr: '0x4a8' }, { value: '', addr: '0x4ac' }, { value: '', addr: '0x4b0' }]"
+  :vars="[{ start: 0, len: 3, name: 'blocul lui v', highlight: true }, { start: 3, len: 2, name: 'alt bloc' }]" />
+
+<div class="text-xs mt-2 text-center opacity-75">fiecare pătrat este un <code>int</code>, de 4 bytes</div>
+</div>
+
+<div>
+<div class="text-sm font-mono mb-2 text-center opacity-80">după realloc: v = 0x7c0</div>
+
+<MemoryCells label="HEAP" :size="52" :continues="false" :axis="false"
+  :cells="[{ value: '8', addr: '0x7c0' }, { value: '9', addr: '0x7c4' }, { value: '10', addr: '0x7c8' }, { value: '?', addr: '0x7cc' }, { value: '?', addr: '0x7d0' }, { value: '?', addr: '0x7d4' }]"
+  :vars="[{ start: 0, len: 3, name: 'copiate', highlight: true }, { start: 3, len: 3, name: 'noi' }]" />
+
+<div class="text-xs mt-2 text-center opacity-75">blocul de la <code>0x4a0</code> a fost eliberat</div>
+</div>
+
+</div>
+
+<div class="text-base mt-12 max-w-3xl mx-auto">
+
+Orice altă copie a adresei `0x4a0` a devenit dangling.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Niciodată `v = realloc(v, ...)`
+
+:: left ::
+
+Forma scurtă pare firească. Dacă `realloc` eșuează, pierde tot blocul.
+
+```c
+// GRESIT
+v = realloc(v, m * sizeof *v);
+
+// CORECT
+int *tmp = realloc(v, m * sizeof *v);
+if (tmp == NULL) {
+    free(v);       // blocul vechi e inca valid
+    return 1;
+}
+v = tmp;
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Când eșuează, `realloc` întoarce `NULL` și **nu atinge** blocul vechi. El
+  există în continuare, cu toate valorile.
+- În forma greșită, `NULL` suprascrie singura adresă a blocului. Blocul nu mai
+  poate fi folosit și nici eliberat.
+- Cu `tmp`, putem alege: eliberăm și ieșim, sau continuăm cu blocul vechi.
+- gcc nu avertizează pentru forma greșită.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Cât Să Crească Blocul
+
+:: left ::
+
+Fiecare mutare copiază toate elementele. Contează de câte ori se mută blocul.
+
+```c
+// cate un element in plus: realloc la fiecare nota
+cap = cap + 1;
+
+// dublare: realloc tot mai rar
+cap = (cap == 0) ? 4 : cap * 2;
+```
+
+:: right ::
+
+<div class="ns-c-table text-sm">
+
+| pentru 1000 de note | +1 | dublare |
+|---|---|---|
+| apeluri `realloc` | 1000 | 9 |
+| copieri, în cel mai rău caz | ~500 000 | ~1000 |
+| loc nefolosit, la final | 0 | cel mult jumătate |
+
+</div>
+
+<div class="text-base mt-4">
+
+Cu dublarea, capacitatea trece prin 4, 8, 16, ..., 1024. Plătim cu ceva memorie
+în plus și câștigăm foarte multe copieri.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Trei Variabile pentru un Array Care Crește
+
+:: left ::
+
+Un array dinamic are nevoie de trei lucruri: blocul, câte elemente folosim și
+câte încap.
+
+```c
+int *note = NULL;    // blocul, deocamdata niciunul
+int nr = 0;          // cate note avem
+int cap = 0;         // cate note incap
+
+// adaugarea unei note x
+if (nr == cap) {
+    cap = (cap == 0) ? 4 : cap * 2;
+    int *tmp = realloc(note, cap * sizeof *tmp);
+    if (tmp == NULL) { free(note); return 1; }
+    note = tmp;
+}
+note[nr] = x;
+nr++;
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `nr` crește la fiecare notă. `cap` crește doar când blocul este plin.
+- Pornim cu `note = NULL`, iar primul `realloc` lucrează ca `malloc`.
+- Elementele de la `nr` la `cap - 1` există, dar nu sunt încă folosite.
+- Cele trei variabile merg mereu împreună. În curând vom vedea cum se strâng
+  într-un singur tip.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Note Până la 0
+
+:: content ::
+
+Nu știm câte note vin. Blocul crește când se umple. Rulați și scrieți, pe un
+singur rând: `8 9 10 7 6 9 0`.
+
+```c {monaco-run} {autorun:false, height:'330px'}
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int *note = NULL, nr = 0, cap = 0, x = 0;
+    printf("Note, cu 0 la final: ");
+    while (scanf("%d", &x) == 1 && x != 0) {
+        if (nr == cap) {
+            cap = (cap == 0) ? 2 : cap * 2;
+            int *tmp = realloc(note, cap * sizeof *tmp);
+            if (tmp == NULL) { free(note); return 1; }
+            note = tmp;
+            printf("capacitate %d\n", cap);
+        }
+        note[nr++] = x;
+    }
+    printf("%d note citite\n", nr);
+    free(note);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un String de Mărimea Potrivită
+
+:: left ::
+
+Citim într-un buffer mare, de pe stivă. Apoi copiem textul într-un bloc exact
+cât trebuie.
+
+```c
+char buf[100];
+scanf("%99s", buf);
+
+char *nume = malloc(strlen(buf) + 1);
+if (nume == NULL) {
+    return 1;
+}
+strcpy(nume, buf);
+// nume ocupa 4 bytes pentru "Ana", nu 100
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `strlen` nu numără `'\0'`. Blocul are nevoie de un byte în plus pentru el:
+  `+ 1`.
+- `sizeof(char)` este 1 prin definiție, deci nu îl mai scriem.
+- `buf` se refolosește la următoarea citire. Fiecare nume primește blocul lui.
+- Pentru 1000 de nume, diferența este între 100 000 de bytes și cât au de fapt
+  numele.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Funcție Care Întoarce un String Nou
+
+:: left ::
+
+Copierea într-un bloc nou merită o funcție. Întoarce adresa copiei sau `NULL`.
+
+```c
+// intoarce o copie a lui s, pe heap
+// apelantul trebuie sa o elibereze cu free
+char *copiaza(const char *s) {
+    char *c = malloc(strlen(s) + 1);
+    if (c == NULL) {
+        return NULL;
+    }
+    strcpy(c, s);
+    return c;
+}
+
+char *nume = copiaza(buf);
+// ... folosim nume ...
+free(nume);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `const char *s` promite că funcția doar citește originalul.
+- Comentariul de deasupra spune cine eliberează. Fără el, apelantul nu are de
+  unde să știe că primește un bloc de pe heap.
+- Din C23, `string.h` are deja funcția: `strdup`. Face exact asta și se
+  eliberează tot cu `free`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Nume de Lungimi Diferite
+
+:: content ::
+
+Un array de pointeri, fiecare spre un string de mărimea lui. Rulați și scrieți
+trei nume pe un rând: `Ana Alexandru Ion`.
+
+```c {monaco-run} {autorun:false, height:'330px'}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    char buf[100];
+    char *nume[3];
+    printf("Trei nume: ");
+    for (int i = 0; i < 3; i++) {
+        scanf("%99s", buf);
+        nume[i] = malloc(strlen(buf) + 1);
+        if (nume[i] == NULL) { return 1; }
+        strcpy(nume[i], buf);
+    }
+    for (int i = 0; i < 3; i++) {
+        printf("%s: %zu bytes\n", nume[i], strlen(nume[i]) + 1);
+        free(nume[i]);
+    }
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Matrice cu Rânduri Alocate
+
+:: left ::
+
+O matrice de `r` rânduri: un array de `r` pointeri, iar fiecare pointer indică
+un rând alocat separat.
+
+```c
+int **m = malloc(r * sizeof *m);    // r pointeri
+if (m == NULL) { return 1; }
+for (int i = 0; i < r; i++) {
+    m[i] = malloc(c * sizeof *m[i]);  // un rand
+    if (m[i] == NULL) { return 1; }
+}
+
+m[2][3] = 7;    // ca la o matrice obisnuita
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `int **m` este un pointer spre pointeri: `m[i]` este un `int *`, iar
+  `m[i][j]` un `int`.
+- `r` și `c` se pot citi la rulare. Rândurile pot avea chiar lungimi diferite.
+- Rândurile nu stau unul după altul în memorie, ca la `int m[3][4]`. Fiecare
+  este un bloc separat.
+- Aici, un rând care eșuează iese din program. Un program mai lung ar elibera
+  întâi rândurile deja primite.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Eliberarea, în Ordine Inversă
+
+:: left ::
+
+Fiecare `malloc` are `free`-ul lui: `r` rânduri și array-ul de pointeri.
+Ordinea contează.
+
+```c
+// CORECT: intai randurile, apoi pointerii
+for (int i = 0; i < r; i++) {
+    free(m[i]);
+}
+free(m);
+m = NULL;
+
+// GRESIT: m[i] se citeste dintr-un bloc eliberat
+free(m);
+for (int i = 0; i < r; i++) {
+    free(m[i]);
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Adresele rândurilor stau în blocul `m`. Dacă îl eliberăm primul, le pierdem.
+- În forma greșită, `m[i]` citește dintr-un bloc deja eliberat. Comportamentul
+  este nedefinit.
+- Regula generală: eliberăm în ordinea inversă alocării, ca la cadrele de pe
+  stivă.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Ce Poate Merge Prost
+
+:: content ::
+
+Compilatorul nu verifică aproape nimic din memoria dinamică. Greșelile apar la
+rulare, uneori mult mai târziu.
+
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm text-left">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Memory leak</div>
+    <div class="mt-1">Un bloc care nu mai este eliberat niciodată.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Use after free</div>
+    <div class="mt-1">Folosirea unui bloc după <code>free</code>, printr-un dangling pointer.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Double free</div>
+    <div class="mt-1">Același bloc eliberat de două ori.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Free pe altceva</div>
+    <div class="mt-1"><code>free</code> pe o adresă care nu vine de la <code>malloc</code>.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Un byte lipsă</div>
+    <div class="mt-1"><code>strlen(s)</code> în loc de <code>strlen(s) + 1</code>.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Bytes, nu elemente</div>
+    <div class="mt-1"><code>malloc(n)</code> în loc de <code>malloc(n * sizeof *p)</code>.</div>
+  </div>
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Memory Leak
+
+:: left ::
+
+Un bloc a cărui adresă s-a pierdut nu mai poate fi eliberat. Rămâne ocupat până
+la sfârșitul programului.
+
+```c
+void afiseazaPatrate(int n) {
+    int *v = malloc(n * sizeof *v);
+    if (v == NULL) { return; }
+    for (int i = 0; i < n; i++) {
+        v[i] = i * i;
+        printf("%d ", v[i]);
+    }
+    printf("\n");
+}    // v dispare, blocul ramane
+
+for (int k = 0; k < 1000000; k++) {
+    afiseazaPatrate(100);    // pierde 400 de bytes
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pointerul local `v` dispare la `}`. Era singurul loc în care stătea adresa
+  blocului.
+- Un apel pierde 400 de bytes. Un milion de apeluri pierd 400 MB.
+- Un program care rulează puțin nu observă. Un server care rulează zile întregi
+  ajunge să ocupe toată memoria.
+- Funcția trebuie să se încheie cu `free(v);`, pe **fiecare** drum spre ieșire.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Pointer spre un Bloc Eliberat
+
+:: left ::
+
+Două variabile pot ține aceeași adresă. `free` și `= NULL` pe una nu o schimbă
+pe cealaltă.
+
+```c
+int *p = malloc(sizeof *p);
+if (p == NULL) { return 1; }
+int *q = p;          // q are aceeasi adresa
+
+*p = 5;
+free(p);
+p = NULL;
+
+printf("%d\n", *q);  // use after free
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `q` este un dangling pointer. Citirea prin el este **comportament
+  nedefinit**.
+- Poate afișa 5, poate afișa altceva, poate opri programul. Rezultatul se poate
+  schimba de la o rulare la alta.
+- Cel mai periculos caz: blocul a fost dat între timp altui `malloc`, iar
+  scrierea prin `q` strică date străine.
+- gcc prinde doar cazurile simple, ca acesta: `pointer 'q' used after 'free'`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `free` de Două Ori
+
+:: left ::
+
+Al doilea `free` pe aceeași adresă strică evidența internă a heap-ului.
+
+```c
+int *p = malloc(10 * sizeof *p);
+free(p);
+free(p);
+```
+
+```bash
+$ ./program
+free(): double free detected in tcache 2
+Aborted (core dumped)
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Este comportament nedefinit. Biblioteca de pe Linux îl detectează de obicei
+  și oprește programul.
+- Apare mai ales când două părți ale programului cred amândouă că ele
+  eliberează blocul.
+- `p = NULL;` după primul `free` face al doilea apel inofensiv: `free(NULL)` nu
+  face nimic.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `free` Doar pe Ce A Dat `malloc`
+
+:: left ::
+
+`free` primește exact adresa întoarsă de `malloc`, `calloc` sau `realloc`.
+Nimic altceva.
+
+```c
+int note[3] = {8, 9, 10};
+free(note);        // array de pe stiva
+
+int *p = malloc(10 * sizeof *p);
+p++;
+free(p);           // adresa din mijlocul blocului
+```
+
+```bash
+$ ./program
+free(): invalid pointer
+Aborted (core dumped)
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Stiva se eliberează singură. `free` pe o variabilă locală este comportament
+  nedefinit.
+- La fel o adresă din interiorul blocului: `free` caută evidența blocului chiar
+  la adresa primită.
+- gcc avertizează pentru amândouă: `'free' called on unallocated object
+  'note'` și `'free' called on pointer 'p' with nonzero offset 4`.
+- Nu mutăm pointerul care ține blocul. Pentru parcurgere folosim un index sau
+  alt pointer.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Byte Lipsă pentru `'\0'`
+
+:: left ::
+
+Blocul are 3 bytes, iar `strcpy` scrie 4: `'A'`, `'n'`, `'a'` și `'\0'`.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    const char *s = "Ana";
+    char *copie = malloc(strlen(s));    // lipseste + 1
+    strcpy(copie, s);
+    printf("%s\n", copie);
+    free(copie);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `'\0'` ajunge în afara blocului: **heap buffer overflow**. Este comportament
+  nedefinit.
+- De obicei programul afișează `Ana` și pare corect. Blocurile primesc ceva loc
+  în plus, iar byte-ul greșit nimerește acolo.
+- Cu un text mai lung sau alt calculator, același byte strică evidența heap-ului
+  sau alt bloc.
+- Programul se compilează fără niciun avertisment.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Bytes, Nu Elemente
+
+:: left ::
+
+`malloc` numără bytes. Uitat, `sizeof` face blocul de 4 ori mai mic decât
+credem.
+
+```c
+int n = 10;
+int *v = malloc(n);      // 10 bytes
+if (v == NULL) { return 1; }
+
+for (int i = 0; i < n; i++) {
+    v[i] = 0;            // de la v[2], in afara blocului
+}
+
+int *w = malloc(n * sizeof *w);   // 40 de bytes
+```
+
+:: right ::
+
+<div class="text-base">
+
+- În 10 bytes încap 2 `int` întregi. `v[2]` ar ocupa bytes-ii 8 până la 11, deci
+  iese deja din bloc.
+- Nici aici nu apare vreun avertisment, iar programul poate părea că merge.
+- Excepția este `char`: `sizeof(char)` este 1, deci `malloc(n + 1)` pentru un
+  string este corect.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# AddressSanitizer
+
+:: content ::
+
+O opțiune a compilatorului adaugă o verificare la fiecare acces în memorie.
+Programul cu byte-ul lipsă, compilat așa, nu mai pare corect:
+
+```bash
+$ gcc -g -fsanitize=address program.c -o program
+$ ./program
+==4821==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000000013
+WRITE of size 4 at 0x602000000013 thread T0
+    #0 ... in strcpy
+    #1 ... in main program.c:8
+0x602000000013 is located 0 bytes after 3-byte region
+allocated by thread T0 here:
+    #0 ... in malloc
+    #1 ... in main program.c:7
+```
+
+<div class="ns-c-tight text-base mt-4 text-left max-w-4xl mx-auto">
+
+- Raportul spune **ce** s-a întâmplat, **unde** (linia 8) și unde a fost alocat blocul (linia 7).
+- `-g` adaugă numerele de linie. Programul rulează mai încet, deci îl folosim la testare.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Un Leak Raportat
+
+:: content ::
+
+Un program cu `int *note = malloc(10 * sizeof *note);` pe linia 5 și fără
+`free`. Rulează corect, iar raportul apare la ieșire:
+
+```bash
+$ gcc -g -fsanitize=address program.c -o program
+$ ./program
+9
+==4830==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 40 byte(s) in 1 object(s) allocated from:
+    #0 ... in malloc
+    #1 ... in main program.c:5
+
+SUMMARY: AddressSanitizer: 40 byte(s) leaked in 1 allocation(s).
+```
+
+<div class="ns-c-tight text-base mt-4 text-left max-w-4xl mx-auto">
+
+- Raportul arată mărimea blocului pierdut și linia `malloc`-ului lui.
+- O rulare fără niciun raport este un bun semn că fiecare `malloc` are `free`-ul lui.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Valgrind
+
+:: content ::
+
+Valgrind rulează programul compilat obișnuit și urmărește fiecare acces. Același
+program, prescurtat:
+
+```bash
+$ gcc -g program.c -o program
+$ valgrind --leak-check=full ./program
+==4840== HEAP SUMMARY:
+==4840==     in use at exit: 40 bytes in 1 blocks
+==4840==   total heap usage: 2 allocs, 1 frees, 1,064 bytes allocated
+==4840==
+==4840== 40 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==4840==    at 0x...: malloc (vg_replace_malloc.c:...)
+==4840==    by 0x...: main (program.c:5)
+==4840==
+==4840==    definitely lost: 40 bytes in 1 blocks
+```
+
+<div class="ns-c-tight text-base mt-4 text-left max-w-4xl mx-auto">
+
+- `definitely lost`: adresa blocului nu mai există nicăieri. Celălalt bloc este al lui `printf`.
+- Nu cere opțiuni speciale, dar rulează de zeci de ori mai încet. Pe Windows nu există.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Regulile Memoriei Dinamice
+
+:: content ::
+
+Fiecare greșeală de mai devreme are o regulă care o previne.
+
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm text-left">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">if (p == NULL)</div>
+    <div class="mt-1">După fiecare <code>malloc</code>, <code>calloc</code> și <code>realloc</code>.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">n * sizeof *p</div>
+    <div class="mt-1">Mărimea urmează tipul pointerului, singură.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">strlen(s) + 1</div>
+    <div class="mt-1">Un string are nevoie de loc și pentru <code>'\0'</code>.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">tmp = realloc(p, ...)</div>
+    <div class="mt-1">Niciodată direct în <code>p</code>.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">free(p); p = NULL;</div>
+    <div class="mt-1">Un <code>free</code> pentru fiecare bloc, apoi pointerul pe <code>NULL</code>.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">-fsanitize=address</div>
+    <div class="mt-1">Cât timp scriem și testăm programul.</div>
+  </div>
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Afișează Fiecare
+
+:: left ::
+
+Ce afișează fiecare fragment și de ce?
+
+```c
+// A
+int *v = malloc(5 * sizeof *v);
+printf("%zu\n", sizeof v);
+
+// B
+int *z = calloc(4, sizeof *z);
+z[1] = 7;
+printf("%d %d\n", z[0], z[1]);
+
+// C
+int *p = malloc(sizeof *p);
+int *q = p;
+*p = 5;
+free(p);
+p = NULL;
+printf("%d\n", *q);
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- **A**: `8`. `sizeof v` este mărimea pointerului, nu a celor 20 de bytes din
+  bloc.
+- **B**: `0 7`. `calloc` a pus toate elementele pe 0, apoi `z[1]` a primit 7.
+- **C**: nu se știe. `q` indică tot blocul eliberat, iar `p = NULL` nu l-a
+  schimbat pe `q`. Este use after free: comportament nedefinit.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Totul la un Loc
+
+:: content ::
+
+Note până la 0, media și notele peste ea. Scrieți pe un rând: `8 9 10 7 6 9 0`.
+
+```c {monaco-run} {autorun:false, height:'380px'}
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+    int *note = NULL, nr = 0, cap = 0, x = 0, suma = 0;
+    while (scanf("%d", &x) == 1 && x != 0) {
+        if (nr == cap) {
+            cap = (cap == 0) ? 4 : cap * 2;
+            int *tmp = realloc(note, cap * sizeof *tmp);
+            if (tmp == NULL) { free(note); return 1; }
+            note = tmp;
+        }
+        note[nr++] = x;
+        suma = suma + x;
+    }
+    double media = (nr > 0) ? (double)suma / nr : 0;
+    printf("Media %.2f. Peste medie:", media);
+    for (int i = 0; i < nr; i++) {
+        if (note[i] > media) { printf(" %d", note[i]); }
+    }
+    printf("\n");
+    free(note);
+    return 0;
+}
+```
+
+---
+layout: center
+color: blue-light
+---
+
+<DeckNav />

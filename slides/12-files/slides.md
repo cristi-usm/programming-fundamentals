@@ -36,113 +36,2006 @@ cpp:
   alwaysShowCompilerOutput: true
 ---
 
-### Fișiere și header-e
+### Fișiere și Header-e
 #### Date care rămân pe disc, cod împărțit în mai multe fișiere
 
 ---
-layout: top-title
+layout: top-title-two-cols
 color: blue-light
-align: c
+align: c-lt-lt
+columns: is-6
 ---
 
 :: title ::
 
-# De ce avem nevoie de fișiere
+# Programul Uită Tot
 
-:: content ::
+:: left ::
 
-Tot ce am scris până acum își pierde datele la închiderea programului.
+Programul citește studenții grupei și le calculează media. Funcționează, dar
+numai până se închide.
 
-> **Schelet** — de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
+```c
+Student s[30];
+int n = 0;
+printf("Cati studenti? ");
+scanf("%d", &n);
+for (int i = 0; i < n; i++) {
+    scanf("%29s %d %lf", s[i].nume,
+          &s[i].grupa, &s[i].medie);
+}
+// ... calcule, afisari ...
+return 0;   // array-ul s dispare aici
+```
 
-:: title ::
+:: right ::
 
-# `fopen`, `fclose` și modurile de deschidere
+<div class="text-base">
 
-:: content ::
-
-`"r"`, `"w"`, `"a"` — și de ce `"w"` șterge conținutul existent.
-
-> **Schelet** — de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Citire și scriere în text
-
-:: content ::
-
-`fprintf`, `fscanf`, `fgets` — și citirea până la `EOF`.
-
-> **Schelet** — de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Verificarea erorilor
-
-:: content ::
-
-Fișierul poate lipsi sau poate fi protejat: `fopen` întoarce `NULL`.
-
-> **Schelet** — de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Ce face `#include`
-
-:: content ::
-
-Preprocesorul copiază conținutul header-ului în locul liniei `#include`, înainte de compilare.
-
-> **Schelet**: de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Header-e proprii și programe pe mai multe fișiere
-
-:: content ::
-
-Declarațiile stau în `.h`, definițiile în `.c`, iar linker-ul le leagă la final.
-
-> **Schelet**: de completat.
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Mai departe
-
-:: content ::
-
-<div class="mt-12">
-
-<DeckNav />
+- Toate variabilele stau în memoria RAM. Când programul se termină, sistemul de
+  operare îi ia memoria înapoi.
+- La următoarea rulare, `s` este din nou gol. Cei 30 de studenți trebuie
+  tastați din nou.
+- Un catalog adevărat ține notele un semestru întreg, nu cât rulează un
+  program.
+- Ne trebuie un loc în care datele **rămân** după ce programul se oprește:
+  discul.
 
 </div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Este un Fișier
+
+:: content ::
+
+<div class="max-w-4xl mx-auto mt-6">
+
+<Definition term="Fișier" source="Pe scurt" emphasis>
+
+Un șir de **bytes** păstrat pe disc, sub un **nume**. Sistemul de operare îl
+ține și după ce programul care l-a scris s-a oprit.
+
+</Definition>
+
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Are un nume și o cale</div>
+    <div class="mt-1"><code>note.txt</code> sau <code>/home/ana/catalog/note.txt</code>: unde se află pe disc.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Conține doar bytes</div>
+    <div class="mt-1">Fișierul nu știe ce reprezintă. Programul care îl citește decide.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Îl administrează sistemul</div>
+    <div class="mt-1">Programul nu scrie direct pe disc. Cere sistemului de operare să deschidă, să citească, să scrie.</div>
+  </div>
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Fișiere Text și Fișiere Binare
+
+:: content ::
+
+Pe disc, ambele sunt doar bytes. Diferența este cum îi scrie programul și cine îi
+poate citi.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-5">
+
+| | fișier text | fișier binar |
+|---|---|---|
+| ce conține | caractere: cifre, litere, `\n` | bytes copiați direct din memorie |
+| nota `10` se scrie ca | două caractere, `'1'` și `'0'` | 4 bytes, ca un `int` în memorie |
+| se deschide într-un editor | da, se citește ca orice text | nu, apar simboluri fără sens |
+| funcții | `fprintf`, `fscanf`, `fgets` | `fwrite`, `fread` |
+| exemple | `.txt`, `.csv`, `.c` | `.bin`, `.png`, executabilul |
+
+</div>
+
+<div class="text-base mt-5 max-w-3xl mx-auto">
+
+Lucrăm mai ales cu fișiere text: le verificați cu ochii și le corectați cu orice
+editor.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `FILE *`: Legătura cu un Fișier
+
+:: left ::
+
+`fopen` deschide fișierul și întoarce un pointer la un `FILE`. Prin el ajung la
+fișier toate celelalte funcții.
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("note.txt", "r");
+    // ... citim din f ...
+    fclose(f);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `FILE` este un `struct` definit în `stdio.h`. Ține poziția în fișier, buffer-ul
+  și starea de eroare. Nu umblăm niciodată în interiorul lui.
+- Primul argument este calea fișierului, al doilea este **modul**: ce vrem să
+  facem cu el.
+- Un `FILE *` deschis este un **stream**, ca `stdin`. Caracterele se citesc în
+  ordine, de la o poziție care avansează.
+- `fclose(f)` încheie legătura.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Modurile de Deschidere
+
+:: content ::
+
+Modul spune ce face `fopen` cu fișierul. O singură literă greșită poate șterge
+datele.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-5">
+
+| mod | pentru | dacă fișierul nu există | dacă fișierul există |
+|---|---|---|---|
+| `"r"` | citire | `fopen` întoarce `NULL` | citim de la început |
+| `"w"` | scriere | este creat, gol | **este golit**, apoi scriem de la început |
+| `"a"` | adăugare | este creat, gol | scriem la final, după ce era |
+| `"r+"` | citire și scriere | `fopen` întoarce `NULL` | nu este golit, pornim de la început |
+
+</div>
+
+<div class="ns-c-tight text-base mt-5 max-w-4xl mx-auto">
+
+- Modul este un string, între ghilimele: `"r"`, nu `'r'`.
+- `"r+"` apare rar. Pentru un catalog e mai simplu să citim tot fișierul și să-l
+  rescriem tot.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `"w"` Golește Fișierul
+
+:: left ::
+
+Fișierul este golit chiar la `fopen`, înainte de orice scriere. Ajunge o
+deschidere în modul greșit.
+
+```c
+// note.txt are 30 de linii cu note
+
+// voiam sa citim notele...
+FILE *f = fopen("note.txt", "w");
+
+// ...dar acum note.txt are 0 bytes,
+// chiar daca nu am scris nimic in el
+fclose(f);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Nu există confirmare și nici coș de gunoi. Ce era în fișier s-a pierdut.
+- `"r"` pentru citire. `"w"` doar când rescriem **tot** fișierul, de exemplu la
+  salvarea întregului catalog.
+- Pentru o linie în plus la final, `"a"`: ce era rămâne neatins.
+- Când testați un program care scrie, lucrați pe o copie a fișierului.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# `fopen` Poate Eșua
+
+:: content ::
+
+Când fișierul nu poate fi deschis, `fopen` întoarce `NULL`. `perror` explică de
+ce. Aici `note.txt` nu există. Rulați.
+
+```c {monaco-run} {autorun:false, height:'202px'}
+#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("note.txt", "r");
+    if (f == NULL) {
+        perror("note.txt");
+        return 1;
+    }
+    printf("Fisierul s-a deschis.\n");
+    fclose(f);
+    return 0;
+}
+```
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Spune `perror`
+
+:: content ::
+
+`perror("note.txt")` afișează textul primit, două puncte și motivul pentru care
+a eșuat ultima operație, pe `stderr`.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-5">
+
+| situația | ce afișează `perror` |
+|---|---|
+| `"r"` pe un fișier care nu există | `note.txt: No such file or directory` |
+| `"w"` într-un director care nu există | `date/note.txt: No such file or directory` |
+| `"w"` pe un fișier protejat la scriere | `note.txt: Permission denied` |
+| `"w"` pe un director, nu pe un fișier | `date: Is a directory` |
+| prea multe fișiere deschise deodată | `note.txt: Too many open files` |
+
+</div>
+
+<div class="ns-c-tight text-base mt-5 max-w-4xl mx-auto">
+
+- Dați-i lui `perror` numele fișierului. Mesajul spune atunci și ce, și de ce.
+- După mesaj, `return 1;`: programul nu are cu ce continua.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `fclose` Închide Fișierul
+
+:: left ::
+
+Ca la `printf`, ce scriem cu `fprintf` ajunge întâi într-un **buffer**. Pe disc
+ajunge mai târziu, cel mai sigur la `fclose`.
+
+```c
+FILE *f = fopen("note.txt", "w");
+if (f == NULL) {
+    perror("note.txt");
+    return 1;
+}
+fprintf(f, "Popescu 9\n");   // in buffer
+fprintf(f, "Ionescu 7\n");   // in buffer
+fclose(f);                   // acum pe disc
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `fclose` scrie pe disc ce a rămas în buffer și eliberează `FILE`-ul.
+- La sfârșitul normal al lui `main`, fișierele deschise se închid singure. Dacă
+  programul cade înainte, ce era în buffer se pierde.
+- Un program poate ține deschise doar un număr limitat de fișiere, pe Linux de
+  obicei 1024, cu tot cu cele trei standard.
+- După `fclose(f)`, `f` nu mai poate fi folosit. Închidem doar un fișier care
+  s-a deschis: `fclose(NULL)` are comportament nedefinit.
+
+</div>
+
+---
+layout: cover
+color: blue-light
+---
+
+## Scriere și Citire
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `fprintf` Scrie ca `printf`
+
+:: left ::
+
+`fprintf` primește în plus, primul, fișierul. Restul este exact `printf`:
+șablonul și valorile.
+
+```c
+FILE *f = fopen("note.txt", "w");
+if (f == NULL) {
+    perror("note.txt");
+    return 1;
+}
+fprintf(f, "%s %d\n", "Popescu", 9);
+fprintf(f, "%s %d\n", "Ionescu", 7);
+fprintf(f, "%s %d\n", "Marin", 10);
+fclose(f);
+```
+
+:: right ::
+
+<div class="text-base">
+
+Pe disc, `note.txt` conține exact acest text:
+
+```text {*}{lines:false}
+Popescu 9
+Ionescu 7
+Marin 10
+```
+
+- Nimic nu apare pe ecran. Tot ce ar fi afișat `printf` ajunge în fișier.
+- `\n` contează: fără el, toate notele ar sta pe o singură linie.
+- `9` ajunge în fișier ca un caracter, `'9'`. `10` ajunge ca două.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `fscanf` Citește ca `scanf`
+
+:: left ::
+
+`fscanf` primește tot fișierul în față, apoi șablonul și adresele. Citește de
+unde a rămas citirea anterioară.
+
+```c
+FILE *f = fopen("note.txt", "r");
+if (f == NULL) {
+    perror("note.txt");
+    return 1;
+}
+char nume[30];
+int nota = 0;
+fscanf(f, "%29s %d", nume, &nota);
+printf("%s: %d\n", nume, nota);  // Popescu: 9
+fscanf(f, "%29s %d", nume, &nota);
+printf("%s: %d\n", nume, nota);  // Ionescu: 7
+fclose(f);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Fiecare apel avansează în fișier. Al doilea `fscanf` citește a doua linie.
+- `%29s` citește un cuvânt de cel mult 29 de caractere, ca să rămână loc pentru
+  `\0` în `nume[30]`.
+- Spațiile și `\n` dintre valori sunt sărite, ca la `scanf`.
+- Câte linii are fișierul nu știm dinainte. Ne trebuie un semnal că s-a
+  terminat.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Întoarce `fscanf`
+
+:: content ::
+
+Ca `scanf`, `fscanf` întoarce **câte valori a citit**. Rezultatul spune dacă
+citirea a reușit și, la final, că fișierul s-a terminat.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-5">
+
+| linia citită cu `"%29s %d"` | `fscanf` întoarce | ce înseamnă |
+|---|---|---|
+| `Popescu 9` | `2` | ambele valori citite |
+| `Popescu noua` | `1` | `nume` citit, `%d` nu a găsit un număr |
+| nimic, fișierul s-a terminat | `EOF` | nu mai e nimic de citit |
+
+</div>
+
+<div class="ns-c-tight text-base mt-5 max-w-4xl mx-auto">
+
+- `EOF` (*end of file*) este o constantă din `stdio.h`, de obicei `-1`.
+- Când întoarce mai puțin decât am cerut, variabilele rămase păstrează valoarea
+  dinainte.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Citim Cât Timp Citirea Reușește
+
+:: left ::
+
+Condiția buclei este chiar citirea. Bucla continuă doar dacă `fscanf` a citit
+ambele valori.
+
+```c
+char nume[30];
+int nota = 0;
+int n = 0;
+
+while (fscanf(f, "%29s %d", nume, &nota) == 2) {
+    printf("%s are nota %d\n", nume, nota);
+    n++;
+}
+
+printf("%d note citite\n", n);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- La fiecare pas, `fscanf` citește o linie și întoarce `2`. Corpul buclei
+  folosește valori citite **acum**.
+- La sfârșitul fișierului întoarce `EOF`, care nu este `2`, și bucla se oprește.
+- Tot așa se oprește la o linie greșită, unde întoarce `0` sau `1`.
+- Comparăm cu `== 2`, nu cu `!= EOF`. Pe o linie greșită, `fscanf` întoarce
+  `1`, iar cu `!= EOF` bucla ar continua cu valori greșite.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Scriem, Apoi Citim Înapoi
+
+:: content ::
+
+Programul scrie trei linii, închide fișierul, îl deschide din nou pentru citire
+și afișează ce găsește. Rulați.
+
+```c {monaco-run} {autorun:false, height:'314px'}
+#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("note.txt", "w");
+    if (f == NULL) { perror("note.txt"); return 1; }
+    fprintf(f, "Popescu 9\n");
+    fprintf(f, "Ionescu 7\n");
+    fprintf(f, "Marin 10\n");
+    fclose(f);
+    f = fopen("note.txt", "r");
+    if (f == NULL) { perror("note.txt"); return 1; }
+    char nume[30];
+    int nota = 0;
+    while (fscanf(f, "%29s %d", nume, &nota) == 2) {
+        printf("%s are nota %d\n", nume, nota);
+    }
+    fclose(f);
+    return 0;
+}
+```
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# `while (!feof(f))` Citește o Dată în Plus
+
+:: content ::
+
+Aceleași trei linii, citite cu o buclă care apare des în exemple de pe internet.
+Rulați și numărați liniile afișate.
+
+```c {monaco-run} {autorun:false, height:'298px'}
+#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("note.txt", "w");
+    if (f == NULL) { perror("note.txt"); return 1; }
+    fprintf(f, "Popescu 9\nIonescu 7\nMarin 10\n");
+    fclose(f);
+    f = fopen("note.txt", "r");
+    if (f == NULL) { perror("note.txt"); return 1; }
+    char nume[30];
+    int nota = 0;
+    while (!feof(f)) {                          // GRESIT
+        fscanf(f, "%29s %d", nume, &nota);
+        printf("%s are nota %d\n", nume, nota);
+    }
+    fclose(f);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-5
+---
+
+:: title ::
+
+# `feof` Răspunde Prea Târziu
+
+:: left ::
+
+`feof(f)` nu se uită înainte. Spune doar dacă o citire **anterioară** a lovit
+deja capătul fișierului.
+
+```c
+while (!feof(f)) {
+    fscanf(f, "%29s %d", nume, &nota);
+    printf("%s are nota %d\n", nume, nota);
+}
+```
+
+:: right ::
+
+<div class="ns-c-table text-sm">
+
+| pas | `fscanf` | `feof(f)` după | se afișează |
+|---|---|---|---|
+| 1 | citește `Popescu 9` | 0 | `Popescu 9` |
+| 2 | citește `Ionescu 7` | 0 | `Ionescu 7` |
+| 3 | citește `Marin 10`, se oprește înainte de `\n` | 0 | `Marin 10` |
+| 4 | găsește doar `\n`, apoi capătul, întoarce `EOF` | 1 | `Marin 10`, încă o dată |
+
+</div>
+
+<div class="text-base mt-4">
+
+La pasul 4 citirea eșuează, dar `printf` rulează oricum, cu valorile rămase de la
+pasul 3. Verificați rezultatul citirii, nu `feof`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Linie cu Linie: `fgets`
+
+:: left ::
+
+Am văzut deja `fgets` pe `stdin`. Pe un fișier citește o linie întreagă, cu tot
+cu spații.
+
+```c
+char linie[100];
+int nr = 0;
+
+while (fgets(linie, sizeof(linie), f) != NULL) {
+    nr++;
+    printf("%d: %s", nr, linie);
+}
+```
+
+```text {*}{lines:false}
+1: Popescu 9
+2: Ionescu 7
+3: Marin 10
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `fgets` întoarce `NULL` la sfârșitul fișierului. Bucla are aceeași formă: cât
+  timp citirea reușește.
+- Păstrează `\n` de la capătul liniei. De aceea `printf` nu mai are nevoie de
+  `\n`.
+- Citește cel mult 99 de caractere, ca să încapă `\0`. O linie mai lungă vine în
+  bucăți, la apeluri succesive.
+- Bun când linia contează ca întreg: o afișăm, o numărăm sau o verificăm.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `stdin`, `stdout`, `stderr` Sunt Tot `FILE *`
+
+:: left ::
+
+Cele trei stream-uri standard sunt fișiere deschise automat. Funcțiile pentru
+fișiere merg și pe ele.
+
+```c
+printf("Media: %.2f\n", m);
+fprintf(stdout, "Media: %.2f\n", m);  // identic
+
+scanf("%d", &n);
+fscanf(stdin, "%d", &n);              // identic
+
+fprintf(stderr, "studenti.txt lipseste\n");
+```
+
+```bash
+$ ./catalog > rezultate.txt
+studenti.txt lipseste
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `printf(...)` este o prescurtare pentru `fprintf(stdout, ...)`.
+- Mesajele de eroare merg pe `stderr`. `perror` scrie tot acolo.
+- `>` trimite doar `stdout` într-un fișier. Eroarea apare în continuare pe
+  ecran, iar `rezultate.txt` nu se umple cu mesaje de eroare.
+- O funcție cu un parametru `FILE *out` poate scrie la fel de bine pe ecran sau
+  în fișier, după ce primește: `stdout` sau un `f` deschis.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `"a"` Adaugă la Final
+
+:: left ::
+
+Un jurnal în care fiecare rulare adaugă o linie. Cu `"a"`, ce era în fișier
+rămâne.
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("jurnal.txt", "a");
+    if (f == NULL) {
+        perror("jurnal.txt");
+        return 1;
+    }
+    fprintf(f, "program pornit\n");
+    fclose(f);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+Trei rulări, apoi conținutul fișierului:
+
+```bash
+$ ./program
+$ ./program
+$ ./program
+$ cat jurnal.txt
+program pornit
+program pornit
+program pornit
+```
+
+- Cu `"w"`, `jurnal.txt` ar fi avut o singură linie.
+- Datele au supraviețuit rulărilor. Exact ce lipsea la început.
+
+</div>
+
+---
+layout: cover
+color: blue-light
+---
+
+## Un Catalog pe Disc
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Student pe Linie
+
+:: left ::
+
+Înainte de cod alegem **formatul**: cum arată fișierul. Pentru catalog: un
+student pe linie, câmpurile separate prin spațiu.
+
+```c
+typedef struct {
+    char nume[30];
+    int grupa;
+    double medie;
+} Student;
+```
+
+```text {*}{lines:false}
+Popescu 211 8.50
+Ionescu 212 9.25
+Marin 211 7.00
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Ordinea câmpurilor din fișier o hotărâm noi. Funcția care scrie și cea care
+  citește trebuie să folosească aceeași ordine.
+- `%s` se oprește la primul spațiu, deci numele se scrie fără spații:
+  `Popescu_Ion`, nu `Popescu Ion`.
+- Media se scrie cu `%.2f` și se citește înapoi cu `%lf`. Din ea rămân doar
+  două zecimale.
+- Fișierul se poate deschide și corecta într-un editor, fără program.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Salvarea Catalogului
+
+:: left ::
+
+Funcția primește calea și array-ul, scrie câte o linie pentru fiecare student și
+spune dacă a reușit.
+
+```c
+int salveaza(const char *cale,
+             const Student v[], int n) {
+    FILE *f = fopen(cale, "w");
+    if (f == NULL) {
+        return 0;
+    }
+    for (int i = 0; i < n; i++) {
+        fprintf(f, "%s %d %.2f\n",
+                v[i].nume, v[i].grupa, v[i].medie);
+    }
+    fclose(f);
+    return 1;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `"w"` este corect aici: salvăm **tot** catalogul, deci versiunea veche trebuie
+  înlocuită.
+- Funcția nu afișează nimic. Întoarce 1 sau 0, iar apelantul decide ce face.
+- La apel: `if (!salveaza("studenti.txt", s, n)) { perror("studenti.txt"); }`.
+- `const` promite, ca la array-uri, că funcția doar citește studenții.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Încărcarea Catalogului
+
+:: left ::
+
+Citim câte un student până când citirea nu mai reușește sau array-ul s-a umplut.
+Funcția întoarce câți a încărcat.
+
+```c
+int incarca(const char *cale, Student v[], int max) {
+    FILE *f = fopen(cale, "r");
+    if (f == NULL) {
+        return -1;
+    }
+    int n = 0;
+    while (n < max
+           && fscanf(f, "%29s %d %lf", v[n].nume,
+                     &v[n].grupa, &v[n].medie) == 3) {
+        n++;
+    }
+    fclose(f);
+    return n;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `n < max` stă **primul**. Când array-ul e plin, `fscanf` nu mai este apelat
+  și nu scrie dincolo de capăt.
+- `== 3`: trei valori pe linie, trei valori citite.
+- `-1` înseamnă "fișierul nu s-a deschis", `0` înseamnă "fișier gol". Sunt
+  situații diferite, deci rezultate diferite.
+- `v[n].nume` este deja o adresă, fără `&`. `grupa` și `medie` au nevoie de `&`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Linie, Apoi `sscanf`
+
+:: left ::
+
+`sscanf` lucrează ca `fscanf`, dar citește dintr-un **string**. Citim linia
+întreagă cu `fgets`, apoi o desfacem.
+
+```c
+char linie[100];
+int nr = 0;
+while (fgets(linie, sizeof(linie), f) != NULL) {
+    nr++;
+    Student s;
+    if (sscanf(linie, "%29s %d %lf", s.nume,
+               &s.grupa, &s.medie) != 3) {
+        fprintf(stderr, "linia %d: ignorata\n", nr);
+        continue;
+    }
+    // s este valid, il folosim
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Cu `fscanf` direct, o linie greșită oprește citirea, iar restul fișierului
+  rămâne necitit.
+- Cu `fgets`, fiecare apel consumă exact o linie. Una greșită se sare, și
+  citirea continuă cu următoarea.
+- Știm și **care** linie e greșită, iar mesajul o spune.
+- Același tipar pentru orice fișier scris de oameni: o linie, o verificare.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# O Linie Greșită Nu Oprește Citirea
+
+:: content ::
+
+A doua linie are nota scrisă în litere. Rulați și urmăriți ce se întâmplă cu
+linia a treia.
+
+```c {monaco-run} {autorun:false, height:'330px'}
+#include <stdio.h>
+int main() {
+    FILE *f = fopen("note.txt", "w");
+    if (f == NULL) { perror("note.txt"); return 1; }
+    fprintf(f, "Popescu 9\nIonescu noua\nMarin 10\n");
+    fclose(f);
+    f = fopen("note.txt", "r");
+    if (f == NULL) { perror("note.txt"); return 1; }
+    char linie[100], nume[30];
+    int nota = 0;
+    while (fgets(linie, sizeof(linie), f) != NULL) {
+        if (sscanf(linie, "%29s %d", nume, &nota) == 2) {
+            printf("%s are nota %d\n", nume, nota);
+        } else {
+            printf("linie gresita: %s", linie);
+        }
+    }
+    fclose(f);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Fișiere Binare: `fwrite` și `fread`
+
+:: left ::
+
+`fwrite` copiază bytes din memorie direct în fișier, fără `printf`. Un array de
+structuri se scrie dintr-un singur apel.
+
+```c
+Student s[3] = {{"Popescu", 211, 8.50},
+                {"Ionescu", 212, 9.25},
+                {"Marin", 211, 7.00}};
+
+FILE *f = fopen("studenti.bin", "wb");
+size_t scrisi = fwrite(s, sizeof(Student), 3, f);
+fclose(f);
+
+Student t[30];
+f = fopen("studenti.bin", "rb");
+size_t n = fread(t, sizeof(Student), 30, f);
+fclose(f);                       // n este 3
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Argumentele: de unde, cât are un element, câte elemente, în ce fișier.
+- Ambele întorc câte elemente au scris sau au citit. `fread` cere 30 și
+  primește 3, câte sunt în fișier.
+- `b` vine de la *binary*. Pe Linux nu schimbă nimic. Pe Windows, fără `b`,
+  fiecare byte `\n` ar fi transformat la scriere.
+- Verificarea lui `NULL` lipsește aici doar ca exemplul să încapă pe slide.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Fișier Binar Nu Se Citește cu Ochii
+
+:: left ::
+
+Trei studenți ocupă 144 bytes, 48 pentru fiecare. `xxd` afișează bytes în
+hexazecimal. Iată primul student:
+
+```bash
+$ ls -l studenti.bin
+-rw-r--r-- 1 ana ana 144 oct 31 12:45 studenti.bin
+$ xxd -c 8 -l 48 studenti.bin
+00000000: 506f 7065 7363 7500  Popescu.
+00000008: 0000 0000 0000 0000  ........
+00000010: 0000 0000 0000 0000  ........
+00000018: 0000 0000 0000 0000  ........
+00000020: d300 0000 0000 0000  ........
+00000028: 0000 0000 0000 2140  ......!@
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Într-un editor apar numele, printre simboluri fără sens. Restul sunt bytes
+  care nu reprezintă litere.
+- `sizeof(Student)` este 48, nu 30 + 4 + 8 = 42. Compilatorul lasă bytes goi
+  între câmpuri, ca `grupa` și `medie` să înceapă la adrese potrivite.
+- Grupa 211 apare ca `d3 00 00 00`: un `int` exact cum stă în memorie.
+- Alt compilator sau alt procesor poate avea alt `sizeof(int)`, alți bytes goi
+  sau altă ordine a bytes. Fișierul nu se citește corect pe altă mașină.
+
+</div>
+
+---
+layout: cover
+color: blue-light
+---
+
+## Greșeli Frecvente
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Fără Verificarea lui `NULL`
+
+:: left ::
+
+Directorul `date` nu există, deci `fopen` întoarce `NULL`. Programul merge mai
+departe ca și cum ar fi reușit.
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("date/note.txt", "w");
+    fprintf(f, "Popescu 9\n");
+    fclose(f);
+    return 0;
+}
+```
+
+```bash
+$ ./program
+Segmentation fault (core dumped)
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `fprintf` primește `NULL` în loc de un `FILE`. Programul cade, iar mesajul nu
+  spune nimic despre fișier.
+- Compilatorul nu avertizează: din cod nu se poate ști dacă fișierul va exista.
+- Cu `if (f == NULL) { perror(...); }`, același program ar fi spus
+  `date/note.txt: No such file or directory`.
+- Fiecare `fopen` este urmat de verificare. Fără excepție.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Fișiere Deschise și Neînchise
+
+:: left ::
+
+Funcția deschide fișierul și uită să-l închidă. La fiecare apel rămâne încă un
+fișier deschis.
+
+```c
+int numaraLinii(const char *cale) {
+    FILE *f = fopen(cale, "r");
+    if (f == NULL) {
+        perror(cale);
+        return -1;
+    }
+    char linie[100];
+    int n = 0;
+    while (fgets(linie, sizeof(linie), f) != NULL) {
+        n++;
+    }
+    return n;        // lipseste fclose(f)
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+Apelată de câteva ori, funcția merge. Apelată într-o buclă, după vreo 1000 de
+apeluri `fopen` începe să întoarcă `NULL`:
+
+```bash
+note.txt: Too many open files
+```
+
+- Greșeala apare departe de cauză: `fopen` eșuează, deși fișierul există și
+  funcția pare corectă.
+- Scrieți `fclose` imediat după `fopen`, apoi completați între ele.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Rezultatul lui `fscanf`, Ignorat
+
+:: left ::
+
+A doua linie din `note.txt` este `Ionescu abc`. Bucla nu verifică ce a citit
+`fscanf`.
+
+```c
+while (!feof(f)) {
+    fscanf(f, "%29s %d", nume, &nota);
+    printf("%s %d\n", nume, nota);
+}
+```
+
+```bash
+$ ./program
+Popescu 9
+Ionescu 9
+abc 9
+Marin 10
+Marin 10
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pe `Ionescu abc`, `%d` nu găsește un număr și întoarce `1`. `nota` rămâne 9,
+  de la Popescu.
+- `abc` rămâne necitit și devine numele următorului "student".
+- Programul nu cade și nu afișează nicio eroare. Datele sunt pur și simplu
+  greșite.
+- Cu `while (fscanf(...) == 2)`, citirea s-ar fi oprit la Ionescu. Cu `fgets` și
+  `sscanf`, linia ar fi fost semnalată și sărită.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Calea Depinde de Unde Porniți
+
+:: left ::
+
+`"note.txt"` este o cale **relativă**: este căutată în directorul din care a fost
+pornit programul, nu în cel în care se află executabilul.
+
+```bash
+$ cd ~/catalog
+$ ls
+catalog  note.txt
+$ ./catalog
+Popescu are nota 9
+$ cd ..
+$ ./catalog/catalog
+note.txt: No such file or directory
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Același program, același fișier. Doar directorul curent s-a schimbat.
+- O cale **absolută** pornește de la `/`: `/home/ana/catalog/note.txt`. Merge de
+  oriunde, dar numai pe calculatorul acela.
+- Un IDE pornește de obicei programul din alt director decât cel al sursei. Dacă
+  fișierul "nu există" doar în IDE, de aici vine.
+- Porniți programul din directorul în care sunt datele.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Șase Reguli pentru Fișiere
+
+:: content ::
+
+Fiecare greșeală de mai sus are o regulă care o previne.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-5">
+
+| greșeala | regula |
+|---|---|
+| `fopen` a întors `NULL`, nimeni n-a verificat | după fiecare `fopen`: `if (f == NULL)`, `perror`, ieșire |
+| fișierul nu e închis | `fclose` pe fiecare drum prin funcție |
+| `"w"` a golit un fișier care trebuia citit | `"r"` pentru citire, `"w"` doar pentru rescriere completă |
+| `while (!feof(f))` | bucla verifică rezultatul citirii: `== 2`, `!= NULL` |
+| rezultatul lui `fscanf` ignorat | comparat cu numărul de valori cerute |
+| calea relativă nu găsește fișierul | programul se pornește din directorul datelor |
+
+</div>
+
+---
+layout: cover
+color: blue-light
+---
+
+## Programe pe Mai Multe Fișiere
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Catalogul Crește
+
+:: left ::
+
+Cu citire, validare, sortare, salvare și meniu, catalogul ajunge la sute de
+linii, toate în `main.c`.
+
+```c
+// main.c, 640 de linii
+#include <stdio.h>
+#include <string.h>
+
+typedef struct { ... } Student;
+
+int citesteIntre(int min, int max) { ... }
+int incarca(const char *cale, ...) { ... }
+int salveaza(const char *cale, ...) { ... }
+void sorteazaDupaMedie(Student v[], int n) { ... }
+void afiseaza(const Student v[], int n) { ... }
+// ... inca 20 de functii ...
+int main() { ... }
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Ca să găsim o funcție, derulăm printre toate celelalte.
+- Funcțiile pentru fișiere ar fi utile și în alt program. Ca să le folosim acolo,
+  le copiem, iar o corectură trebuie apoi făcută în două locuri.
+- La fiecare schimbare, oricât de mică, se recompilează tot programul.
+- Vrem fișiere separate, pe teme, care să se compileze împreună.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `#include` Copiază Text
+
+:: left ::
+
+Am văzut deja că `#include` este o directivă a preprocesorului. Ea pune
+conținutul fișierului în locul liniei, ca un copy-paste.
+
+```c
+// corp.h, o singura linie
+    printf("Salut din corp.h\n");
+```
+
+```c
+// main.c
+#include <stdio.h>
+
+int main() {
+#include "corp.h"
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Programul se compilează și afișează `Salut din corp.h`.
+- Preprocesorul nu știe C. Nu verifică ce conține fișierul, doar îl copiază.
+- Exemplul e doar o demonstrație: nimeni nu scrie așa. Un header conține
+  declarații, nu bucăți de funcție.
+- `gcc -E main.c` arată textul după copiere. Doar din `stdio.h` vin peste 800 de
+  linii.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Primește Compilatorul
+
+:: content ::
+
+Preprocesorul înlocuiește linia `#include "catalog.h"` cu tot conținutul
+header-ului. Compilatorul primește varianta din dreapta.
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70 mb-3">ce scrieți în main.c</div>
+
+```c
+#include "catalog.h"
+
+int main() {
+    Student s[30];
+    int n = incarca("studenti.txt", s, 30);
+    return 0;
+}
+```
+
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70 mb-3">ce primește compilatorul</div>
+
+```c
+typedef struct {
+    char nume[30]; int grupa; double medie;
+} Student;
+int incarca(const char *cale, Student v[], int max);
+
+int main() {
+    Student s[30];
+    int n = incarca("studenti.txt", s, 30);
+    return 0;
+}
+```
+
+  </div>
+</div>
+
+<div class="text-center text-base mt-6 max-w-3xl mx-auto">
+Compilatorul vede tipul <code>Student</code> și prototipul lui
+<code>incarca</code>, deci poate verifica apelul. Corpul funcției nu este aici.
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# `<stdio.h>` sau `"catalog.h"`
+
+:: left ::
+
+Forma parantezelor spune unde caută preprocesorul fișierul.
+
+```c
+#include <stdio.h>     // header-ele sistemului
+#include <string.h>
+
+#include "catalog.h"   // header-ele noastre,
+#include "fisiere.h"   // langa main.c
+```
+
+```bash
+$ gcc main.c catalog.c -o catalog
+main.c:2:10: fatal error: catalog.h: No such file or directory
+    2 | #include <catalog.h>
+      |          ^~~~~~~~~~~
+compilation terminated.
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `<...>` caută doar în directoarele sistemului, ca `/usr/include`, unde stau
+  `stdio.h` și celelalte header-e standard.
+- `"..."` caută întâi în directorul fișierului care face `#include`, apoi în
+  cele ale sistemului.
+- Cu `<catalog.h>`, header-ul nostru nu este găsit, deși stă lângă `main.c`.
+- Regula: `<>` pentru biblioteca standard, `""` pentru fișierele proiectului.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Header-ul: Ce Oferă Modulul
+
+:: left ::
+
+`catalog.h` spune **ce** se poate folosi: tipuri, constante și prototipuri. Nu
+conține corpuri de funcții.
+
+```c
+// catalog.h
+#define MAX_STUDENTI 100
+
+typedef struct {
+    char nume[30];
+    int grupa;
+    double medie;
+} Student;
+
+int salveaza(const char *cale, const Student v[], int n);
+int incarca(const char *cale, Student v[], int max);
+void afiseaza(const Student v[], int n);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Un `.h` cu fișierul `.c` care îi corespunde formează un **modul**: o parte a
+  programului cu o singură temă.
+- Prototipurile sunt **declarații**, cum am văzut deja: nume, parametri,
+  rezultat, fără corp.
+- Cine vrea să folosească modulul citește doar header-ul. E cuprinsul lui.
+- Fiecare `.c` care folosește `Student` sau `incarca` începe cu
+  `#include "catalog.h"`.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Definițiile Stau în `catalog.c`
+
+:: content ::
+
+Ambele fișiere `.c` includ același header. `catalog.c` scrie corpurile funcțiilor,
+`main.c` doar le apelează.
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70 mb-3">catalog.c</div>
+
+```c
+#include <stdio.h>
+#include "catalog.h"
+
+int salveaza(const char *cale,
+             const Student v[], int n) {
+    FILE *f = fopen(cale, "w");
+    // ... ca mai devreme ...
+}
+int incarca(...) { ... }
+void afiseaza(...) { ... }
+```
+
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="text-xs uppercase tracking-wider opacity-70 mb-3">main.c</div>
+
+```c
+#include <stdio.h>
+#include "catalog.h"
+
+int main() {
+    Student s[MAX_STUDENTI];
+    int n = incarca("studenti.txt",
+                    s, MAX_STUDENTI);
+    afiseaza(s, n);
+    return 0;
+}
+```
+
+  </div>
+</div>
+
+<div class="text-center text-base mt-6 max-w-3xl mx-auto">
+<code>catalog.c</code> include propriul header: compilatorul verifică astfel că
+fiecare definiție se potrivește cu prototipul ei.
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Program, Două Fișiere `.c`
+
+:: left ::
+
+Îi dăm lui `gcc` toate fișierele `.c`, într-o singură comandă. Rezultatul este un
+singur executabil.
+
+```bash
+$ ls
+catalog.c  catalog.h  main.c  studenti.txt
+$ gcc main.c catalog.c -o catalog
+$ ./catalog
+Popescu    211  8.50
+Ionescu    212  9.25
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pe linia de comandă apar doar fișierele `.c`. Header-ele nu se compilează
+  singure: ajung în program prin `#include`.
+- Ordinea fișierelor nu contează: `gcc catalog.c main.c` dă același executabil.
+- Un singur fișier are `main`. Programul pornește tot de acolo.
+- Opțiunile rămân aceleași: `-Wall -Wextra` se scriu o singură dată, pentru
+  toate fișierele.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Compilare Separată
+
+:: left ::
+
+Comanda de mai sus face, de fapt, trei pași. Îi putem face și unul câte unul.
+
+```bash
+$ gcc -c main.c          # doar compilare
+$ gcc -c catalog.c
+$ ls *.o
+catalog.o  main.o
+$ gcc main.o catalog.o -o catalog   # linker-ul
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `-c` compilează un singur `.c` într-un **fișier obiect**, `.o`: cod mașină, dar
+  încă nu un program.
+- În `main.o`, apelul lui `incarca` are un loc gol: compilatorul știa doar
+  prototipul.
+- **Linker-ul** unește fișierele `.o` și completează fiecare apel cu adresa
+  funcției. Am văzut deja pasul acesta pe drumul de la sursă la executabil.
+- După o schimbare în `main.c`, se recompilează doar `main.c`, apoi se leagă din
+  nou.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# `undefined reference to`
+
+:: content ::
+
+Am uitat `catalog.c` din comandă. `main.c` se compilează fără probleme, dar
+linker-ul nu găsește funcțiile.
+
+<div class="max-w-4xl mx-auto mt-5">
+
+```bash
+$ gcc main.c -o catalog
+/usr/bin/ld: /tmp/ccvFH6sH.o: in function `main':
+main.c:(.text+0x20): undefined reference to `incarca'
+/usr/bin/ld: main.c:(.text+0x37): undefined reference to `afiseaza'
+collect2: error: ld returned 1 exit status
+```
+
+</div>
+
+<div class="ns-c-tight text-base mt-5 max-w-4xl mx-auto">
+
+- Mesajul vine de la `ld`, linker-ul, nu de la compilator, de aceea nu are număr
+  de linie. Prototipul promitea că funcția există **undeva**, dar definiția
+  lipsește.
+- Cauze: un `.c` uitat în comandă, o funcție declarată și nescrisă, un nume
+  scris diferit în prototip și în definiție.
+- Același mesaj l-am văzut deja la `sqrt`, compilat fără `-lm`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `multiple definition of`
+
+:: left ::
+
+Funcția are corpul scris în header. Header-ul este inclus de `main.c` și de
+`catalog.c`.
+
+```c
+// catalog.h, GRESIT
+double mediaGrupei(const Student v[], int n) {
+    double s = 0;
+    for (int i = 0; i < n; i++) {
+        s = s + v[i].medie;
+    }
+    return s / n;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `#include` copiază corpul în ambele fișiere. Fiecare `.o` conține o
+  definiție.
+- La legare, linker-ul găsește două funcții cu același nume și se oprește:
+  `multiple definition of 'mediaGrupei'`.
+- Fiecare `.c` se compilează separat și corect. Eroarea apare doar la final.
+- Regula: în header, prototipul. Corpul, într-un singur `.c`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Header Inclus de Două Ori
+
+:: left ::
+
+`fisiere.h` are nevoie de `Student`, deci include `catalog.h`. `main.c` le
+include pe amândouă.
+
+```c
+// fisiere.h
+#include "catalog.h"
+int exporta(const char *cale, const Student v[], int n);
+
+// main.c
+#include "catalog.h"
+#include "fisiere.h"   // aduce inca o data catalog.h
+```
+
+:: right ::
+
+<div class="text-base">
+
+- După copiere, `main.c` conține de două ori `typedef struct { ... } Student;`.
+  Compilatorul vede două tipuri cu același nume: `conflicting types for
+  'Student'`.
+- Nimeni nu a scris greșit nimic. Problema apare din combinarea a două
+  `#include` corecte.
+- Într-un proiect mare, cine include pe cine nu se mai poate urmări de mână.
+- Header-ul trebuie să se protejeze singur.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Include Guards
+
+:: left ::
+
+Header-ul se învelește în trei directive. A doua copiere a lui este sărită de
+preprocesor.
+
+```c
+// catalog.h
+#ifndef CATALOG_H
+#define CATALOG_H
+
+typedef struct {
+    char nume[30];
+    int grupa;
+    double medie;
+} Student;
+
+int incarca(const char *cale, Student v[], int max);
+
+#endif
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `#ifndef CATALOG_H`: "dacă `CATALOG_H` nu a fost definit încă". Prima dată
+  nu este, deci textul se păstrează și `CATALOG_H` se definește.
+- A doua oară, `CATALOG_H` există. Totul până la `#endif` este sărit.
+- Numele este al fișierului, cu majuscule și `_` în loc de punct.
+- `#pragma once`, pe prima linie, face același lucru într-un singur rând.
+  Nu este în standard, dar gcc, clang și MSVC îl cunosc.
+- Fiecare header primește guard-uri. Ele nu ajută la `multiple definition`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `static` Ascunde o Funcție în Fișierul Ei
+
+:: left ::
+
+O funcție ajutătoare din `catalog.c` nu trebuie folosită din afară. `static` în
+fața ei o face vizibilă doar în fișierul ei.
+
+```c
+// catalog.c
+static int medieValida(double m) {
+    return m >= 1 && m <= 10;
+}
+
+int adauga(Student v[], int n, Student s) {
+    if (!medieValida(s.medie)) {
+        return n;
+    }
+    v[n] = s;
+    return n + 1;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Prototipul lui `medieValida` nu stă în header. Pentru `main.c`, funcția nu
+  există: `implicit declaration of function 'medieValida'`.
+- Alt fișier poate avea propria funcție `static` cu același nume, fără
+  conflict la legare.
+- Header-ul arată ce oferă modulul. Restul rămâne `static`, ca detaliu intern.
+- Același cuvânt, alt sens: la o variabilă locală, `static` păstra valoarea
+  între apeluri. La o funcție, o ascunde.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `extern`: O Globală pentru Mai Multe Fișiere
+
+:: left ::
+
+O variabilă globală se **definește** într-un singur `.c`. Header-ul o
+**declară** cu `extern`.
+
+```c
+// catalog.c: aici exista memoria
+int nrSalvari = 0;
+
+// catalog.h: "exista undeva"
+extern int nrSalvari;
+
+// main.c, dupa #include "catalog.h"
+printf("%d salvari\n", nrSalvari);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `extern` face pentru o variabilă ce face un prototip pentru o funcție: anunță
+  numele și tipul, fără să creeze memorie.
+- Fără `extern`, `int nrSalvari;` din header ar crea câte o variabilă în fiecare
+  `.c` care îl include: `multiple definition of 'nrSalvari'`.
+- Problemele globalelor rămân, doar că acum orice **fișier** o poate modifica.
+- În programele noastre nu o folosim. Datele circulă prin parametri și prin
+  `return`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Afișează Fiecare
+
+:: left ::
+
+`note.txt` conține la început două linii: `Ana 9` și `Dan 7`. Ce afișează
+fiecare fragment și de ce?
+
+```c
+// A
+FILE *f = fopen("note.txt", "w");
+fclose(f);
+f = fopen("note.txt", "r");
+printf("%d\n", fscanf(f, "%29s %d", nume, &nota));
+
+// B, note.txt contine acum: Ana 9.5
+int r = fscanf(f, "%29s %d", nume, &nota);
+printf("%d %d\n", r, nota);
+
+// C, rulat cu: ./program > rez.txt
+printf("rezultat\n");
+fprintf(stderr, "eroare\n");
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- **A**: `-1`, adică `EOF`. `"w"` a golit fișierul, deci nu mai e nimic de
+  citit.
+- **B**: `2 9`. `%d` citește `9` și se oprește la punct. Ambele valori au fost
+  citite, iar `.5` rămâne pentru citirea următoare.
+- **C**: pe ecran apare doar `eroare`. `rezultat` ajunge în `rez.txt`, pentru că
+  `>` redirecționează doar `stdout`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Totul la un Loc
+
+:: content ::
+
+Catalogul ajunge pe disc, apoi este citit înapoi, student cu student. Rulați.
+
+```c {monaco-run} {autorun:false, height:'314px'}
+#include <stdio.h>
+typedef struct { char nume[30]; int grupa; double medie; } Student;
+int main() {
+    Student a[2] = {{"Popescu", 211, 8.5}, {"Ionescu", 212, 9.25}};
+    FILE *f = fopen("studenti.txt", "w");
+    if (f == NULL) { perror("studenti.txt"); return 1; }
+    for (int i = 0; i < 2; i++) {
+        fprintf(f, "%s %d %.2f\n", a[i].nume, a[i].grupa, a[i].medie);
+    }
+    fclose(f);
+    f = fopen("studenti.txt", "r");
+    if (f == NULL) { perror("studenti.txt"); return 1; }
+    Student s;
+    while (fscanf(f, "%29s %d %lf", s.nume, &s.grupa, &s.medie) == 3) {
+        printf("%-8s %d %5.2f\n", s.nume, s.grupa, s.medie);
+    }
+    fclose(f);
+    return 0;
+}
+```
+
+---
+layout: center
+color: blue-light
+---
+
+<DeckNav />

@@ -117,7 +117,7 @@
       "title": "Lecția 8: Șiruri de caractere",
       "description": "Stringuri în C și funcțiile din <string.h>",
       "status": "ready",
-      "published": false
+      "published": true
     },
     {
       "num": 9,
@@ -128,7 +128,7 @@
       "title": "Lecția 9: Pointeri",
       "description": "Adrese, dereferențiere, pointeri ca parametri",
       "status": "ready",
-      "published": false
+      "published": true
     },
     {
       "num": 10,
@@ -138,7 +138,8 @@
       "icon": "i-ph-hard-drives-duotone",
       "title": "Lecția 10: Memorie dinamică",
       "description": "malloc, free, memory leaks, tablouri dinamice",
-      "published": false
+      "status": "ready",
+      "published": true
     },
     {
       "num": 11,
@@ -149,7 +150,7 @@
       "title": "Lecția 11: Structuri, typedef și enum",
       "description": "Tipuri proprii: struct, typedef și enum",
       "status": "ready",
-      "published": false
+      "published": true
     },
     {
       "num": 12,
@@ -159,7 +160,8 @@
       "icon": "i-ph-file-text-duotone",
       "title": "Lecția 12: Fișiere și header-e",
       "description": "Fișiere pe disc, #include și programe pe mai multe fișiere",
-      "published": false
+      "status": "ready",
+      "published": true
     },
     {
       "num": 13,
@@ -169,7 +171,8 @@
       "icon": "i-ph-terminal-window-duotone",
       "title": "Lecția 13: Proiect: catalogul",
       "description": "Un tool în linia de comandă, construit din tot ce știm",
-      "published": false
+      "status": "ready",
+      "published": true
     }
   ]
 }

@@ -38,896 +38,1816 @@ cpp:
 
 ### Șiruri de Caractere (Strings) în C
 
-#### Manipularea textului și pointeri
-
 ---
-layout: top-title
-align: c
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
+
 :: title ::
 
-# Ce este un Șir de Caractere (String)?
+# Am Afișat Deja Text
 
-:: content ::
+:: left ::
 
-În multe limbaje de programare, un "string" este un tip de dată special pentru a lucra cu text. În C, lucrurile stau puțin diferit.
-
-<br/>
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)] text-[var(--neversink-text-color)] text-center">
-
-În C, un **șir de caractere** nu este un tip de dată fundamental. Este, de fapt, un **tablou (array) de caractere (`char`)**.
-
-</div>
-<br/>
-
-Există o regulă esențială care face un tablou de caractere să fie un șir de caractere valid:
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-bg-code-color)] p-4 rounded-lg text-center mt-4">
-
-Tabloul trebuie să se termine cu un caracter special numit **caracterul nul** (`\0`).
-
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Caracterul Nul (`\0`) - Terminatorul
-
-:: content ::
-
-Caracterul nul (`\0`) acționează ca un **semn de stop**. Toate funcțiile standard din C care lucrează cu șiruri de caractere (cum ar fi cele de afișare, copiere, concatenare) se bazează pe acest caracter pentru a ști unde se termină șirul.
-
-Să vizualizăm șirul "Salut" în memorie:
-
-<style>
-.array-viz {
-  display: flex;
-  justify-content: center;
-  gap: 2px;
-  font-family: monospace;
-}
-.array-cell {
-  border: 2px solid var(--neversink-border-color);
-  width: 60px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5em;
-  background-color: var(--neversink-bg-code-color);
-  color: var(--neversink-fg-code-color);
-  position: relative;
-}
-.array-index {
-  position: absolute;
-  bottom: -25px;
-  font-size: 0.8em;
-  color: var(--neversink-text-color);
-}
-</style>
-
-<div class="neversink-blue-light-scheme">
-<br/>
-<div class="array-viz mt-12">
-  <div class="array-cell"><span class="array-index">[0]</span>'S'</div>
-  <div class="array-cell"><span class="array-index">[1]</span>'a'</div>
-  <div class="array-cell"><span class="array-index">[2]</span>'l'</div>
-  <div class="array-cell"><span class="array-index">[3]</span>'u'</div>
-  <div class="array-cell"><span class="array-index">[4]</span>'t'</div>
-  <div class="array-cell" style="background-color: #fca5a5;"><span class="array-index">[5]</span>'\0'</div>
-</div>
-</div>
-
-<br/>
-<AdmonitionType type="warning">
-Pentru a stoca un șir de `N` caractere, aveți nevoie de un tablou de dimensiune `N + 1` pentru a face loc și terminatorului nul!
-</AdmonitionType>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Declararea și Inițializarea Șirurilor
-
-:: content ::
-
-Există două moduri principale de a declara și inițializa un șir de caractere:
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">Folosind un literal de șir</h3>
-    <div class="text-sm mt-2">
-Cea mai comună și convenabilă metodă. Compilatorul adaugă automat caracterul nul `\0` la final.
+Din primul program afișăm text cu `printf`. Textul a stat însă mereu în cod,
+niciodată într-o variabilă.
 
 ```c
-char salut[] = "Salut";
+int nota = 9;          // un numar: int
+double media = 8.5;    // un numar cu zecimale: double
+// numele studentului: ce tip?
+
+printf("Salut!\n");
+printf("Media: %.2f\n", media);
 ```
 
+:: right ::
+
+<div class="text-base">
+
+- Până acum am păstrat în variabile doar numere: `int`, `double`.
+- Un program de catalog are nevoie și de **numele** studenților: citite de la
+  tastatură, păstrate, comparate, afișate.
+- Pentru asta avem nevoie de o variabilă care ține **text**.
+
 </div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Literă Încape într-un `char`
+
+:: left ::
+
+Am văzut deja tipul care ține un singur caracter: `char`, un byte cu un cod ASCII.
+
+```c
+char litera = 'A';
+
+printf("%c\n", litera);   // A
+printf("%d\n", litera);   // 65
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Ghilimelele simple, `'A'`, înseamnă **un singur caracter**.
+- `%c` afișează caracterul, `%d` afișează codul lui.
+- Un nume are însă mai multe litere, iar un `char` ține doar una.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Variabilă pentru Fiecare Literă
+
+:: left ::
+
+Prima idee: câte un `char` pentru fiecare literă. Pentru numele "Ana":
+
+```c
+char l1 = 'A';
+char l2 = 'n';
+char l3 = 'a';
+
+printf("%c%c%c\n", l1, l2, l3);   // Ana
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pentru "Alexandra" ar trebui nouă variabile, iar `printf` ar primi nouă
+  argumente.
+- Numele se citește de la tastatură, deci numărul de litere se află abia la
+  rulare.
+- Este aceeași problemă ca la note: multe valori de **același tip**. Am rezolvat-o
+  deja, cu un array.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Nume, Literă cu Literă
+
+:: left ::
+
+Punem numele într-un array de `char`, câte o literă în fiecare element. O buclă
+îl afișează, oricâte litere ar avea.
+
+```c
+char nume[3] = {'A', 'n', 'a'};
+int lungime = 3;
+
+for (int i = 0; i < lungime; i++) {
+    printf("%c", nume[i]);
+}
+printf("\n");
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pentru afișare ne trebuie o buclă, la fiecare nume.
+- Lungimea textului stă într-o variabilă separată, care trebuie purtată peste tot
+  împreună cu array-ul.
+- Un alt nume are altă lungime, deci și altă variabilă.
+- Ca să comparăm două nume, comparăm literă cu literă, într-o buclă.
+- Ne trebuie un mod prin care textul să-și **poarte singur** sfârșitul.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Semn la Capăt
+
+:: left ::
+
+Ideea din C: după ultima literă punem un caracter special, cu codul 0. Bucla se
+oprește când îl întâlnește, fără să știe lungimea dinainte.
+
+```c
+char nume[4] = {'A', 'n', 'a', '\0'};
+
+for (int i = 0; nume[i] != '\0'; i++) {
+    printf("%c", nume[i]);
+}
+printf("\n");
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `'\0'` se citește "caracterul nul". Este un `char` ca oricare altul, cu codul 0.
+- Variabila `lungime` a dispărut. Sfârșitul textului stă chiar în array.
+- Bucla merge la fel pentru `"Ana"` și pentru `"Alexandra"`.
+- Prețul: un element în plus, pentru semn.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Ce Este un String
+
+:: content ::
+
+<div class="max-w-4xl mx-auto mt-6">
+
+<Definition term="String (șir de caractere)" source="Pe scurt" emphasis>
+
+Un **array de `char`** în care textul se termină cu caracterul nul **`'\0'`**,
+numit **terminator**.
+
+</Definition>
+
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Nu este un tip nou</div>
+    <div class="mt-1">C nu are un tip <code>string</code>. Un string este un array de <code>char</code> folosit după o regulă.</div>
   </div>
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">Ca un tablou de caractere</h3>
-    <div class="text-sm mt-2">
-Mai puțin comun, dar demonstrează conceptul. Aici, trebuie să adăugăm manual caracterul nul.
-
-```c
-char salut[] = {'S', 'a', 'l', 'u', 't', '\0'};
-```
-    
-</div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Lungimea</div>
+    <div class="mt-1">Numărul de caractere dinaintea lui <code>'\0'</code>. Caracterul nul nu intră în lungime.</div>
   </div>
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Șirurile și Poinerii
-
-:: content ::
-
-Numele unui tablou în C este, în esență, un **pointer** către primul său element. Deoarece șirurile sunt tablouri de caractere, numele unui șir este un pointer către primul său caracter.
-
-```c
-char mesaj[] = "Text";
-
-// 'mesaj' este un pointer la adresa lui 'T'
-// 'mesaj + 1' este un pointer la adresa lui 'e'
-// si asa mai departe
-```
-
-<br/>
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)] text-[var(--neversink-text-color)] text-center">
-
-Această relație este fundamentală și explică de ce multe funcții care lucrează cu șiruri de caractere acceptă ca argument un `char *` (pointer la char).
-
-</div>
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Citirea și Afișarea Șirurilor de Caractere
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Afișarea cu `printf`
-
-:: content ::
-
-Pentru a afișa un șir de caractere, folosim specificatorul de format **`%s`**. `printf` va începe să afișeze caractere de la adresa dată, până când întâlnește caracterul nul `\0`.
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-
-int main() {
-    char nume[] = "Popescu";
-    char prenume[] = "Ion";
-
-    printf("Nume: %s\n", nume);
-    printf("Prenume: %s\n", prenume);
-    printf("Nume complet: %s %s\n", prenume, nume);
-
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Citirea cu `scanf`
-
-:: content ::
-
-Putem folosi `%s` și cu `scanf` pentru a citi un șir.
-
-<AdmonitionType type="danger">
-
-**`scanf("%s", ...)` este periculos!**
-
-</AdmonitionType>
-
-<div class="ns-c-tight">
-
--   Se oprește la primul caracter "whitespace" (spațiu, tab, linie nouă). Nu poate citi un nume complet precum "Popescu Ion".
--   **Nu verifică limitele tabloului!** Dacă utilizatorul introduce un text mai lung decât dimensiunea tabloului, va avea loc un **buffer overflow**, o problemă gravă de securitate.
-
-</div>
-
----
-layout: cover
-align: c
-color: blue-light
----
-
-```c
-#include <stdio.h>
-
-int main() {
-    // ATENTIE: buffer de doar 10 caractere!
-    char nume[10];
-
-    printf("Introduceti numele: ");
-    // scanf nu stie ca 'nume' are doar 10 locuri.
-    // Daca scrieti "Alexandrescu", programul se va prabusi.
-    scanf("%s", nume); // NU folosim '&' pentru siruri cu scanf!
-
-    printf("Numele introdus: %s\n", nume);
-
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# O Metodă Mai Sigură: `fgets`
-
-:: content ::
-
-Funcția `fgets` este o alternativă mult mai sigură pentru a citi șiruri de caractere.
-
-<div class="ns-c-tight">
-
--   **`fgets(nume_sir, dimensiune, sursa)`**
--   Citește o linie întreagă, inclusiv spațiile.
--   Este sigură: nu va scrie niciodată mai mult de `dimensiune - 1` caractere, prevenind overflow-ul.
--   `sursa` este de obicei `stdin` (Standard Input - tastatura).
-
-</div>
-
-<br/>
-<AdmonitionType type="info">
-
-Un mic dezavantaj: `fgets` stochează și caracterul de linie nouă (`\n`) dacă utilizatorul apasă Enter. Acesta poate fi eliminat manual.
-
-</AdmonitionType>
-
----
-layout: cover
----
-
-```c
-#include <stdio.h>
-#include <string.h> // Pentru functia strcspn
-
-int main() {
-    char nume_complet[50];
-
-    printf("Introduceti numele si prenumele: ");
-
-    // fgets(unde stocam, dimensiunea maxima, de unde citim)
-    fgets(nume_complet, 50, stdin);
-
-    // Optional: Eliminam caracterul '\n' de la final
-    nume_complet[strcspn(nume_complet, "\n")] = 0;
-
-    printf("Salut, %s!\n", nume_complet);
-
-    return 0;
-}
-```
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Biblioteca `string.h`
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Unelte Standard pentru Șiruri
-
-:: content ::
-
-Limbajul C oferă o bibliotecă standard, **`string.h`**, care conține o colecție de funcții foarte utile pentru manipularea șirurilor de caractere.
-
-<br/>
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)] text-center">
-
-Pentru a folosi aceste funcții, trebuie să includem biblioteca la începutul fișierului:
-<p class="font-mono text-lg mt-2 text-[var(--neversink-text-color)]">#include &lt;string.h&gt;</p>
-
-</div>
-
-Vom explora cele mai comune și utile funcții.
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# `strlen` - Lungimea Șirului
-
-:: content ::
-
-Funcția `strlen` (string length) returnează lungimea unui șir de caractere.
-
-<div class="ns-c-tight">
-
--   **`size_t strlen(const char *sir)`**
--   Numără caracterele până la, **dar fără a include**, caracterul nul `\0`.
--   `size_t` este un tip de dată întreg, fără semn, adecvat pentru a reprezenta dimensiuni.
-
-</div>
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-#include <string.h>
-
-int main() {
-    char text[] = "Programare"; // 10 caractere
-    
-    // strlen va returna 10
-    int lungime = strlen(text);
-
-    printf("Sirul \"%s\" are %d caractere.\n", text, lungime);
-
-    // Dimensiunea totala in memorie este 11 (include \0)
-    printf("Dimensiunea in memorie (sizeof): %zu bytes.\n", sizeof(text));
-
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# `strcpy` - Copierea Șirurilor
-
-:: content ::
-
-Nu putem copia șiruri folosind operatorul `=`. Trebuie să folosim `strcpy` (string copy).
-
-<div class="ns-c-tight">
-
--   **`char *strcpy(char *destinatie, const char *sursa)`**
--   Copiază conținutul șirului `sursa` (inclusiv `\0`) în șirul `destinatie`.
-
-</div>
-
-<AdmonitionType type="danger">
-
-**`strcpy` este periculos!** La fel ca `scanf("%s")`, nu verifică dacă șirul `destinatie` are suficient spațiu pentru a conține `sursa`, ducând la potențiale buffer overflows. O alternativă mai sigură este `strncpy`.
-
-</AdmonitionType>
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-#include <string.h>
-
-int main() {
-    char sursa[] = "Text de copiat";
-    char destinatie[50]; // Asiguram suficient spatiu
-
-    // strcpy(unde copiem, de unde copiem)
-    strcpy(destinatie, sursa);
-
-    printf("Sursa: %s\n", sursa);
-    printf("Destinatie (dupa copiere): %s\n", destinatie);
-
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# `strcat` - Concatenarea Șirurilor
-
-:: content ::
-
-Funcția `strcat` (string concatenate) adaugă un șir la sfârșitul altui șir.
-
-<div class="ns-c-tight">
-
--   **`char *strcat(char *destinatie, const char *sursa)`**
--   Găsește caracterul `\0` din `destinatie`, și începe să copieze `sursa` de la acea poziție.
-
-</div>
-
-<AdmonitionType type="danger">
-
-**`strcat` este la fel de periculos ca `strcpy`!** Asigurați-vă că șirul `destinatie` are suficient spațiu pentru a conține ambele șiruri combinate, plus caracterul nul.
-
-</AdmonitionType>
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-#include <string.h>
-
-int main() {
-    char salut[20] = "Buna "; // Spatiu suficient pentru ambele
-    char nume[] = "dimineata!";
-
-    // strcat(la ce adaugam, ce adaugam)
-    strcat(salut, nume);
-
-    printf("Sirul concatenat: %s\n", salut);
-
-    return 0;
-}
-```
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# `strcmp` - Compararea Șirurilor
-
-:: content ::
-
-Nu putem compara șiruri lexicografic (alfabetic) folosind `==`. `strcmp` (string compare) face acest lucru.
-
-<div class="ns-c-tight">
-
--   **`int strcmp(const char *sir1, const char *sir2)`**
--   Returnează:
-    -   **`0`** dacă șirurile sunt identice.
-    -   O valoare **negativă** dacă `sir1` este alfabetic înaintea `sir2`.
-    -   O valoare **pozitivă** dacă `sir1` este alfabetic după `sir2`.
-
-</div>
-
----
-layout: cover
-align: c
-color: blue-light
----
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-#include <string.h>
-
-int main() {
-    char pass[] = "secret123";
-    char input[50];
-
-    printf("Introduceti parola: ");
-    scanf("%s", input);
-
-    // strcmp returneaza 0 daca sunt egale
-    if (strcmp(pass, input) == 0) {
-        printf("Parola corecta!\n");
-    } else {
-        printf("Parola gresita!\n");
-    }
-
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# `strchr` & `strrchr` - Găsirea unui Caracter
-
-:: content ::
-
-Aceste funcții caută un caracter specific într-un șir și returnează un pointer la locația sa.
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-  <div class="neversink-indigo-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">
-    
-`strchr` (string character)
-
-</h3>
-    <div class="text-sm mt-2">
-
-Găsește **prima** apariție a unui caracter.
-
-<p class="font-mono mt-2">
-
-`char *strchr(const char *str, int c);`
-
-</p>
-    </div>
-  </div>
-  <div class="neversink-indigo-light-scheme bg-[var(--neversink-bg-color)] p-4 rounded-lg">
-    <h3 class="text-xl font-bold text-center text-[var(--neversink-text-color)]">
-
-`strrchr` (string reverse character)
-</h3>
-    <div class="text-sm mt-2">
-
-Găsește **ultima** apariție a unui caracter.
-
-<p class="font-mono mt-2">
-
-`char *strrchr(const char *str, int c);`
-
-</p>
-    </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Toate funcțiile se bazează pe el</div>
+    <div class="mt-1"><code>printf</code>, <code>scanf</code> și biblioteca <code>string.h</code> se opresc la <code>'\0'</code>.</div>
   </div>
 </div>
 
-<br/>
-<AdmonitionType type="info">
-Ambele funcții returnează un pointer la caracterul găsit sau `NULL` dacă caracterul nu există în șir.
-</AdmonitionType>
-
 ---
-layout: cover
+layout: top-title
+align: c
+color: blue-light
 ---
 
-```c {monaco-run} {autorun:false}
+:: title ::
+
+# Un String în Memorie
+
+:: content ::
+
+`char nume[4] = "Ana";` ocupă patru bytes alăturați: trei litere și caracterul nul.
+
+<div class="flex justify-center mt-10">
+
+<MemoryCells :base="1000" :size="80"
+  :cells="[{ value: 'A' }, { value: 'n' }, { value: 'a' }, { value: '\\0', highlight: true }]"
+  :vars="[
+    { start: 0, len: 1, name: 'nume[0]' },
+    { start: 1, len: 1, name: 'nume[1]' },
+    { start: 2, len: 1, name: 'nume[2]' },
+    { start: 3, len: 1, name: 'nume[3]', highlight: true },
+  ]"
+  caption="în memorie stau codurile ASCII: 65, 110, 97 și 0"
+/>
+
+</div>
+
+<div class="text-center text-base mt-8 max-w-3xl mx-auto">
+
+Lungimea textului este 3. Array-ul are 4 elemente, pentru că și caracterul nul
+are nevoie de locul lui.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `'\0'` Nu Este `'0'`
+
+:: left ::
+
+Două caractere care seamănă la scris, dar au coduri diferite.
+
+```c
+printf("%d\n", '\0');   // 0
+printf("%d\n", '0');    // 48
+printf("%d\n", '\n');   // 10
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `'\0'` este o **secvență escape**, ca `'\n'`: două semne în cod, un singur
+  caracter în memorie.
+- `'0'` este cifra zero, cea care se vede pe ecran. Are codul 48 în tabelul ASCII.
+- `'\0'` nu se vede pe ecran. Are codul 0, deci se poate scrie și `0`, dar
+  `'\0'` spune cititorului că este vorba de caracterul nul.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Regula N + 1
+
+:: left ::
+
+Un text de N caractere are nevoie de un array de **cel puțin N + 1** elemente.
+
+```c
+char a[4] = "Ana";    // corect: 3 litere + '\0'
+char b[3] = "Ana";    // GRESIT: nu mai e loc de '\0'
+
+#define LUNG_NUME 20
+char nume[LUNG_NUME]; // un nume de cel mult 19 litere
+```
+
+:: right ::
+
+<div class="text-base">
+
+- C permite linia cu `b`: copiază cele trei litere și renunță la caracterul nul.
+  Doar versiunile recente ale lui gcc avertizează.
+- `b` arată ca un string, dar nu este unul. Orice funcție care caută `'\0'` trece
+  de capătul lui.
+- Când alegeți mărimea, gândiți-vă la cel mai lung text posibil și adăugați 1.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Textul între Ghilimele
+
+:: left ::
+
+Un text scris între ghilimele duble se numește **literal string**. Compilatorul
+îi adaugă singur caracterul nul.
+
+```c
+char a[] = {'A', 'n', 'a', '\0'};
+char b[] = "Ana";      // acelasi continut
+
+printf("%zu\n", sizeof a);   // 4
+printf("%zu\n", sizeof b);   // 4
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Cele două declarații construiesc același array de 4 elemente.
+- Fără mărime între parantezele pătrate, mărimea se deduce, la fel ca la array-urile
+  de numere, și include `'\0'`.
+- În lista cu acolade, `'\0'` trebuie scris de mână. Ghilimelele îl scriu pentru
+  noi, de aceea sunt forma folosită.
+
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Mai Mult Loc Decât Text
+
+:: content ::
+
+`char nume[8] = "Ana";` umple primele patru elemente. Restul devin 0, ca la orice
+array inițializat parțial.
+
+<div class="flex justify-center mt-10">
+
+<MemoryCells :size="64" label="" :continues="false" :axis="false"
+  :cells="[
+    { value: 'A', addr: '[0]' }, { value: 'n', addr: '[1]' }, { value: 'a', addr: '[2]' },
+    { value: '\\0', addr: '[3]', highlight: true },
+    { value: '\\0', addr: '[4]' }, { value: '\\0', addr: '[5]' },
+    { value: '\\0', addr: '[6]' }, { value: '\\0', addr: '[7]' },
+  ]" />
+
+</div>
+
+<div class="text-center text-base mt-8 max-w-3xl mx-auto">
+
+Textul se termină la **primul** `'\0'`, de pe poziția 3. Locul rămas este liber
+pentru un nume mai lung, scris mai târziu în același array.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `'A'` și `"A"` Sunt Diferite
+
+:: left ::
+
+Ghilimelele simple fac un caracter. Ghilimelele duble fac un string, chiar și
+pentru o singură literă.
+
+```c
+char c = 'A';        // un char, codul 65
+char s[] = "A";      // un array: 'A' si '\0'
+
+printf("%zu\n", sizeof s);   // 2
+
+char gresit = "A";   // eroare
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `'A'` este un număr mic, 65. Se poate aduna, compara, afișa cu `%c`.
+- `"A"` este un array de două elemente. Se afișează cu `%s`.
+- Ultima linie dă eroare: `initialization of 'char' from 'char *' makes integer
+  from pointer without a cast`. Ce înseamnă `char *` vom vedea în curând.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Afișarea cu `%s`
+
+:: left ::
+
+`printf` cu `%s` afișează caracterele unul după altul, până la `'\0'`. Bucla de
+afișare de la început stă acum în `printf`.
+
+```c
+char nume[20] = "Ana";
+
+printf("%s\n", nume);              // Ana
+printf("Salut, %s!\n", nume);      // Salut, Ana!
+printf("[%-6s]\n", nume);          // [Ana   ]
+puts(nume);                        // Ana
+```
+
+:: right ::
+
+<div class="text-base">
+
+- La `%s` se dă numele array-ului, fără paranteze pătrate.
+- Lățimea și alinierea le știm deja: `%-6s` completează cu spații până la 6
+  caractere. Utile la tabele.
+- `puts` afișează un string și adaugă singur `\n`.
+- Fără `'\0'` în array, `printf` continuă să afișeze ce găsește după el în
+  memorie.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Citirea cu `%s`
+
+:: left ::
+
+`scanf` cu `%s` citește un cuvânt și pune singur `'\0'` după el.
+
+```c
+char nume[20];
+
+printf("Numele: ");
+scanf("%19s", nume);     // fara &
+printf("Salut, %s!\n", nume);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- La `%s` **nu** se pune `&`. Numele array-ului ține deja locul în care se scrie.
+  De ce, vom vedea în curând, odată cu pointerii.
+- Sare peste spațiile albe de la început, ca `%d`, apoi se oprește la primul
+  spațiu, tab sau Enter.
+- Deci citește un singur **cuvânt**. `Ana Maria` se citește în doi pași.
+- `19` este lățimea maximă: cel mult 19 caractere, plus `'\0'`, în cele 20 de
+  elemente.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Un Cuvânt, Nu o Linie
+
+:: content ::
+
+Rulați și tastați un nume din două cuvinte, de exemplu `Ana Maria`. Priviți unde
+ajunge fiecare cuvânt.
+
+```c {monaco-run} {autorun:false, height:'220px'}
 #include <stdio.h>
-#include <string.h>
 
-int main() {
-    char cale_fisier[] = "/home/user/documente/raport.txt";
-    char caracter_cautat = '/';
-    char extensie_cautata = '.';
+int main(void) {
+    char prenume[20], rest[20];
 
-    // Gasim prima aparitie a lui '/'
-    char *prima_bara = strchr(cale_fisier, caracter_cautat);
-    // Gasim ultima aparitie a lui '/'
-    char *ultima_bara = strrchr(cale_fisier, caracter_cautat);
-    // Gasim extensia fisierului
-    char *extensie = strrchr(cale_fisier, extensie_cautata);
+    printf("Numele complet: ");
+    scanf("%19s", prenume);   // ex: Ana Maria
+    printf("prenume = [%s]\n", prenume);
 
-    if (prima_bara != NULL) {
-        // %s cu un pointer va afisa de la acel pointer pana la final
-        printf("Restul caii de la prima '/': %s\n", prima_bara); 
+    scanf("%19s", rest);    // al doilea cuvant era deja in buffer
+    printf("rest    = [%s]\n", rest);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Lățimea Apără Array-ul
+
+:: left ::
+
+`scanf` nu știe cât de mare este array-ul. Fără lățime, scrie tot cuvântul,
+oricât de lung.
+
+```c
+char nume[5];
+
+scanf("%s", nume);    // GRESIT: "Alexandra" scrie 10 bytes
+scanf("%4s", nume);   // corect: cel mult 4 litere + '\0'
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `Alexandra` are 9 litere și caracterul nul. Cinci dintre ele ajung **după**
+  capătul array-ului, peste alte variabile.
+- Este aceeași scriere în afara array-ului pe care am văzut-o deja: C nu
+  verifică, iar efectul este nedefinit.
+- Cu `%4s`, `scanf` citește `Alex`. Restul, `andra`, rămâne în buffer pentru
+  următoarea citire.
+- Regula: lățimea este mărimea array-ului minus 1.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `fgets` Citește Toată Linia
+
+:: left ::
+
+Pentru un text cu spații, `fgets` citește o linie întreagă, cu tot cu spațiile
+din ea.
+
+```c
+char linie[50];
+
+fgets(linie, sizeof linie, stdin);
+```
+
+```text {*}{lines:false}
+de unde:        stdin, tastatura
+unde scrie:     linie
+cat cel mult:   sizeof linie - 1 caractere, plus '\0'
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Se oprește după `\n` sau când array-ul s-a umplut. Pune mereu `'\0'` la
+  capăt.
+- `sizeof linie` dă mărimea array-ului, deci `fgets` nu poate scrie dincolo de
+  el.
+- Spre deosebire de `scanf`, **păstrează** `\n`-ul de la capătul liniei, dacă
+  a avut loc.
+- Ce nu încape rămâne în buffer, pentru următoarea citire.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Enter-ul Ajunge în String
+
+:: content ::
+
+Rulați și tastați un nume complet, de exemplu `Ana Maria Popescu`. Parantezele
+pătrate din `printf` arată unde se termină string-ul.
+
+```c {monaco-run} {autorun:false, height:'170px'}
+#include <stdio.h>
+
+int main(void) {
+    char linie[50];
+
+    printf("Numele complet: ");
+    fgets(linie, sizeof linie, stdin);   // ex: Ana Maria Popescu
+    printf("[%s]\n", linie);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Scoaterea lui `\n`
+
+:: left ::
+
+Căutăm `\n` cu o buclă și îl înlocuim cu `'\0'`. Textul se termină acum cu un
+caracter mai devreme.
+
+```c
+char linie[50];
+fgets(linie, sizeof linie, stdin);
+
+for (int i = 0; linie[i] != '\0'; i++) {
+    if (linie[i] == '\n') {
+        linie[i] = '\0';     // aici se termina acum
     }
-    if (ultima_bara != NULL) {
-        // +1 pentru a sari peste caracterul '/'
-        printf("Numele fisierului: %s\n", ultima_bara + 1);
-    }
-    if (extensie != NULL) {
-        printf("Extensia fisierului: %s\n", extensie + 1);
-    }
+}
+```
 
+:: right ::
+
+<div class="text-base">
+
+- Dacă linia a fost mai lungă decât array-ul, `\n` nu este în string și nimic
+  nu se schimbă.
+- După înlocuire, bucla se oprește singură: `linie[i]` a devenit `'\0'`.
+- Aceeași operație într-un singur rând, cu o funcție din `string.h`:
+  `linie[strcspn(linie, "\n")] = '\0';`
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Enter-ul Lăsat de `scanf`
+
+:: content ::
+
+`scanf("%d")` lasă Enter-ul în buffer, cum am văzut deja. `fgets` îl găsește
+primul și se oprește imediat. Rulați și introduceți o vârstă.
+
+```c {monaco-run} {autorun:false, height:'220px'}
+#include <stdio.h>
+
+int main(void) {
+    int varsta = 0;
+    char nume[50];
+
+    printf("Varsta: ");
+    scanf("%d", &varsta);              // ex: 20
+    printf("Numele: ");
+    fgets(nume, sizeof nume, stdin);   // citeste doar "\n"
+    printf("[%s] are %d ani\n", nume, varsta);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Golirea Liniei Rămase
+
+:: left ::
+
+Înainte de `fgets`, scoatem din buffer tot ce a rămas pe linie, inclusiv `\n`.
+
+```c
+scanf("%d", &varsta);
+
+int c = 0;
+while ((c = getchar()) != '\n' && c != EOF) {
+    // aruncam caracterul
+}
+
+fgets(nume, sizeof nume, stdin);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `getchar()` scoate un singur caracter din buffer și îl întoarce.
+- Bucla aruncă tot până la `\n` inclusiv. Merge și când utilizatorul a scris
+  spații după număr.
+- `c` este `int`, nu `char`, pentru că `getchar` poate întoarce și `EOF`, care
+  nu este un caracter.
+- Altă cale: citim **totul** cu `fgets` și scoatem numerele cu `sscanf`. Atunci
+  bufferul rămâne mereu curat.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Parcurgerea unui String
+
+:: left ::
+
+Un string se parcurge ca orice array. Condiția buclei nu folosește o lungime, ci
+caracterul nul.
+
+```c
+char s[] = "Programare";
+int a = 0;
+
+for (int i = 0; s[i] != '\0'; i++) {
+    if (s[i] == 'a') {
+        a++;
+    }
+}
+printf("%d\n", a);   // 2
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `s[i]` este un `char` obișnuit: îl comparăm, îl afișăm, îl modificăm.
+- Bucla se oprește la `'\0'` și nu îl prelucrează.
+- Același tipar merge pentru orice întrebare despre text: câte litere, câte
+  cifre, unde apare un caracter.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un String ca Parametru
+
+:: left ::
+
+Ca la orice array, parametrul se scrie cu paranteze pătrate goale. Lungimea nu
+se mai trimite: funcția găsește singură `'\0'`.
+
+```c
+int numara(const char s[], char c) {
+    int n = 0;
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] == c) {
+            n++;
+        }
+    }
+    return n;
+}
+
+numara("Programare", 'r');   // 3
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `const` promite că funcția doar citește. O funcție care modifică textul se
+  scrie fără `const` și lucrează pe original, ca la orice array.
+- Argumentul poate fi un array sau direct un literal.
+- O funcție care **scrie** într-un string are nevoie de mărimea array-ului, ca
+  `fgets`. Caracterul nul spune unde se termină textul, nu cât loc este.
+- În funcție, `sizeof s` nu mai dă mărimea array-ului. De ce, vom vedea în
+  curând.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Lungimea, Calculată de Noi
+
+:: content ::
+
+Lungimea este numărul de pași până la `'\0'`. Rulați, apoi încercați alte texte.
+
+```c {monaco-run} {autorun:false, height:'250px'}
+#include <stdio.h>
+
+int lungime(const char s[]) {
+    int n = 0;
+    while (s[n] != '\0') {
+        n++;
+    }
+    return n;
+}
+
+int main(void) {
+    char nume[20] = "Ana";
+    printf("%d %d %d\n", lungime(nume), lungime("Ana Maria"), lungime(""));
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Numărarea Vocalelor
+
+:: left ::
+
+Un `switch` pe caracter, în bucla de parcurgere. Mai multe `case` pot duce la
+aceeași instrucțiune.
+
+```c
+int vocale(const char s[]) {
+    int n = 0;
+    for (int i = 0; s[i] != '\0'; i++) {
+        switch (s[i]) {
+            case 'a': case 'e': case 'i': case 'o': case 'u':
+            case 'A': case 'E': case 'I': case 'O': case 'U':
+                n++;
+                break;
+        }
+    }
+    return n;
+}
+
+vocale("Ion are Examen");   // 7
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Literele mari și mici au coduri diferite, deci apar ambele.
+- Spațiile și consoanele nu se potrivesc cu niciun `case` și sunt sărite.
+- Cu `tolower`, pe care o vedem imediat, litera devine întâi mică, iar lista
+  scade la 5 cazuri.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Din Literă Mică în Literă Mare
+
+:: left ::
+
+În tabelul ASCII, literele mici stau la o distanță fixă de cele mari:
+`'a' - 'A'` este 32. Scădem distanța și obținem litera mare.
+
+```c
+void majuscule(char s[]) {
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] >= 'a' && s[i] <= 'z') {
+            s[i] = s[i] - ('a' - 'A');
+        }
+    }
+}
+
+char oras[] = "Chisinau";
+majuscule(oras);
+printf("%s\n", oras);   // CHISINAU
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Doar literele mici se schimbă. `'C'` și spațiile rămân cum erau.
+- Literele `a` ... `z` sunt consecutive în ASCII, deci un singur interval le
+  prinde pe toate.
+- Fără `const`: funcția modifică array-ul primit, iar schimbarea se vede în
+  `main`.
+- `'a' - 'A'` este mai clar decât 32: spune de unde vine numărul.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Biblioteca `ctype.h`
+
+:: content ::
+
+Întrebările despre un singur caracter au funcții gata scrise. Primesc un
+caracter și răspund cu adevărat (diferit de 0) sau fals (0).
+
+<div class="ns-c-table text-base mt-6 max-w-3xl mx-auto">
+
+| funcție | adevărat pentru |
+|---|---|
+| `isalpha(c)` | o literă, `'a'` ... `'z'` sau `'A'` ... `'Z'` |
+| `isdigit(c)` | o cifră, `'0'` ... `'9'` |
+| `isspace(c)` | un spațiu alb: spațiu, `'\t'`, `'\n'` |
+| `isupper(c)` / `islower(c)` | o literă mare / o literă mică |
+| `toupper(c)` / `tolower(c)` | întorc litera mare / mică; alt caracter rămâne neschimbat |
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Clasificarea Caracterelor
+
+:: content ::
+
+O singură parcurgere numără literele, cifrele și spațiile și trece textul în
+litere mari. Rulați, apoi schimbați textul.
+
+```c {monaco-run} {autorun:false, height:'270px'}
+#include <stdio.h>
+#include <ctype.h>
+
+int main(void) {
+    char s[] = "Grupa 2 are 25 de studenti";
+    int litere = 0, cifre = 0, spatii = 0;
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (isalpha(s[i])) { litere++; }
+        else if (isdigit(s[i])) { cifre++; }
+        else if (isspace(s[i])) { spatii++; }
+        s[i] = toupper(s[i]);
+    }
+    printf("%s\n", s);
+    printf("litere %d, cifre %d, spatii %d\n", litere, cifre, spatii);
     return 0;
 }
 ```
 
 ---
 layout: top-title
-align: c
 color: blue-light
+align: c
 ---
+
 :: title ::
 
-# `strstr` - Găsirea unui Subșir
+# Biblioteca `string.h`
 
 :: content ::
 
-Funcția `strstr` (string in string) caută prima apariție a unui subșir ("needle") într-un șir mai mare ("haystack").
+Operațiile obișnuite pe string-uri sunt scrise deja. `#include <string.h>` aduce
+prototipurile lor.
 
-<div class="ns-c-tight">
+<div class="ns-c-table text-base mt-6 max-w-3xl mx-auto">
 
--   **`char *strstr(const char *haystack, const char *needle);`**
--   Returnează un pointer la începutul subșirului găsit în șirul principal.
--   Returnează `NULL` dacă subșirul nu este găsit.
+| funcție | ce face |
+|---|---|
+| `strlen(s)` | întoarce lungimea, fără `'\0'` |
+| `strcpy(dest, sursa)` | copiază `sursa` în `dest` |
+| `strcat(dest, sursa)` | lipește `sursa` la capătul lui `dest` |
+| `strcmp(a, b)` | compară două string-uri în ordine alfabetică |
+| `strncpy`, `strncat` | variante cu limită, cu capcanele lor |
 
 </div>
 
-<br/>
-<div class="neversink-indigo-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)] text-center">
-Este utilă pentru a verifica dacă un text conține un anumit cuvânt sau o anumită secvență de caractere.
+<div class="text-center text-base mt-6 max-w-3xl mx-auto">
+
+Toate se bazează pe caracterul nul. Dacă array-ul nu are `'\0'`, oricare dintre
+ele citește dincolo de capătul lui.
+
 </div>
 
 ---
-layout: cover
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
+:: title ::
+
+# `strlen` Numără până la `'\0'`
+
+:: left ::
+
+`strlen` face ce face funcția noastră `lungime`. Întoarce un `size_t`, care se
+afișează cu `%zu`.
+
+```c
 #include <string.h>
 
-int main() {
-    char propozitie[] = "Limbajul C este un limbaj procedural.";
-    char cuvant_cautat[] = "limbaj";
+char nume[20] = "Ana";
 
-    // Cautam "limbaj" in propozitie
-    char *rezultat = strstr(propozitie, cuvant_cautat);
+printf("%zu\n", strlen(nume));   // 3
+printf("%zu\n", sizeof nume);    // 20
+printf("%zu\n", strlen(""));     // 0
+```
 
-    if (rezultat != NULL) {
-        printf("Cuvantul '%s' a fost gasit!\n", cuvant_cautat);
-        printf("Restul propozitiei de la '%s' este: \"%s\"\n", cuvant_cautat, rezultat);
+:: right ::
 
-        // Putem calcula si pozitia (indexul)
-        int pozitie = rezultat - propozitie;
-        printf("A fost gasit la indexul: %d\n", pozitie);
+<div class="text-base">
 
-    } else {
-        printf("Cuvantul '%s' nu a fost gasit.\n", cuvant_cautat);
+- `strlen` dă lungimea **textului**. `sizeof` dă mărimea **array-ului**, oricât
+  text ar fi în el.
+- `size_t` este tipul fără semn pe care l-am văzut deja la `sizeof`.
+- Un string gol, `""`, are un singur element: `'\0'`. Lungimea lui este 0.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Diacriticele Ocupă Mai Mulți Bytes
+
+:: left ::
+
+Un `char` ține un byte. Literele din afara tabelului ASCII, ca `ă` sau `ș`, ocupă
+doi bytes în codificarea UTF-8.
+
+```c
+printf("%zu\n", strlen("mar"));   // 3
+printf("%zu\n", strlen("măr"));   // 4
+printf("%zu\n", strlen("ș"));     // 2
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `strlen` numără bytes, nu litere. `ă` contează de două ori.
+- `toupper` și `isalpha` lucrează pe un singur byte, deci nu știu ce este `ă`.
+- De aceea, textele din programele noastre sunt scrise fără diacritice:
+  `"Varsta"`, nu `"Vârsta"`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `strlen` Parcurge Tot String-ul
+
+:: left ::
+
+Ca să afle lungimea, `strlen` merge prin tot textul. Pusă în condiția buclei, se
+calculează din nou la fiecare pas.
+
+```c
+// GRESIT: strlen se apeleaza de n ori
+for (size_t i = 0; i < strlen(s); i++) {
+    s[i] = toupper(s[i]);
+}
+
+// corect: lungimea se afla o singura data
+size_t n = strlen(s);
+for (size_t i = 0; i < n; i++) {
+    s[i] = toupper(s[i]);
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pentru un text de 1000 de caractere, prima buclă face în jur de un milion de
+  pași, a doua 2000.
+- `i` este `size_t`, ca rezultatul lui `strlen`. Cu `int i`, gcc avertizează:
+  `comparison of integer expressions of different signedness`.
+- De multe ori nici nu trebuie lungimea: condiția `s[i] != '\0'` face o singură
+  trecere.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Inițializare Da, Atribuire Nu
+
+:: left ::
+
+La declarație, `=` umple array-ul. Mai târziu, un string nu se poate atribui,
+la fel ca orice array.
+
+```c
+char nume[20] = "Ana";   // corect: initializare
+
+nume = "Ion";            // eroare
+```
+
+:: right ::
+
+<div class="text-base">
+
+- gcc oprește compilarea: `assignment to expression with array type`.
+- Am văzut deja că un array nu se atribuie dintr-o bucată. Un string este tot un
+  array.
+- Ca să punem alt text în `nume`, copiem caracterele unul câte unul, cu `'\0'`
+  cu tot. Exact asta face `strcpy`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `strcpy` Copiază
+
+:: left ::
+
+`strcpy(dest, sursa)` copiază caracterele din `sursa` în `dest`, inclusiv
+caracterul nul. Ordinea este cea de la o atribuire: `dest = sursa`.
+
+```c
+char nume[20] = "Ana";
+char copie[20];
+
+strcpy(nume, "Ion");     // nume devine "Ion"
+strcpy(copie, nume);     // copie devine "Ion"
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Destinația este **primul** argument. Inversate, copiază în sens opus.
+- Copiază și `'\0'`, deci rezultatul este un string corect.
+- Ce era înainte în `dest` se pierde.
+- **Nu** verifică dacă `dest` are destul loc.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `strcat` Lipește la Capăt
+
+:: left ::
+
+`strcat(dest, sursa)` caută `'\0'`-ul din `dest` și scrie `sursa` începând de
+acolo.
+
+```c
+char complet[30];
+
+strcpy(complet, "Ana");      // "Ana"
+strcat(complet, " ");        // "Ana "
+strcat(complet, "Popescu");  // "Ana Popescu"
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `dest` trebuie să fie **deja** un string. Primul pas este un `strcpy`, nu un
+  `strcat`.
+- Un array neinițializat nu are `'\0'` într-un loc cunoscut. `strcat` pe el
+  lipește textul la o poziție oarecare.
+- Nici `strcat` nu verifică locul. `dest` trebuie să încapă ambele texte, plus
+  `'\0'`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Nicio Copiere Nu Verifică Locul
+
+:: left ::
+
+`strcpy` și `strcat` scriu atât cât au de scris. Dacă destinația este prea mică,
+scriu mai departe, în afara ei.
+
+```c
+char nume[5];
+int nota = 10;
+
+strcpy(nume, "Alexandra");   // 10 bytes in 5
+printf("%d\n", nota);        // ?
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Este scrierea în afara array-ului pe care o știm: comportament nedefinit.
+  Poate strica `nota`, alte variabile sau opri programul.
+- Uneori gcc observă și avertizează, când lungimile sunt cunoscute la compilare.
+  Cu un nume citit de la tastatură, nu are cum.
+- Înainte de copiere, verificați lungimea: `strlen(sursa) < sizeof nume`.
+- Sau folosiți o funcție care primește mărimea destinației.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Capcana lui `strncpy`
+
+:: left ::
+
+`strncpy(dest, sursa, n)` copiază cel mult `n` caractere. Pare varianta sigură a
+lui `strcpy`, dar are o capcană.
+
+```c
+char nume[5];
+
+strncpy(nume, "Alexandra", sizeof nume);
+// nume: 'A' 'l' 'e' 'x' 'a', fara '\0'
+
+strncpy(nume, "Alexandra", sizeof nume - 1);
+nume[sizeof nume - 1] = '\0';   // caracterul nul, de mana
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Când sursa are cel puțin `n` caractere, `strncpy` **nu** pune `'\0'`.
+- Rezultatul nu este un string. Următorul `printf("%s")` citește dincolo de
+  array.
+- Varianta corectă copiază cu unu mai puțin și scrie caracterul nul separat. Este
+  ușor de uitat.
+- `strncat` pune mereu `'\0'`, dar `n` limitează doar caracterele lipite, nu tot
+  array-ul. Locul rămas trebuie calculat de mână.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `snprintf`: Scriere cu Limită
+
+:: left ::
+
+`snprintf` este `printf`, dar scrie într-un array în loc de ecran. Primește
+mărimea array-ului și nu trece niciodată de ea.
+
+```c
+char copie[20];
+char complet[30];
+
+// in loc de strcpy
+snprintf(copie, sizeof copie, "%s", nume);
+
+// in loc de strcpy + strcat + strcat
+snprintf(complet, sizeof complet, "%s %s",
+         prenume, numeFamilie);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Scrie cel mult `sizeof copie - 1` caractere și pune **mereu** `'\0'`.
+- Dacă textul nu încape, este tăiat, dar rezultatul rămâne un string corect.
+- Formatul este cel de la `printf`, deci putem lipi text și numere deodată:
+  `"%s, nota %d"`.
+- Este forma pe care o recomandăm pentru copiere și lipire.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Textul Tăiat, Dar Corect
+
+:: content ::
+
+`snprintf` întoarce lungimea pe care textul **ar fi avut-o**. Dacă ea nu este mai
+mică decât mărimea array-ului, textul a fost tăiat. Rulați.
+
+```c {monaco-run} {autorun:false, height:'235px'}
+#include <stdio.h>
+
+int main(void) {
+    char prenume[20], nume[20], scurt[8];
+    snprintf(prenume, sizeof prenume, "%s", "Ana");
+    snprintf(nume, sizeof nume, "%s", "Popescu");
+
+    int cat = snprintf(scurt, sizeof scurt, "%s %s", prenume, nume);
+    printf("[%s]\n", scurt);
+    if (cat >= (int)sizeof scurt) {
+        printf("taiat: era nevoie de %d caractere\n", cat);
     }
-
     return 0;
 }
 ```
 
 ---
-layout: top-title
-align: c
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
+
 :: title ::
 
-# `strspn` - Măsurarea Segmentului Inițial
+# `==` Nu Compară Textul
 
-:: content ::
+:: left ::
 
-Funcția `strspn` (string span) este mai specializată. Ea calculează lungimea segmentului de la începutul unui șir care conține **doar** caractere dintr-un set specificat.
+Pentru numere, `==` compară valori. Pentru două string-uri, compară altceva.
 
-<div class="ns-c-tight">
+```c
+char nume[20];
+scanf("%19s", nume);
 
--   **`size_t strspn(const char *str1, const char *str2);`**
--   Returnează numărul de caractere de la începutul lui `str1` care se găsesc în `str2`.
--   Se oprește la primul caracter din `str1` care **nu** se află în `str2`.
-
-</div>
-
-<br/>
-<div class="neversink-indigo-light-scheme bg-[var(--neversink-admon-bg-color)] p-6 rounded-lg border border-[var(--neversink-admon-border-color)] text-center">
-Poate fi folosită pentru a valida formatul datelor de la începutul unui șir.
-</div>
-
----
-layout: cover
----
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-#include <string.h>
-
-int main() {
-    char text[] = "12345ABCDE";
-    char cifre[] = "0123456789";
-
-    // Calculeaza cate caractere de la inceputul lui 'text'
-    // sunt cifre (se gasesc in sirul 'cifre').
-    size_t lungime_prefix_numeric = strspn(text, cifre);
-
-    printf("Sirul '%s' incepe cu %zu cifre.\n", text, lungime_prefix_numeric);
-
-    char text2[] = "abc123def";
-    size_t lungime2 = strspn(text2, cifre);
-    printf("Sirul '%s' incepe cu %zu cifre.\n", text2, lungime2);
-
-
-    return 0;
+if (nume == "Ana") {          // GRESIT
+    printf("Salut, Ana!\n");
 }
 ```
 
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
+:: right ::
 
-# `strtok` - Divizarea unui Șir (Tokenization)
+<div class="text-base">
 
-:: content ::
-
-Funcția `strtok` (string token) este folosită pentru a împărți un șir în "token-uri" (segmente), pe baza unor caractere delimitatoare.
-
-<AdmonitionType type="danger">
-
-**Atenție! `strtok` modifică (distruge) șirul original!** El inserează caractere nule `\0` în locul delimitatorilor.
-
-</AdmonitionType>
-
-
-<div class="ns-c-tight">
-
--   **`char *strtok(char *str, const char *delimitatori);`**
--   La **primul apel**, se specifică șirul care trebuie divizat.
--   La **apelurile următoare**, se folosește `NULL` ca prim argument pentru a continua divizarea aceluiași șir.
--   Returnează un pointer la următorul token sau `NULL` când nu mai sunt token-uri.
+- Condiția este falsă și când scrieți `Ana`.
+- `==` nu se uită la litere. Compară **locurile** din memorie în care stau cele
+  două array-uri, iar acestea diferă mereu. Ce înseamnă exact vom vedea în
+  curând.
+- gcc avertizează: `comparison with string literal results in unspecified
+  behavior`.
+- Textul se compară literă cu literă, cu o buclă sau cu `strcmp`.
 
 </div>
 
 ---
-layout: cover
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-#include <string.h>
+:: title ::
 
-int main() {
-    char propozitie[] = "Invat,limbajul,C,la,facultate";
-    char delimitatori[] = ","; // Putem avea mai multi: " ,.-"
+# `strcmp` Răspunde cu un Semn
 
-    // Primul apel - cu sirul original
-    char *token = strtok(propozitie, delimitatori);
-    printf("Token-uri gasite:\n");
-    // Ciclul continua cat timp strtok nu returneaza NULL
-    while (token != NULL) {
-        printf("-> %s\n", token);
-        // Apelurile urmatoare - cu NULL, pentru a continua
-        token = strtok(NULL, delimitatori);
+:: left ::
+
+`strcmp(a, b)` compară cele două string-uri caracter cu caracter și întoarce un
+`int`. Contează doar semnul lui.
+
+```c
+if (strcmp(nume, "Ana") == 0) {
+    printf("Salut, Ana!\n");
+}
+
+if (strcmp(a, b) < 0) {
+    printf("%s vine inaintea lui %s\n", a, b);
+}
+```
+
+:: right ::
+
+<div class="ns-c-table text-base">
+
+| rezultat | înseamnă |
+|---|---|
+| `0` | textele sunt egale |
+| negativ | `a` vine **înaintea** lui `b` |
+| pozitiv | `a` vine **după** `b` |
+
+</div>
+
+<div class="text-base mt-4">
+
+Nu comparați cu `-1` sau `1`. Standardul promite doar semnul, nu valoarea:
+`strcmp("Ana", "Ion")` poate întoarce -8 la fel de bine ca -1.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Ordinea lui `strcmp`
+
+:: content ::
+
+Se compară primul caracter diferit, după codul lui ASCII. Ordinea seamănă cu cea
+din dicționar, cu câteva surprize.
+
+<div class="ns-c-table text-base mt-6 max-w-3xl mx-auto">
+
+| comparație | semn | de ce |
+|---|---|---|
+| `"Ana"` cu `"Ane"` | negativ | prima diferență: `'a'` (97) < `'e'` (101) |
+| `"Ana"` cu `"Anastasia"` | negativ | `"Ana"` se termină primul: `'\0'` (0) < `'s'` |
+| `"ana"` cu `"Ion"` | pozitiv | literele mici vin după toate cele mari: 97 > 73 |
+| `"10"` cu `"9"` | negativ | cifrele sunt caractere: `'1'` (49) < `'9'` (57) |
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Array de String-uri
+
+:: left ::
+
+O listă de nume este o matrice de `char`: fiecare rând este un string.
+
+```c
+#define MAX 30
+#define LUNG 20
+
+char nume[MAX][LUNG];        // 30 de nume, fiecare < 20
+
+strcpy(nume[0], "Ana");
+strcpy(nume[1], "Ion");
+
+printf("%s\n", nume[1]);     // Ion
+printf("%c\n", nume[1][0]);  // I
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `nume[i]` este rândul `i`, adică un string întreg. Merge oriunde merge un
+  string: `printf`, `scanf`, `strcmp`.
+- `nume[i][j]` este caracterul `j` din numele `i`.
+- Fiecare rând are 20 de elemente, chiar dacă numele este scurt. Memoria se
+  calculează pentru cel mai lung nume.
+- Ca parametru, se scrie ca orice matrice: `char nume[][LUNG]`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Primul în Ordine Alfabetică
+
+:: left ::
+
+Ca la căutarea minimului într-un array de numere, dar comparăm cu `strcmp`.
+
+```c
+char nume[MAX][LUNG];
+int n = 3;
+for (int i = 0; i < n; i++) {
+    scanf("%19s", nume[i]);    // Maria Ion Ana
+}
+
+int p = 0;                     // pozitia primului, pana acum
+for (int i = 1; i < n; i++) {
+    if (strcmp(nume[i], nume[p]) < 0) {
+        p = i;
     }
-    
-    // Sirul original a fost modificat!
-    printf("\nSirul original dupa strtok: %s\n", propozitie);
+}
+printf("Primul in catalog: %s\n", nume[p]);   // Ana
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `strcmp(nume[i], nume[p]) < 0` înseamnă "numele `i` vine înaintea celui mai
+  bun de până acum".
+- Ținem minte **poziția**, nu textul. Un `int` se atribuie cu `=`, un string ar
+  fi cerut `strcpy`.
+- Pentru cel mai lung nume, același tipar compară `strlen(nume[i])`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ordonarea Alfabetică
+
+:: left ::
+
+Pentru fiecare poziție `i`, comparăm cu toate numele de după ea. Când unul
+trebuie să vină înainte, cele două își schimbă locul.
+
+```c
+char tmp[LUNG];
+
+for (int i = 0; i < n - 1; i++) {
+    for (int j = i + 1; j < n; j++) {
+        if (strcmp(nume[i], nume[j]) > 0) {
+            strcpy(tmp, nume[i]);
+            strcpy(nume[i], nume[j]);
+            strcpy(nume[j], tmp);
+        }
+    }
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- După primul pas al buclei exterioare, `nume[0]` este primul în ordine
+  alfabetică. După al doilea, `nume[1]`, și așa mai departe.
+- Schimbul are nevoie de un array ajutător, `tmp`, ca schimbul a două numere.
+- Cu `=` în loc de `strcpy`, programul nu se compilează: un string nu se
+  atribuie.
+- Pentru `"ana"` și `"Ion"` ordinea iese greșită. Transformați întâi totul în
+  litere mari sau mici.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Greșeli Frecvente
+
+:: content ::
+
+Aproape toate greșelile cu string-uri vin din același loc: C nu verifică nici
+locul, nici caracterul nul.
+
+<div class="ns-c-table text-sm mt-6 max-w-4xl mx-auto">
+
+| greșit | corect | de ce |
+|---|---|---|
+| `if (a == b)` | `if (strcmp(a, b) == 0)` | `==` nu compară literele |
+| `a = b;` | `snprintf(a, sizeof a, "%s", b);` | un array nu se atribuie |
+| `char s[3] = "Ana";` | `char s[4] = "Ana";` | `'\0'` are nevoie de loc |
+| `scanf("%s", s);` | `scanf("%19s", s);` | fără lățime, poate scrie în afara array-ului |
+| `strcpy(s, sursa);` cu `s` mic | `snprintf(s, sizeof s, "%s", sursa);` | `strcpy` nu verifică locul |
+| `scanf("%d")`, apoi `fgets` | golim linia înainte de `fgets` | `fgets` citește `\n`-ul rămas |
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Caracterul Nul Uitat
+
+:: left ::
+
+Când construim un string caracter cu caracter, `'\0'` trebuie pus de mână.
+Funcția de mai jos păstrează doar literele.
+
+```c
+void doarLitere(const char s[], char rez[]) {
+    int j = 0;
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (isalpha(s[i])) {
+            rez[j] = s[i];
+            j++;
+        }
+    }
+    rez[j] = '\0';    // fara linia asta, rez nu se termina
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Bucla se oprește **la** `'\0'`, deci nu îl copiază. Trebuie scris după
+  buclă.
+- Fără el, `printf("%s", rez)` afișează literele, apoi ce găsește în memorie
+  până la primul byte 0. Comportament nedefinit.
+- Uneori array-ul conține deja zerouri și greșeala nu se vede. Pe alt
+  calculator, se vede.
+- `rez` trebuie să fie cel puțin la fel de mare ca `s`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Afișează Fiecare
+
+:: left ::
+
+Ce afișează fiecare fragment și de ce?
+
+```c
+// A
+char s[10] = "Ana";
+printf("%zu %zu\n", strlen(s), sizeof s);
+
+// B
+char t[] = "Salut";
+t[2] = '\0';
+printf("%s %zu\n", t, sizeof t);
+
+// C
+printf("%d\n", strcmp("ana", "Ana") > 0);
+
+// D
+char u[] = "c";
+u[0] = u[0] - ('a' - 'A');
+printf("%s %zu\n", u, sizeof u);
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- **A**: `3 10`. `strlen` numără textul, `sizeof` tot array-ul.
+- **B**: `Sa 6`. Textul se termină la primul `'\0'`. Array-ul are în
+  continuare 6 elemente.
+- **C**: `1`. `'a'` (97) este mai mare decât `'A'` (65), deci rezultatul lui
+  `strcmp` este pozitiv, iar comparația `> 0` este adevărată.
+- **D**: `C 2`. Litera devine mare. `"c"` are două elemente: `'c'` și `'\0'`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Totul la un Loc
+
+:: content ::
+
+Numele citite într-un array de string-uri. O singură parcurgere găsește primul
+nume în ordine alfabetică și pe cel mai lung. Rulați și introduceți
+numărul de studenți, apoi numele lor.
+
+```c {monaco-run} {autorun:false, height:'285px'}
+#include <stdio.h>
+#include <string.h>
+#define MAX 30
+int main(void) {
+    char nume[MAX][20];
+    int n = 0, primul = 0, lung = 0;
+    printf("Cati studenti? ");   // ex: 4
+    if (scanf("%d", &n) != 1 || n < 1 || n > MAX) { return 1; }
+    for (int i = 0; i < n; i++) {
+        scanf("%19s", nume[i]);   // ex: Maria Ion Ana Cristian
+        if (strcmp(nume[i], nume[primul]) < 0) { primul = i; }
+        if (strlen(nume[i]) > strlen(nume[lung])) { lung = i; }
+    }
+    printf("Primul in catalog: %s\n", nume[primul]);
+    printf("Cel mai lung: %s, %zu litere\n", nume[lung], strlen(nume[lung]));
     return 0;
 }
 ```
 
 ---
-transition: slide-left
-layout: cover
+layout: center
 color: blue-light
 ---
-
-# Sarcini de Practică
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 1 (Ușor)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care:
-<div class="ns-c-tight">
-
-1.  Cere utilizatorului să-și introducă prenumele.
-2.  Folosind `strlen`, afișează un mesaj care specifică câte caractere are prenumele introdus.
-
-</div>
-<br/>
-
-### Exemplu de interacțiune:
-```text
-Introduceti prenumele: Cristian
-Prenumele "Cristian" are 8 caractere.
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 2 (Mediu)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care construiește un username. Programul trebuie să:
-<div class="ns-c-tight">
-
-1.  Ceară utilizatorului numele de familie.
-2.  Ceară utilizatorului prenumele.
-3.  Combine primul caracter din prenume cu numele de familie complet.
-4.  Afișeze username-ul rezultat, cu litere mici.
-
-</div>
-<br/>
-
-<AdmonitionType type="tip">
-
-Puteți crea un șir nou `username`. Copiați primul caracter din prenume în el. Apoi, folosiți `strcat` pentru a adăuga numele de familie. Pentru a converti la litere mici, puteți folosi funcția `tolower` din biblioteca `ctype.h` și un ciclu `for`.
-
-</AdmonitionType>
-
-<br/>
-
-### Exemplu de interacțiune:
-```text
-Numele de familie: Popescu
-Prenumele: Ion
-Username-ul generat este: ipopescu
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 3 (Avansat)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care verifică dacă un cuvânt este **palindrom**. Un palindrom este un cuvânt care se citește la fel din ambele sensuri (ex: "cojoc", "capac", "ana").
-
-<div class="ns-c-tight">
-
-1.  Cereți utilizatorului să introducă un cuvânt.
-2.  Creați o copie a cuvântului în ordine inversă.
-3.  Comparați cuvântul original cu copia inversată folosind `strcmp`.
-4.  Afișați dacă este sau nu palindrom.
-
-</div>
-<br/>
-<AdmonitionType type="tip">
-
-Pentru a inversa șirul, puteți folosi un ciclu `for`. Un contor `i` merge de la începutul șirului original la sfârșit, iar un alt contor `j` merge de la sfârșitul șirului copie la început. La fiecare pas, `copie[j] = original[i]`.
-
-</AdmonitionType>
-
-### Exemplu de interacțiune:
-```text
-Introduceti un cuvant: cojoc
-Cuvantul "cojoc" este palindrom.
-```
-```text
-Introduceti un cuvant: salut
-Cuvantul "salut" nu este palindrom.
-```
-
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Mai departe
-
-:: content ::
-
-<div class="mt-12">
 
 <DeckNav />
-
-</div>

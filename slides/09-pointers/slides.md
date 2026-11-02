@@ -37,273 +37,193 @@ cpp:
 ---
 
 ### Pointeri în C
-
-#### Controlul direct asupra memoriei
+#### Adresa unei variabile, ca valoare
 
 ---
-layout: cover
+layout: top-title-two-cols
 color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
-## De ce avem nevoie de Pointeri?
-
-Răspunsul scurt: **Pentru a controla direct MEMORIA.**
-
----
-layout: top-title
-align: c
-color: blue-light
----
 :: title ::
 
-# Cum este Organizată Memoria
+# O Funcție Care Nu Poate Interschimba
 
-:: content ::
+:: left ::
 
-Un program C are la dispoziție două tipuri principale de memorie: **Stack** și **Heap**.
-
-<br/>
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-6 rounded-lg border border-[var(--neversink-border-color)]">
-    <h3 class="text-2xl font-bold text-center text-[var(--neversink-highlight-color)]">STACK (Stiva)</h3>
-    <div class="ns-c-tight mt-4 text-[var(--neversink-admon-text-color)]">
-    
-- **Gestionare Automată**: Memoria este alocată și eliberată automat.
-- **Viteză**: Foarte rapidă.
-- **Ce conține**: Variabilele locale (declarate în interiorul funcțiilor), parametrii funcțiilor.
-- **Regulă**: "Last In, First Out" (LIFO). Când o funcție se termină, memoria ei este eliberată.
-- **Limitare**: Dimensiune fixă și relativ mică.
-
-</div>
-  </div>
-  
-  <div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-6 rounded-lg border border-[var(--neversink-border-color)]">
-    <h3 class="text-2xl font-bold text-center text-[var(--neversink-highlight-color)]">HEAP (Grămada)</h3>
-    <div class="ns-c-tight mt-4 text-[var(--neversink-admon-text-color)]">
-    
-- **Gestionare Manuală**: Programatorul trebuie să ceară memorie și să o elibereze.
-- **Viteză**: Mai lentă decât stiva.
-- **Ce conține**: Memorie alocată dinamic (la cerere, în timpul rulării).
-- **Regulă**: Controlată de programator prin funcții ca `malloc()` și `free()`.
-- **Limitare**: Dimensiune mare, limitată doar de RAM-ul disponibil.
-
-</div>
-  </div>
-</div>
-
-<br/>
-
-<AdmonitionType type="info">
-
-Pointerii sunt mecanismul care ne permite să lucrăm eficient cu ambele, dar sunt **esențiali** pentru a gestiona memoria de pe **Heap**.
-
-</AdmonitionType>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Fiecare Variabilă are o Adresă
-
-:: content ::
-
-Gândiți-vă la memoria computerului ca la o stradă foarte lungă cu case. Fiecare "casă" (locație de memorie) are o adresă unică.
-
-Când declarăm o variabilă, sistemul de operare îi alocă o "casă" și pune valoarea acolo.
-
-<style>
-.memory-container {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 10px;
-  background-color: var(--neversink-bg-color);
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid var(--neversink-border-color);
-  font-family: monospace;
-}
-.memory-box {
-  background-color: var(--neversink-bg-code-color);
-  border: 2px solid var(--neversink-border-color);
-  padding: 10px;
-  width: 150px;
-  text-align: center;
-  border-radius: 4px;
-  color: var(--neversink-fg-code-color);
-}
-.memory-box .address {
-  font-size: 0.8em;
-  opacity: 0.7;
-  color: var(--neversink-text-color);
-}
-.memory-box .value {
-  font-size: 1.5em;
-  font-weight: bold;
-}
-.dots {
-  font-size: 2em;
-  color: var(--neversink-text-color);
-}
-</style>
-
-<div class="memory-container neversink-blue-light-scheme mt-8">
-  <div class="dots">...</div>
-  <div class="memory-box">
-    <div class="address">Adresa: 0x7ffe...a1b4</div>
-    <div class="value">x: 10</div>
-  </div>
-  <div class="dots">...</div>
-  <div class="memory-box">
-    <div class="address">Adresa: 0x7ffe...a1b8</div>
-    <div class="value">y: 'A'</div>
-  </div>
-  <div class="dots">...</div>
-</div>
-
-<br/>
-
-**Un pointer este o variabilă specială care nu stochează valoarea `10` sau `'A'`, ci stochează adresa `0x7ffe...a1b4`.**
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Ce este un Pointer? (Conceptul de Bază)
-
-:: content ::
-
-Un **pointer** este o variabilă care stochează **adresa de memorie** a unei alte variabile.
-
-<div class="ns-c-tight">
-
--   Nu stochează o valoare ca `10` sau `'A'`.
--   Stochează *locația* unde se găsește o altă variabilă.
-
-</div>
-<br/>
-
-<style>
-.pointer-diagram {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 20px;
-  font-family: monospace;
-  margin-top: 30px;
-}
-.pointer-box {
-  background-color: var(--neversink-bg-code-color);
-  border: 2px solid var(--neversink-border-color);
-  padding: 15px;
-  width: 250px;
-  text-align: center;
-  border-radius: 4px;
-  color: var(--neversink-fg-code-color);
-}
-.pointer-box .address {
-  font-size: 0.8em;
-  opacity: 0.7;
-  color: var(--neversink-text-color);
-  border-bottom: 1px dashed var(--neversink-text-color);
-  padding-bottom: 5px;
-  margin-bottom: 5px;
-}
-.pointer-box .var-name {
-  font-weight: bold;
-  font-size: 1.2em;
-  color: var(--neversink-highlight-color);
-}
-.pointer-box .value {
-  font-size: 1.5em;
-  font-weight: bold;
-}
-.arrow {
-  font-size: 3em;
-  color: var(--neversink-highlight-color);
-  position: relative;
-  top: 20px;
-}
-</style>
-
-<div class="pointer-diagram neversink-blue-light-scheme">
-  
-  <div class="pointer-box">
-    <div class="address">Adresa: 0x8000</div>
-    <div class="var-name">Pointer `p`</div>
-    <div class="value">0x7ffc</div>
-  </div>
-  
-  <div class="arrow">➡️</div>
-
-  <div class="pointer-box">
-    <div class="address">Adresa: 0x7ffc</div>
-    <div class="var-name">Variabila `x`</div>
-    <div class="value">10</div>
-  </div>
-</div>
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Cei Doi Operatori Esențiali
-
-#### `&` și `*`
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Operatorul `&` (Address-of)
-
-:: content ::
-
-Operatorul `&` (ampersand) **obține adresa de memorie** a unei variabile.
-
-<div class="ns-c-tight text-base">
-
--   Îl folosim atunci când vrem să știm *unde* este stocată o variabilă.
--   L-ați mai folosit deja cu `scanf`!
-
-</div>
+Vrem o funcție care schimbă între ele valorile a două variabile. Aceasta nu
+reușește.
 
 ```c
-int x = 10;
-// &x  <-- Aceasta expresie inseamna "adresa lui x" (Ex: 0x7ffc...a1b4)
-// Am cerut scanf sa stocheze valoarea LA ADRESA lui 'varsta'
-scanf("%d", &varsta); 
+void schimba(int a, int b) {
+    int aux = a;
+    a = b;
+    b = aux;
+}
+
+int main() {
+    int x = 3, y = 7;
+    schimba(x, y);
+    printf("x = %d, y = %d\n", x, y);   // x = 3, y = 7
+    return 0;
+}
 ```
 
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)] text-center">
-  <p class="font-mono text-lg text-[var(--neversink-text-color)]">
-  Pentru a afișa o adresă (un pointer), folosim specificatorul de format <strong>%p</strong> (pointer).
-  </p>
+:: right ::
+
+<div class="text-base">
+
+- Am văzut deja de ce: `a` și `b` primesc **copii** ale lui `x` și `y`.
+- Funcția interschimbă copiile. La `return` cadrul ei dispare, iar `x` și `y`
+  rămân neatinse.
+- `return` nu ajută: întoarce o singură valoare, iar aici trebuie schimbate
+  două variabile.
+- Totuși, `scanf("%d", &x)` scrie în `x` din interiorul unei funcții. Ce
+  primește `scanf` în plus?
+
 </div>
 
 ---
-layout: cover
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
-```c {monaco-run} {autorun:false}
+:: title ::
+
+# `scanf` Primește o Adresă
+
+:: left ::
+
+`scanf` nu primește `x`, ci `&x`: **adresa** lui `x`. Cu ea află unde stă
+variabila și scrie direct acolo.
+
+```c
+int x = 0;
+
+scanf("%d", &x);   // primeste adresa lui x
+scanf("%d", x);    // GRESIT: primeste valoarea lui x
+```
+
+:: right ::
+
+<div class="text-base">
+
+- O copie a valorii nu îi folosește la nimic lui `scanf`. Îi trebuie locul în
+  care să scrie.
+- Fără `&`, primește valoarea 0 și o tratează ca pe o adresă. Scrierea la
+  "adresa 0" este comportament nedefinit; de obicei, programul cade.
+- gcc avertizează: `format '%d' expects argument of type 'int *', but argument
+  2 has type 'int'`.
+- `int *` este tipul unei valori care ține adresa unui `int`. Despre acest tip
+  vorbim azi.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Fiecare Variabilă Are o Adresă
+
+:: content ::
+
+Memoria este un șir de bytes numerotați. Adresa unei variabile este adresa
+**primului** ei byte.
+
+```c
+int x = 5;    char c = 'A';
+```
+
+<MemoryCells class="mt-6" :base="1000" :size="60"
+  :cells="[
+    { value: '0' }, { value: '0' }, { value: '0' }, { value: '5' },
+    { value: '65' },
+  ]"
+  :vars="[
+    { start: 0, len: 4, name: 'x', type: 'int', highlight: true },
+    { start: 4, len: 1, name: 'c', type: 'char' },
+  ]"
+/>
+
+<div class="ns-c-tight text-base mt-6">
+
+- `&x` se citește "adresa lui `x`". Aici, `&x` este 1000, iar `&c` este 1004.
+- Adresele reale sunt numere mari, ca `0x7ffd...`, și se schimbă de la o rulare
+  la alta. Pe slide-uri folosim numere mici, ca 1000.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Afișarea unei Adrese
+
+:: left ::
+
+`printf` afișează o adresă cu `%p`. Adresa se convertește întâi la `void *`.
+
+```c
+int x = 5;
+
+printf("%d\n", x);            // 5
+printf("%p\n", (void *)&x);   // 0x7ffd...
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `p` vine de la **pointer**. Adresa apare în baza 16 (hexazecimal): cifrele
+  de la 0 la 9, apoi de la `a` la `f`. `0x` din față anunță baza.
+- `%p` cere un `void *`, adică o adresă fără tip. `(void *)` este un cast, ca
+  `(double)` la împărțire.
+- Fără cast, gcc avertizează cu `-pedantic`: `format '%p' expects argument of
+  type 'void *', but argument 2 has type 'int *'`.
+- Sistemul de operare așază stiva la o poziție aleasă la întâmplare, ca
+  protecție. De aceea adresa diferă între rulări.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Adrese Vecine
+
+:: content ::
+
+Rulați de două ori. Adresele se pot schimba, dar între elementele array-ului
+distanța rămâne 4: mărimea unui `int`.
+
+```c {monaco-run} {autorun:false, height:'235px'}
 #include <stdio.h>
+
 int main() {
-    int x = 10;
-    printf("Valoarea lui x este: %d\n", x);
-    printf("Adresa lui x este: %p\n", &x); // %p afiseaza adresa in format hexadecimal
-    printf("Adresa lui x ca numar: %d\n", &x); 
+    int a = 5;
+    int b = 7;
+    int note[3] = {8, 9, 10};
+    printf("&a       = %p\n", (void *)&a);
+    printf("&b       = %p\n", (void *)&b);
+    printf("&note[0] = %p\n", (void *)&note[0]);
+    printf("&note[1] = %p\n", (void *)&note[1]);
+    printf("&note[2] = %p\n", (void *)&note[2]);
     return 0;
 }
 ```
@@ -313,602 +233,1700 @@ layout: top-title
 align: c
 color: blue-light
 ---
+
 :: title ::
 
-# Operatorul `*` (Dereferențiere)
+# Ce Este un Pointer
 
 :: content ::
 
-Operatorul `*` (asterisc) **obține valoarea stocată la o anumită adresă**.
+<div class="max-w-4xl mx-auto mt-6">
 
-<div class="ns-c-tight">
+<Definition term="Pointer" source="Pe scurt" emphasis>
 
--   Este opusul lui `&`.
--   "Urmează" pointerul pentru a ajunge la "casa" la care arată și ne spune ce este înăuntru.
--   Este folosit și la **declararea** unui pointer, pentru a specifica tipul (ex: `int *p`).
+O variabilă care ține o **adresă**. Prin ea, programul ajunge la variabila de
+la acea adresă: pointerul **arată spre** ea.
+
+</Definition>
 
 </div>
 
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)]">
-<h3 class="font-bold text-center text-base text-[var(--neversink-text-color)]">Exemplu cu Pointeri</h3>
+<div class="grid grid-cols-3 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-text-color)]">int *p;</div>
+    <div class="mt-1">Declararea: <code>p</code> poate ține adresa unui <code>int</code>.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-text-color)]">p = &x;</div>
+    <div class="mt-1">Atribuirea: <code>p</code> primește adresa lui <code>x</code>.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-text-color)]">*p</div>
+    <div class="mt-1">Dereferențierea: variabila de la adresa din <code>p</code>, adică <code>x</code>.</div>
+  </div>
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Pointerul Este Tot o Variabilă
+
+:: content ::
+
+`p` are și el un nume, un tip, o valoare și o adresă. Valoarea lui este adresa
+lui `x`, iar săgeata arată ce înseamnă acea valoare.
 
 ```c
-int x = 10;          // O variabila normala
-
-// 1. DECLARARE: 
-// 'p' este o variabila care poate stoca adresa unui int
-int *p;              
-
-// 2. ATRIBUIRE:
-// 'p' primeste (stocheaza) adresa lui 'x'
-p = &x;              
-
-// 3. DEREFERENTIERE:
-// Folosim *p pentru a obtine valoarea de la adresa stocata in p
-// *p inseamna "valoarea de la adresa spre care arata p"
-printf("Valoarea lui x este: %d\n", *p); // Va afisa 10
+int x = 5;    int *p = &x;
 ```
+
+<PointerDiagram class="mt-6" :width="150" :gap="120"
+  :boxes="[
+    { name: 'x', type: 'int', value: '5', addr: '1000', highlight: true },
+    { name: 'p', type: 'int *', value: '1000', addr: '1008' },
+  ]"
+  :arrows="[{ from: 1, to: 0 }]"
+/>
+
+<div class="ns-c-tight text-base mt-6">
+
+- Pe un sistem de 64 de biți, orice pointer ocupă 8 bytes: `sizeof(p)` este 8.
+- Săgeata nu există în memorie. În memorie există doar numărul 1000.
 
 </div>
 
 ---
-layout: cover
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
 ---
 
-```c {monaco-run} {autorun:false}
+:: title ::
+
+# Declararea unui Pointer
+
+:: left ::
+
+Steaua din declarație spune că variabila este un pointer. Tipul din față spune
+spre ce fel de variabilă arată.
+
+```c
+int x = 5;
+double medie = 8.5;
+char litera = 'A';
+
+int *p = &x;          // pointer la int
+double *pm = &medie;  // pointer la double
+char *pl = &litera;   // pointer la char
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Se citește de la nume spre stânga: `p` este un pointer (`*`) la `int`.
+- Tipul lui `p` este `int *`. Fiecare tip are tipul lui de pointer.
+- Spațiile nu contează: `int *p`, `int* p` și `int * p` înseamnă același lucru.
+  Noi scriem `int *p`.
+- Toți trei ocupă 8 bytes. Diferă câți bytes citesc de la adresă: 4, 8 sau 1.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Steaua Ține de Nume
+
+:: left ::
+
+O singură declarație poate crea mai multe variabile. Steaua se aplică doar
+numelui de lângă ea.
+
+```c
+int *p, q;      // p este int *, q este int
+
+int x = 5;
+p = &x;         // corect
+q = &x;         // error
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `int *p, q;` declară un pointer și un `int` obișnuit, nu doi pointeri.
+- gcc oprește compilarea la `q = &x;`: `assignment to 'int' from 'int *' makes
+  integer from pointer without a cast`.
+- De aceea scriem steaua lângă nume. `int* p, q;` sugerează doi pointeri, dar
+  declară același lucru.
+- Pentru doi pointeri: `int *p, *q;`. Mai clar: o declarație pe linie.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Dereferențierea: `*p`
+
+:: left ::
+
+Într-o expresie, `*p` înseamnă variabila de la adresa din `p`. Se poate citi și
+scrie, ca orice variabilă.
+
+```c
+int x = 5;
+int *p = &x;
+
+printf("%d\n", *p);   // 5: citeste x prin p
+*p = 20;              // scrie 20 in x
+printf("%d\n", x);    // 20
+*p = *p + 1;          // x devine 21
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `*p` nu este o copie a lui `x`. **Este** `x`, ajuns prin adresă.
+- Operația se numește **dereferențiere**: urmează adresa până la variabilă.
+- `*` și `&` se anulează: `*&x` este chiar `x`.
+- `*p = 20;` face exact ce face `scanf` cu adresa primită.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Două Drumuri spre Aceeași Variabilă
+
+:: content ::
+
+Prin `x` și prin `*p` ajungem la aceeași memorie. O schimbare făcută pe un drum
+se vede pe celălalt.
+
+```c {monaco-run} {autorun:false, height:'265px'}
 #include <stdio.h>
 
 int main() {
-    int x = 10;
-    int *p; // p este un pointer catre un int
+    int x = 5;
+    int *p = &x;          // p tine adresa lui x
 
-    p = &x; // p stocheaza adresa lui x
+    printf("x  = %d\n", x);
+    printf("*p = %d\n", *p);
 
-    printf("Adresa stocata in pointerul p: %p\n", p);
-    printf("Adresa variabilei x:             %p\n", &x);
+    *p = 20;              // scrie 20 la adresa din p
+    printf("x  = %d\n", x);
 
-    // Folosim *p pentru a accesa valoarea la care arata p
-    printf("\nValoarea obtinuta prin *p: %d\n", *p);
-    
-    // Putem folosi *p pentru a MODIFICA valoarea lui x!
-    *p = 25; // "Pune valoarea 25 la adresa stocata in p"
-    
-    printf("\nValoarea lui x dupa modificare: %d\n", x); // x este acum 25
-
+    x = x + 1;
+    printf("*p = %d\n", *p);
     return 0;
 }
 ```
 
 ---
-transition: slide-left
-layout: cover
+layout: top-title
 color: blue-light
+align: c
 ---
 
-## Reguli de Siguranță Esențiale
+:: title ::
+
+# `p`, `*p` și `&p`
+
+:: content ::
+
+Pentru `int x = 5;` și `int *p = &x;`, cu `x` la adresa 1000 și `p` la 1008:
+
+<div class="ns-c-table max-w-4xl mx-auto mt-6">
+
+| expresia | tipul | valoarea | ce este |
+|---|---|---|---|
+| `x` | `int` | `5` | variabila |
+| `&x` | `int *` | `1000` | adresa lui `x` |
+| `p` | `int *` | `1000` | valoarea lui `p`: adresa lui `x` |
+| `*p` | `int` | `5` | variabila de la adresa 1000, adică `x` |
+| `&p` | `int **` | `1008` | adresa lui `p`, care are și el una |
+
+</div>
+
+<div class="text-base mt-6">
+
+`int **` este un pointer la un pointer. Vom reveni la el mai târziu în lecție.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Steaua Are Două Roluri
+
+:: left ::
+
+Același caracter `*` înseamnă lucruri diferite în declarație și în expresie.
+
+```c
+int x = 5;
+int *p = &x;      // declaratie: p este pointer,
+                  // iar p primeste &x
+
+*p = 7;           // expresie: dereferentiere
+int y = *p * 2;   // 14: dereferentiere, apoi inmultire
+```
+
+:: right ::
+
+<div class="text-base">
+
+- În declarație, `*` face parte din tip. `int *p = &x;` inițializează `p`, nu
+  `*p`.
+- Citiți-o ca `int *p;` urmat de `p = &x;`. Nu ca `*p = &x;`.
+- Într-o expresie, `*` în fața unui pointer este dereferențiere.
+- Între două valori, `*` rămâne înmulțire: `*p * 2` este 14.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Interschimbarea, Reparată
+
+:: content ::
+
+Funcția primește adresele lui `x` și `y`. Prin ele scrie direct în variabilele
+din `main`.
+
+```c {monaco-run} {autorun:false, height:'235px'}
+#include <stdio.h>
+
+void schimba(int *a, int *b) {
+    int aux = *a;
+    *a = *b;
+    *b = aux;
+}
+
+int main() {
+    int x = 3, y = 7;
+    schimba(&x, &y);
+    printf("x = %d, y = %d\n", x, y);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Ce Primește `schimba`
+
+:: left ::
+
+Parametrii sunt tot copii, dar copii ale unor **adrese**. Așa arată memoria în
+timpul apelului `schimba(&x, &y)`:
+
+<PointerDiagram class="mt-8" :width="105" :gap="22"
+  :boxes="[
+    { name: 'x', type: 'int', value: '3', addr: '1000', highlight: true },
+    { name: 'y', type: 'int', value: '7', addr: '1004', highlight: true },
+    { name: 'a', type: 'int *', value: '1000' },
+    { name: 'b', type: 'int *', value: '1004' },
+  ]"
+  :arrows="[{ from: 2, to: 0 }, { from: 3, to: 1, below: true }]"
+  :groups="[{ start: 0, len: 2, label: 'main' }, { start: 2, len: 2, label: 'schimba' }]"
+/>
+
+:: right ::
+
+<div class="text-base">
+
+- `a` primește o copie a lui `&x`, adică 1000. `*a` este chiar `x`.
+- Copia unei adrese arată spre același loc ca originalul.
+- Regula nu s-a schimbat: în C, argumentele se transmit **mereu** prin copie.
+- Ca o funcție să modifice o variabilă, îi dăm adresa variabilei.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Două Rezultate dintr-un Apel
+
+:: left ::
+
+Împărțirea cu rest are două rezultate: câtul și restul. Funcția le scrie la
+adresele primite.
+
+```c
+void imparte(int a, int b, int *cat, int *rest) {
+    *cat = a / b;
+    *rest = a % b;
+}
+
+int main() {
+    int c = 0, r = 0;
+    imparte(17, 5, &c, &r);
+    printf("17 = 5 * %d + %d\n", c, r);   // 17 = 5 * 3 + 2
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `return` întoarce o singură valoare. Celelalte rezultate ies prin pointeri.
+- Apelantul pregătește variabilele, iar funcția scrie în ele.
+- Astfel de parametri se numesc parametri **de ieșire**.
+- Fără `&` la apel, gcc oprește compilarea: `passing argument 3 of 'imparte'
+  makes pointer from integer without a cast`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Funcție Care Citește ca `scanf`
+
+:: left ::
+
+Funcția primește adresa notei și scrie la ea, exact ca `scanf`.
+
+```c
+void citesteNota(int *nota) {
+    do {
+        printf("Nota (1-10): ");
+        scanf("%d", nota);    // nota este deja o adresa
+    } while (*nota < 1 || *nota > 10);
+}
+
+int n = 0;
+citesteNota(&n);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- În funcție, `nota` este deja un `int *`. Se dă lui `scanf` așa cum este, fără
+  `&`.
+- `&nota` ar fi adresa pointerului, de tip `int **`: greșit.
+- `*nota` este nota citită, folosită în condiție.
+- `scanf` primește `int *` pentru `%d` și `double *` pentru `%lf`. De aceea, la
+  citire, `%lf` și `%f` nu sunt interschimbabile: unul scrie 8 bytes, celălalt
+  4.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# De Ce `nume` Nu Are `&`
+
+:: left ::
+
+La string-uri, `scanf` primește numele array-ului fără `&`. La un element de
+array, `&` revine.
+
+```c
+char nume[20];
+scanf("%19s", nume);      // fara &
+
+int note[5];
+scanf("%d", &note[0]);    // cu &: note[0] este un int
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `scanf` are nevoie de o adresă și pentru `%s`. `nume` este deja una.
+- Folosit într-o expresie, numele unui array devine **adresa primului
+  element**: `nume` înseamnă `&nume[0]`.
+- `note[0]` este un `int` obișnuit, deci are nevoie de `&`.
+- Cu `&nume`, gcc avertizează: `format '%s' expects argument of type 'char *',
+  but argument 2 has type 'char (*)[20]'`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Numele Array-ului Devine Adresă
+
+:: left ::
+
+Un pointer poate primi direct numele unui array. Arată atunci spre primul
+element.
+
+```c
+int v[3] = {8, 9, 10};
+int *p = v;          // la fel ca: int *p = &v[0];
+
+printf("%d\n", *p);           // 8
+printf("%d\n", p == &v[0]);   // 1
+
+v = p;               // error
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Într-o expresie, `v` se convertește la `&v[0]`, de tip `int *`.
+- Excepția importantă: `sizeof v` dă mărimea întregului array, 12.
+- `v` nu este un pointer. Nu ține o adresă într-o variabilă separată, deci nu
+  poate fi schimbat.
+- `v = p;` dă eroare: `assignment to expression with array type`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Un Pointer Plus un Număr
+
+:: content ::
+
+`p + 1` nu este adresa următorului byte, ci a **elementului** următor. Adresa
+crește cu mărimea tipului spre care arată `p`.
+
+```c
+int v[3] = {8, 9, 10};    int *p = v;
+```
+
+<MemoryCells class="mt-6" :base="1000" :size="60"
+  :cells="[
+    { value: '0' }, { value: '0' }, { value: '0' }, { value: '8' },
+    { value: '0' }, { value: '0' }, { value: '0' }, { value: '9' },
+    { value: '0' }, { value: '0' }, { value: '0' }, { value: '10' },
+  ]"
+  :vars="[
+    { start: 0, len: 4, name: '*p', type: 'p = 1000' },
+    { start: 4, len: 4, name: '*(p + 1)', type: 'p + 1 = 1004', highlight: true },
+    { start: 8, len: 4, name: '*(p + 2)', type: 'p + 2 = 1008' },
+  ]"
+/>
+
+<div class="ns-c-tight text-base mt-6">
+
+- Compilatorul înmulțește singur cu `sizeof(int)`: `p + 2` înseamnă 1000 + 2 × 4.
+- Pentru un `char *`, `+ 1` adaugă 1. Pentru un `double *`, adaugă 8.
+
+</div>
 
 ---
 layout: top-title
 align: c
 color: blue-light
 ---
+
 :: title ::
 
-# Reguli de Siguranță
+# `v[i]` Este `*(v + i)`
 
 :: content ::
 
-<AdmonitionType type="danger">
+Parantezele pătrate sunt o scriere prescurtată. Compilatorul transformă orice
+`v[i]` într-o adunare și o dereferențiere.
 
-### Regula 1: Întotdeauna Inițializează-ți Pointerii!
+<div class="fp-formula mt-8">
+<div class="fp-formula__eq">
+<code>v[i]</code>
+<span class="fp-formula__op">=</span>
+<code>*(v + i)</code>
+</div>
+<div class="fp-formula__case">elementul aflat la <code>i</code> elemente după începutul array-ului</div>
+</div>
 
-Un pointer neinițializat conține o adresă "gunoi" (aleatorie). Încercarea de a-l folosi (`*p`) va citi sau scrie într-o zonă aleatorie de memorie și va duce la un **Crash** (Segmentation Fault).
+<div class="grid grid-cols-3 gap-4 mt-6 max-w-4xl mx-auto text-center">
+<div class="fp-ex"><code>v[0]</code><div><code>*(v + 0)</code>, adică <code>*v</code></div></div>
+<div class="fp-ex"><code>v[2]</code><div><code>*(v + 2)</code></div></div>
+<div class="fp-ex"><code>p[1]</code><div><code>*(p + 1)</code>, merge și pe un pointer</div></div>
+</div>
+
+<div class="text-center text-base mt-6">
+
+Acum se vede de unde vine indexarea de la 0: indexul este numărul de elemente
+peste care se sare de la început.
+
+</div>
+
+<style>
+/* Same formula card as "De Ce Indexul Pornește de la 0" in 06-arrays. */
+.fp-formula {
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--neversink-border-color);
+  border-radius: 14px;
+  background: var(--neversink-admon-bg-color);
+  text-align: center;
+}
+
+.fp-formula__eq {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.8rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--neversink-text-color);
+}
+
+.fp-formula__op { opacity: 0.6; }
+
+.fp-formula__case {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
+.fp-ex {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--neversink-admon-border-color);
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+</style>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Curiozitate: `3[note]`
+
+:: left ::
+
+Dacă `v[i]` este doar `*(v + i)`, atunci ordinea din paranteze pătrate nu
+contează. Toate cele patru linii afișează același element.
 
 ```c
-// RAU! Pointer "salbatic" (wild pointer)
-int *p; 
-// *p = 10; // CRASH! 'p' arata spre o adresa gunoi.
+int note[5] = {7, 9, 4, 10, 8};
+
+printf("%d\n", note[3]);      // 10
+printf("%d\n", *(note + 3));  // 10
+printf("%d\n", *(3 + note));  // 10
+printf("%d\n", 3[note]);      // 10
 ```
 
-</AdmonitionType>
-<br/>
-<AdmonitionType type="tip">
+:: right ::
 
-### Regula 2: Folosește `NULL` pentru "nu arată spre nimic"
+<div class="text-base">
 
-Dacă ai un pointer care nu arată încă spre o variabilă validă, setează-l la `NULL`. Acesta este o valoare "zero" sigură pentru pointeri.
+- Adunarea este comutativă: `note + 3` și `3 + note` dau aceeași adresă.
+- Deci `3[note]` devine `*(3 + note)`, adică exact `note[3]`.
+- Compilatorul îl acceptă fără niciun warning.
+- Este o curiozitate, nu un stil. În cod real scrieți mereu `note[3]`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Parcurgerea cu un Pointer
+
+:: content ::
+
+Pointerul pornește de la primul element și înaintează cu `p++`. Rulați și
+priviți adresele: cresc din 4 în 4.
+
+```c {monaco-run} {autorun:false, height:'235px'}
+#include <stdio.h>
+
+int main() {
+    int note[5] = {7, 9, 4, 10, 8};
+    int suma = 0;
+
+    for (int *p = note; p < note + 5; p++) {
+        printf("%p: %d\n", (void *)p, *p);
+        suma = suma + *p;
+    }
+    printf("Suma: %d\n", suma);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Bucla cu Pointer, Citită
+
+:: left ::
+
+Cele trei părți ale lui `for` lucrează acum cu adrese, nu cu indici.
 
 ```c
-// BINE! 
-int *p_safe = NULL;
+// cu pointer
+for (int *p = note; p < note + 5; p++) {
+    suma = suma + *p;
+}
+
+// cu index, acelasi lucru
+for (int i = 0; i < 5; i++) {
+    suma = suma + note[i];
+}
 ```
 
-</AdmonitionType>
+:: right ::
+
+<div class="text-base">
+
+- `p = note`: pornește de la `note[0]`.
+- `p < note + 5`: doi pointeri din același array se pot compara.
+- `note + 5` este adresa de imediat după ultimul element. Poate fi calculată și
+  comparată, dar nu dereferențiată.
+- `p++`: trece la elementul următor, cu 4 bytes mai departe.
+- Cele două bucle fac același lucru. Pentru array-uri, varianta cu index se
+  citește de obicei mai ușor.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un String Parcurs cu Pointer
+
+:: left ::
+
+La un string nu trebuie trimisă lungimea: capătul este marcat de `'\0'`.
+Pointerul înaintează până îl găsește.
+
+```c
+int lungime(const char *s) {
+    const char *p = s;
+    while (*p != '\0') {
+        p++;
+    }
+    return p - s;
+}
+
+lungime("Ana");          // 3
+lungime("programare");   // 10
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `s` primește adresa primului caracter. `p` pornește de acolo.
+- `p++` înaintează câte un caracter, până la `'\0'`.
+- Diferența a doi pointeri din același array este numărul de elemente dintre
+  ei: `p - s`.
+- Așa lucrează și `strlen` din `string.h`, declarată ca `size_t strlen(const
+  char *s);`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Parametrul Array Este un Pointer
+
+:: left ::
+
+Am văzut deja că o funcție care primește un array lucrează pe original. Acum
+putem spune de ce.
+
+```c
+// cele doua forme sunt identice
+void dubleaza(int v[], int n);
+void dubleaza(int *v, int n);
+
+int a[3] = {1, 2, 3};
+dubleaza(a, 3);    // primeste &a[0]
+```
+
+:: right ::
+
+<div class="text-base">
+
+- La apel, `a` devine `&a[0]`. Funcția primește o copie a **adresei**, nu a
+  elementelor.
+- Un parametru scris `int v[]` este, de fapt, `int *v`.
+- În funcție, `v[i]` înseamnă `*(v + i)`: un element din array-ul apelantului.
+- La fel, `const int v[]` este același lucru cu `const int *v`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `sizeof` în Funcție
+
+:: left ::
+
+Același `v`, măsurat în `main` și în funcție.
+
+```c
+void marime(int v[]) {
+    printf("%zu\n", sizeof v);   // 8
+}
+
+int main() {
+    int v[10] = {0};
+    printf("%zu\n", sizeof v);   // 40
+    marime(v);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- În `main`, `v` este array-ul: 10 elemente de câte 4 bytes.
+- În funcție, `v` este un pointer: 8 bytes, oricât de mare ar fi array-ul.
+- gcc avertizează: `'sizeof' on array function parameter 'v' will return size
+  of 'int *'`.
+- De aceea mărimea se trimite separat, ca parametru. `sizeof v / sizeof v[0]`
+  funcționează doar acolo unde array-ul a fost declarat.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Array sau Pointer
+
+:: content ::
+
+Amândouă se folosesc cu paranteze pătrate, dar nu sunt același lucru.
+
+<div class="ns-c-table max-w-4xl mx-auto mt-6">
+
+| | `int v[5];` | `int *p = v;` |
+|---|---|---|
+| ce ține | 5 elemente de tip `int` | o adresă |
+| `sizeof` | 20 | 8 |
+| poate fi schimbat | nu: `v = ...` dă eroare | da: `p++`, `p = &x` |
+| `v[2]`, `p[2]` | `*(v + 2)` | `*(p + 2)` |
+| într-o expresie | devine `&v[0]` | este deja o adresă |
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# `const` și Pointerii
+
+:: content ::
+
+Într-o declarație cu pointer, două lucruri pot fi `const`: variabila spre care
+arată și pointerul însuși. Locul lui `const` față de `*` decide.
+
+<div class="grid grid-cols-3 gap-5 mt-10 text-left">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">const int *p</div>
+    <div class="text-sm mt-2">Prin <code>p</code> doar se citește: <code>*p = 5</code> dă eroare. <code>p</code> poate arăta spre altă variabilă.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">int *const p</div>
+    <div class="text-sm mt-2"><code>p</code> arată mereu spre aceeași variabilă: <code>p = &y</code> dă eroare. <code>*p = 5</code> merge.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">const int *const p</div>
+    <div class="text-sm mt-2">Nici una, nici alta. Se citește <code>*p</code> și atât.</div>
+  </div>
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Oprește Fiecare `const`
+
+:: left ::
+
+Citiți declarația de la nume spre stânga: `q` este un pointer `const`, iar `p`
+este un pointer la un `int` `const`.
+
+```c
+int x = 5, y = 7;
+
+const int *p = &x;
+*p = 10;    // error
+p = &y;     // corect
+
+int *const q = &x;
+*q = 10;    // corect
+q = &y;     // error
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `*p = 10;` dă eroare: `assignment of read-only location '*p'`.
+- `q = &y;` dă eroare: `assignment of read-only variable 'q'`.
+- `const int *p` nu face `x` constant. `x = 10;` merge în continuare; doar
+  drumul prin `p` este numai pentru citire.
+- `const int *` apare des, la parametri. `int *const` apare rar.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `const char *` pentru String-uri
+
+:: left ::
+
+O funcție care doar citește un string îl primește ca `const char *`.
+
+```c
+int numara(const char *s, char c) {
+    int nr = 0;
+    while (*s != '\0') {
+        if (*s == c) {
+            nr++;
+        }
+        s++;
+    }
+    return nr;
+}
+
+numara("banana", 'a');   // 3
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `const` promite că funcția nu modifică textul. `*s = 'x';` ar da eroare.
+- `s++` merge: pointerul este o copie locală, doar caracterele sunt protejate.
+- Funcțiile din `string.h` sunt declarate la fel: `size_t strlen(const char
+  *s);`.
+- O funcție cu `const char *` poate primi fără grijă și un text scris între
+  ghilimele, care nu are voie să fie modificat.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `NULL`: un Pointer Care Nu Arată Nicăieri
+
+:: left ::
+
+Un pointer care nu are încă spre ce să arate primește `NULL`. Înainte de `*p`,
+verificăm.
+
+```c
+int *p = NULL;      // nu arata spre nimic
+
+if (p != NULL) {
+    printf("%d\n", *p);
+} else {
+    printf("Nu am ce afisa\n");
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `NULL` este o adresă specială, la care nu se află nicio variabilă. Este
+  definit în `stdio.h`, `stddef.h` și `stdlib.h`.
+- Un pointer cu `NULL` se recunoaște ușor. Unul neinițializat arată spre un loc
+  oarecare și nu poate fi verificat.
+- Dereferențierea lui `NULL` oprește programul cu segmentation fault.
+- `printf("%p", (void *)p)` afișează `(nil)` pe Linux.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Funcție Care Întoarce o Adresă
+
+:: left ::
+
+Căutarea poate întoarce adresa elementului găsit, iar `NULL` când nu îl găsește.
+
+```c
+int *cauta(int *v, int n, int x) {
+    for (int i = 0; i < n; i++) {
+        if (v[i] == x) {
+            return &v[i];   // adresa elementului gasit
+        }
+    }
+    return NULL;            // nu exista
+}
+
+int *gasit = cauta(note, n, 10);
+if (gasit != NULL) {
+    *gasit = 9;             // modifica direct in array
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Cu adresa elementului, apelantul îl poate citi sau modifica direct.
+- `NULL` joacă rolul pe care -1 îl juca la căutarea care întorcea un index.
+- Adresa întoarsă este în array-ul apelantului, care există și după `return`.
+- `fgets` lucrează la fel: întoarce `NULL` când nu mai are ce citi. `malloc`,
+  pe care îl vom vedea în curând, întoarce `NULL` când nu mai are memorie.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Un Pointer spre un Pointer
+
+:: content ::
+
+`p` este o variabilă, deci are și el o adresă. Un pointer poate ține adresa lui
+`p`, la fel cum `p` ține adresa lui `x`.
+
+```c
+int x = 5;    int *p = &x;    int **pp = &p;
+```
+
+<PointerDiagram class="mt-6" :width="150" :gap="110"
+  :boxes="[
+    { name: 'x', type: 'int', value: '5', addr: '1000', highlight: true },
+    { name: 'p', type: 'int *', value: '1000', addr: '1008' },
+    { name: 'pp', type: 'int **', value: '1008', addr: '1016' },
+  ]"
+  :arrows="[{ from: 1, to: 0 }, { from: 2, to: 1 }]"
+/>
+
+<div class="ns-c-tight text-base mt-6">
+
+- Se citește de la nume spre stânga: `pp` este un pointer (`*`) la un pointer
+  (`*`) la `int`.
+- În memorie, `pp` ține doar numărul 1008. Ocupă tot 8 bytes, ca orice pointer.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# `pp`, `*pp` și `**pp`
+
+:: content ::
+
+Fiecare stea face un pas pe săgeată. Cu `x` la 1000, `p` la 1008 și `pp` la
+1016:
+
+<div class="ns-c-table max-w-4xl mx-auto mt-6">
+
+| expresia | tipul | valoarea | ce este |
+|---|---|---|---|
+| `pp` | `int **` | `1008` | valoarea lui `pp`: adresa lui `p` |
+| `*pp` | `int *` | `1000` | variabila de la adresa 1008, adică `p` |
+| `**pp` | `int` | `5` | variabila de la adresa 1000, adică `x` |
+| `&pp` | `int ***` | `1016` | adresa lui `pp` |
+
+</div>
+
+<div class="text-base mt-6">
+
+`**pp` înseamnă `*(*pp)`: întâi ajungem la `p`, apoi de la `p` la `x`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Două Niveluri de Scriere
+
+:: left ::
+
+Prin `pp` putem scrie în două locuri: în `x`, cu două stele, sau în `p`, cu una.
+
+```c
+int x = 5, y = 8;
+int *p = &x;
+int **pp = &p;
+
+**pp = 20;   // scrie in x: x devine 20
+*pp = &y;    // scrie in p: p arata acum spre y
+**pp = 30;   // scrie in y: y devine 30
+
+printf("%d %d %d\n", x, y, *p);   // 20 30 30
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `**pp = 20;` merge pe ambele săgeți, până la `x`.
+- `*pp = &y;` se oprește la `p` și îi schimbă valoarea. `p` arată acum spre `y`.
+- După mutare, același `**pp` ajunge la altă variabilă.
+- `*pp` este un `int *`, deci primește doar adrese. Pentru `*pp = 5;`, gcc
+  oprește compilarea: `assignment to 'int *' from 'int' makes pointer from
+  integer without a cast`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Funcție Care Nu Poate Muta un Pointer
+
+:: left ::
+
+Funcția caută cel mai mic și cel mai mare element și vrea ca doi pointeri din
+`main` să arate spre ele.
+
+```c
+void extreme(int *v, int n, int *min, int *max) {
+    min = v;
+    max = v;
+    for (int i = 1; i < n; i++) {
+        if (v[i] < *min) { min = &v[i]; }
+        if (v[i] > *max) { max = &v[i]; }
+    }
+}
+
+int *mic = NULL, *mare = NULL;
+extreme(note, 5, mic, mare);
+printf("%d\n", *mic);   // segmentation fault
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Este aceeași greșeală ca la prima variantă a lui `schimba`.
+- `min` primește o **copie** a lui `mic`. `min = &v[i]` mută doar copia.
+- După apel, `mic` și `mare` sunt tot `NULL`, iar `*mic` oprește programul.
+- Ca o funcție să modifice un `int`, îi dăm un `int *`. Ca să modifice un
+  `int *`, îi dăm adresa lui: un `int **`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Pointerii Mutați prin `int **`
+
+:: content ::
+
+Funcția primește adresele lui `mic` și `mare`. Prin `*min` și `*max` scrie
+direct în pointerii din `main`.
+
+```c {monaco-run} {autorun:false, height:'265px'}
+#include <stdio.h>
+
+void extreme(int *v, int n, int **min, int **max) {
+    *min = v;
+    *max = v;
+    for (int i = 1; i < n; i++) {
+        if (v[i] < **min) { *min = &v[i]; }
+        if (v[i] > **max) { *max = &v[i]; }
+    }
+}
+
+int main() {
+    int note[5] = {7, 9, 4, 10, 8};
+    int *mic = NULL, *mare = NULL;
+    extreme(note, 5, &mic, &mare);
+    printf("Minim %d, maxim %d\n", *mic, *mare);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Ce Primește `extreme`
+
+:: left ::
+
+Așa arată memoria la sfârșitul apelului, pentru maxim. `max` ține adresa lui
+`mare`, iar `mare` arată acum spre `note[3]`.
+
+<PointerDiagram class="mt-8" :width="120" :gap="40"
+  :boxes="[
+    { name: 'note[3]', type: 'int', value: '10', addr: '1012', highlight: true },
+    { name: 'mare', type: 'int *', value: '1012', addr: '2008' },
+    { name: 'max', type: 'int **', value: '2008' },
+  ]"
+  :arrows="[{ from: 1, to: 0 }, { from: 2, to: 1 }]"
+  :groups="[{ start: 0, len: 2, label: 'main' }, { start: 2, len: 1, label: 'extreme' }]"
+/>
+
+:: right ::
+
+<div class="text-base">
+
+- `max` primește o copie a lui `&mare`. `*max` este chiar `mare`.
+- `*max = &v[i]` schimbă spre ce arată `mare` din `main`.
+- `**max` este elementul spre care arată `mare`: aici 10.
+- Regula este aceeași de la `schimba` încoace: ca să modifici ceva, dai adresa
+  lui. Adresa unui `int *` este un `int **`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `char s[]` sau `char *s`
+
+:: left ::
+
+Ambele declarații se inițializează cu același text, dar numai prima creează un
+array.
+
+```c
+char a[] = "abc";   // array de 4 char, copie a textului
+char *b = "abc";    // pointer spre textul din program
+
+a[0] = 'A';         // corect: a devine "Abc"
+b[0] = 'A';         // se compileaza, dar este UB
+```
+
+```bash
+$ ./program
+Segmentation fault (core dumped)
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `a` este un array al nostru, inițializat cu o copie a textului.
+- `b` arată spre textul însuși, numit **string literal**. Literalii stau într-o
+  zonă de memorie doar pentru citire.
+- Modificarea unui literal este comportament nedefinit (UB). Pe Linux,
+  programul se oprește cu segmentation fault.
+- Scrieți `const char *b = "abc";`. Atunci compilatorul prinde greșeala:
+  `assignment of read-only location '*b'`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Pointer Neinițializat
+
+:: left ::
+
+Un pointer declarat fără valoare ține ce a rămas în memorie: o adresă oarecare.
+
+```c
+int *p;         // adresa necunoscuta
+*p = 5;         // scrie la acea adresa
+
+// corect: o adresa valida sau NULL
+int x = 0;
+int *q = &x;
+int *r = NULL;
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `*p = 5` scrie peste altă variabilă sau în afara memoriei programului.
+  Comportament nedefinit.
+- Uneori programul cade. Alteori merge mai departe, cu o variabilă stricată
+  undeva departe de linia vinovată.
+- gcc avertizează: `'p' is used uninitialized`.
+- Regula: orice pointer primește o valoare la declarare, o adresă validă sau
+  `NULL`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Dereferențierea lui `NULL`
+
+:: left ::
+
+`cauta` întoarce `NULL` când nu găsește. Dacă apelantul uită să verifice:
+
+```c
+int *gasit = cauta(note, n, 11);
+printf("%d\n", *gasit);   // 11 nu exista: gasit este NULL
+```
+
+```bash
+$ ./program
+Segmentation fault (core dumped)
+$ echo $?
+139
+```
+
+:: right ::
+
+<div class="text-base">
+
+- La adresa `NULL` nu se află memorie a programului. Sistemul de operare îl
+  oprește la prima încercare de a citi sau scrie acolo.
+- gcc nu poate avertiza: la compilare nu știe ce va întoarce `cauta`.
+- Aici segmentation fault este norocul: greșeala se vede imediat, pe linia ei.
+  Un pointer neinițializat poate să nu cadă deloc.
+- Verificați orice pointer întors de o funcție care poate întoarce `NULL`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Adresa unei Variabile Locale
+
+:: left ::
+
+O funcție care întoarce adresa unei variabile proprii:
+
+```c
+int *creeaza() {
+    int x = 5;
+    return &x;
+}
+
+int main() {
+    int *p = creeaza();
+    printf("%d\n", *p);
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `x` trăiește în cadrul lui `creeaza`. La `return`, cadrul dispare, iar
+  adresa lui `x` nu mai aparține nimănui.
+- gcc avertizează: `function returns address of local variable`.
+- gcc întoarce, de fapt, `NULL` în locul adresei, iar programul cade la `*p`.
+  Alt compilator poate întoarce adresa veche, iar programul pare că merge.
+- O funcție poate întoarce o adresă primită de la apelant, ca la `cauta`.
+  Memorie care trăiește după `return` vom obține în curând, cu `malloc`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Adresa Rămâne, Variabila Nu
+
+:: content ::
+
+Chiar dacă adresa ar ajunge în `main`, ar arăta spre stiva unui apel încheiat.
+Următorul apel pune acolo variabilele lui.
+
+<PointerDiagram class="mt-10" :width="150" :gap="120"
+  :boxes="[
+    { name: 'x', type: 'int', value: '5', addr: '1000', dead: true },
+    { name: 'p', type: 'int *', value: '1000', addr: '1040', highlight: true },
+  ]"
+  :arrows="[{ from: 1, to: 0 }]"
+  :groups="[{ start: 0, label: 'creeaza (încheiată)', dead: true }, { start: 1, label: 'main' }]"
+/>
+
+<div class="text-base mt-8">
+
+Un pointer care arată spre memorie care nu mai aparține variabilei se numește **dangling pointer**.
+Nu se vede din valoarea lui: 1000 arată la fel ca orice adresă bună.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `p` în Loc de `*p`
+
+:: left ::
+
+`p` este adresa, `*p` este valoarea de la adresă. Cele două se încurcă mai ales
+la parametrii de ieșire.
+
+```c
+void dubleaza(int *x) {
+    x = *x * 2;      // error: lipseste *
+}
+
+void reseteaza(int *x) {
+    x = 0;           // se compileaza, dar nu face nimic util
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- În `dubleaza`, un `int` ajunge într-un `int *`. gcc oprește compilarea:
+  `assignment to 'int *' from 'int' makes pointer from integer without a cast`.
+- În `reseteaza`, `0` pus într-un pointer înseamnă `NULL`, deci se compilează.
+  Funcția schimbă doar copia ei a adresei. gcc observă doar: `parameter 'x' set
+  but not used`.
+- Corect: `*x = *x * 2;` și `*x = 0;`.
+- La fiecare linie, întrebați-vă: schimb adresa sau valoarea de la ea?
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `*p++` sau `(*p)++`
+
+:: left ::
+
+Fără paranteze rotunde, `++` se aplică pointerului, nu valorii.
+
+```c
+int v[3] = {1, 5, 9};
+int *p = v;
+
+(*p)++;          // v[0] devine 2; p ramane pe v[0]
+int a = *p++;    // a = 2, apoi p trece la v[1]
+
+printf("%d %d %d\n", v[0], a, *p);   // 2 2 5
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `++` scris după se leagă mai strâns decât `*`. `*p++` înseamnă `*(p++)`.
+- `p++` are ca valoare adresa veche, deci `*p++` citește elementul curent și
+  abia apoi trece la următorul.
+- Ca să creșteți valoarea: `(*p)++` sau, mai clar, `*p = *p + 1;`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Pointer de Alt Tip
+
+:: left ::
+
+Adresa unui `int` pusă într-un pointer la alt tip, sau afișată ca număr:
+
+```c
+int x = 5;
+
+double *pd = &x;      // error
+char *pc = &x;        // error
+printf("%d\n", &x);   // warning
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `initialization of 'double *' from incompatible pointer type 'int *'`. `*pd`
+  ar citi 8 bytes de la adresa lui `x`: cei 4 ai lui și încă 4 străini.
+- La `char *` mesajul este același. gcc mai vechi dă doar avertismente aici,
+  iar programul pornește. Tratați-le ca pe erori.
+- `printf` cu `%d` primește o adresă: `format '%d' expects argument of type
+  'int', but argument 2 has type 'int *'`. Pentru adrese: `%p` cu
+  `(void *)`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce Afișează Fiecare
+
+:: left ::
+
+Ce afișează fiecare fragment și de ce?
+
+```c
+// A
+int x = 4;   int *p = &x;
+*p = *p * 3;
+printf("%d\n", x);
+// B
+int v[4] = {10, 20, 30, 40};
+int *q = v + 1;
+printf("%d %d\n", *q, *(q + 2));
+// C
+int a = 1, b = 2;   int *r = &a;
+r = &b;
+*r = 5;
+printf("%d %d\n", a, b);
+// D
+char s[] = "pointer";
+printf("%s\n", s + 3);
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- **A**: `12`. `*p` este chiar `x`.
+- **B**: `20 40`. `q` arată spre `v[1]`, iar `q + 2` spre `v[3]`.
+- **C**: `1 5`. `r = &b` schimbă spre ce arată `r`, deci `*r = 5` scrie în `b`.
+- **D**: `nter`. `s + 3` este adresa lui `s[3]`, iar `%s` afișează de acolo
+  până la `'\0'`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Totul la un Loc
+
+:: content ::
+
+O singură funcție calculează minimul, maximul și media unui array. Rezultatele
+ies prin trei pointeri.
+
+```c {monaco-run} {autorun:false, height:'345px'}
+#include <stdio.h>
+void statistici(const int *v, int n, int *min, int *max, double *medie) {
+    int suma = 0;
+    *min = v[0];
+    *max = v[0];
+    for (const int *p = v; p < v + n; p++) {
+        if (*p < *min) { *min = *p; }
+        if (*p > *max) { *max = *p; }
+        suma += *p;
+    }
+    *medie = (double)suma / n;
+}
+int main() {
+    int note[] = {7, 9, 4, 10, 8, 6};
+    int mic = 0, mare = 0;
+    double m = 0;
+    statistici(note, 6, &mic, &mare, &m);
+    printf("Minim %d, maxim %d, media %.2f\n", mic, mare, m);
+    return 0;
+}
+```
 
 ---
 layout: center
----
-
-<AdmonitionType type="danger">
-
-# Regula 3: Verifică dacă e `NULL` înainte de a Dereferenția!
-
-Chiar dacă un pointer este inițializat cu `NULL`, încercarea de a dereferenția `NULL` (`*p_safe`) va provoca tot un **Crash**.
-
-Verificați întotdeauna dacă un pointer este valid înainte de a-l folosi.
-
-```c
-int *p = NULL;
-
-// ... cod care poate sau nu sa atribuie o adresa lui p ...
-
-// Verificarea de siguranta:
-if (p != NULL) {
-    // Este sigur sa il folosim
-    printf("Valoarea este: %d\n", *p);
-} else {
-    // Pointerul este invalid
-    printf("Pointerul este NULL!\n");
-}
-```
-
-</AdmonitionType>
-
----
-transition: slide-left
-layout: cover
 color: blue-light
 ---
-
-## De ce folosim Pointeri?
-##### Caz de Utilizare 1: Funcții (Pass-by-Reference)
-
----
-layout: cover
----
-
-#### Problema: Pass-by-Value
-În C, funcțiile primesc în mod implicit o **COPIE** a variabilelor. Orice modificare făcută copiei nu afectează originalul.
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-
-// 'a' si 'b' sunt COPII ale lui x si y
-void swap_esuat(int a, int b) {
-    int temp = a;
-    a = b;
-    b = temp;
-    printf("In functie: a = %d, b = %d\n", a, b);
-}
-
-int main() {
-    int x = 10, y = 20;
-    printf("Inainte: x = %d, y = %d\n", x, y);
-    
-    swap_esuat(x, y); // Trimitem copii
-    
-    printf("Dupa:    x = %d, y = %d\n", x, y); // x si y raman neschimbate!
-    return 0;
-}
-```
-
----
-layout: cover
----
-
-#### Soluția: Pass-by-Reference (folosind Pointeri)
-Putem trimite funcției **adresele** variabilelor (pointeri). Funcția poate apoi "urma" acele adrese și modifica valorile **originale**.
-<div class='mb-10'>
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-
-// 'a' si 'b' sunt POINTERI care contin ADRESELE originale
-void swap_corect(int *a, int *b) {
-    // Folosim *a (valoarea de la adresa 'a')
-    int temp = *a;
-    *a = *b; // Schimbam valoarea de la adresa 'a'
-    *b = temp; // Schimbam valoarea de la adresa 'b'
-}
-
-int main() {
-    int x = 10, y = 20;
-    printf("Inainte: x = %d, y = %d\n", x, y);
-    
-    // Trimitem ADRESELE lui x si y
-    swap_corect(&x, &y); 
-    
-    printf("Dupa:    x = %d, y = %d\n", x, y); // Acum sunt schimbate!
-    return 0;
-}
-```
-
-</div>
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## Pointeri și Tablouri (Arrays)
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Conexiunea Fundamentală
-
-:: content ::
-
-În C, numele unui tablou este (aproape) un pointer constant către **primul său element**.
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)]">
-<h3 class="font-bold text-center text-[var(--neversink-text-color)]">Asta înseamnă că:</h3>
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-
-int main(){
-int arr[5] = {10, 20, 30, 40, 50};
-
-// 'arr' este (aproape) echivalent cu '&arr[0]'
-// Ambele reprezinta adresa primului element.
-
-printf("Adresa tabloului (arr):   %p\n", arr);
-printf("Adresa primului element: %p\n", &arr[0]);
-
-return 0;
-}
-```
-</div>
-
----
-layout: cover
----
-
-<br/>
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-4 rounded-lg border border-[var(--neversink-admon-border-color)]">
-<h3 class="font-bold text-center text-[var(--neversink-text-color)]">Aritmetica Pointerilor</h3>
-<div class="ns-c-tight">
-
-- Deoarece tablourile sunt stocate în memorie continuă, putem folosi "aritmetica pointerilor" pentru a naviga.
-- `arr[i]` este sintaxa "ușoară" pentru `*(arr + i)`
-- `arr + 1` înseamnă "adresa elementului următor" (nu adresa + 1 byte!). Compilatorul știe mărimea unui `int` și sare automat câți bytes trebuie.
-
-</div>
-
-</div>
-
----
-layout: cover
----
-
-```c {monaco-run} {autorun:false}
-#include <stdio.h>
-
-int main() {
-    int arr[4] = {10, 20, 30, 40};
-
-    // 'arr' este echivalent cu &arr[0]
-    int *p = arr; 
-
-    printf("Elementul arr[0] este: %d\n", arr[0]);
-    printf("Elementul *p este:     %d\n", *p);
-
-    // Aritmetica pointerilor
-    // arr[1] este echivalent cu *(arr + 1)
-    printf("\nElementul arr[1] este: %d\n", arr[1]);
-    printf("Elementul *(arr + 1) este: %d\n", *(arr + 1));
-
-    // Putem parcurge tabloul cu un pointer
-    printf("\nParcurgere cu pointeri:\n");
-    for (int i = 0; i < 4; i++) {
-        // La fiecare pas, afisam valoarea de la (adresa de inceput + i)
-        printf("%d ", *(p + i));
-    }
-    printf("\n");
-
-    return 0;
-}
-```
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-## De ce folosim Pointeri?
-##### Caz de Utilizare 2: Memoria Dinamică (Heap)
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Alocarea Dinamică a Memoriei
-
-:: content ::
-
-Ce facem când **nu știm** de la început mărimea unui tablou?
-Ex: "Câte numere vrei să introduci?"
-
-Trebuie să cerem manual memorie de pe **Heap** în timpul rulării programului. Pointerii sunt singura modalitate de a gestiona această memorie.
-
-<div class="ns-c-tight">
-
-- **`malloc()`**: "Memory Allocate". Cere un număr de bytes.
-- **`calloc()`**: "Contiguous Allocate". Cere un număr de elemente și le inițializează cu 0.
-- **`realloc()`**: "Resize". Modifică mărimea unui bloc de memorie alocat anterior.
-- **`free()`**: "Eliberează". Returnează memoria sistemului de operare.
-
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# `malloc` și `free`
-
-:: content ::
-
-**`malloc`** (din `stdlib.h`) alocă un număr specificat de bytes. Returnează un pointer `void*` (un pointer generic) către începutul blocului de memorie, sau `NULL` dacă alocarea eșuează.
-
-**`free`** eliberează memoria indicată de un pointer.
-
-
----
-layout: cover
----
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] p-2 rounded-lg border border-[var(--neversink-admon-border-color)]">
-<h4 class="font-bold text-center text-[var(--neversink-text-color)]">Sintaxă (pentru N elemente de tip `int`)</h4>
-
-```c
-#include <stdlib.h> // Necesara pentru malloc si free
-
-int n = 10; // Numarul de elemente dorite
-
-// 1. Alocarea
-// Cerem memorie pentru 'n' elemente de marimea unui 'int'
-// (int*) "forteaza" pointerul generic (void*) sa fie de tip int*
-int *arr = (int*) malloc(n * sizeof(int));
-
-// 2. VERIFICAREA!
-if (arr == NULL) {
-    printf("Eroare la alocarea memoriei!\n");
-    return 1; // Opreste programul
-}
-
-// 3. Utilizarea (ca un tablou normal)
-arr[0] = 100;
-
-// 4. Eliberarea (CRUCIALA!)
-// Dupa ce am terminat de folosit memoria, o dam inapoi.
-free(arr);
-```
-
-</div>
----
-layout: cover
----
-
-
-<AdmonitionType type="danger">
-
-## Dacă uiți să folosești `free()`, creezi un **Memory Leak** (scurgere de memorie). Programul tău va consuma memorie și nu o va mai da înapoi până la închidere.
-</AdmonitionType>
-
----
-layout: cover
----
-
-```c
-#include <stdio.h>
-#include <stdlib.h> // Pentru malloc si free
-int main() {
-    int n;
-    printf("Cate numere doriti sa stocati? ");
-    scanf("%d", &n);
-    // 1. Alocam dinamic memorie pentru 'n' intregi
-    int *arr = (int*) malloc(n * sizeof(int));
-    // 2. Verificam daca alocarea a reusit
-    if (arr == NULL) {
-        printf("Memoria nu a putut fi alocata!\n");
-        return 1; // Iesim cu eroare
-    }
-    // 3. Folosim tabloul
-    printf("Introduceti %d numere:\n", n);
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]); // Putem folosi sintaxa arr[i]
-    }
-    printf("Numerele introduse (folosind pointeri):\n");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", *(arr + i));
-    }
-    printf("\n");
-    // 4. Eliberam memoria!
-    free(arr);
-    arr = NULL; // Buna practica: setam pointerul la NULL dupa free pentru a evita "dangling pointers"
-
-    return 0;
-}
-```
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# `calloc`
-
-:: content ::
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-6 rounded-lg border border-[var(--neversink-border-color)] mb-4">
-<h3 class="text-2xl font-bold text-[var(--neversink-highlight-color)]">
-  
-`calloc` (Contiguous Allocation)
-
-</h3>
-  <p class="text-[var(--neversink-admon-text-color)]">
-  Similar cu `malloc`, dar are două diferențe cheie:
-  </p>
-<div class="ns-c-tight text-[var(--neversink-admon-text-color)]">
-
-- Ia doi parametri: numărul de elemente și mărimea fiecăruia.
-- **Inițializează automat** toată memoria alocată cu **zero**.
-
-</div>
-  <code class="font-mono text-[var(--neversink-fg-code-color)]">int *arr = (int*) calloc(n, sizeof(int));</code>
-</div>
-
-
----
-layout: top-title
-align: c
-color: blue-light
----
-
-:: title ::
-
-#  `realloc`
-
-:: content ::
-
-<div class="neversink-blue-light-scheme bg-[var(--neversink-bg-color)] p-6 rounded-lg border border-[var(--neversink-border-color)]">
-<h3 class="text-2xl font-bold text-[var(--neversink-highlight-color)]">
-
-`realloc` (Re-allocation)
-
-</h3>
-<p class="text-[var(--neversink-admon-text-color)]">
-
-Folosit pentru a **redimensiona** un bloc de memorie alocat anterior (cu `malloc` sau `calloc`).
-
-</p>
-  <div class="ns-c-tight text-[var(--neversink-admon-text-color)]">
-    - Păstrează conținutul vechi care se încadrează în noua mărime.
-    - Poate muta blocul de memorie într-o locație nouă dacă este necesar.
-  </div>
-  <code class="font-mono text-[var(--neversink-fg-code-color)]">int *new_arr = (int*) realloc(arr, new_size * sizeof(int));</code>
-  <AdmonitionType type="warning">
-
-Trebuie întotdeauna să atribuiți rezultatul `realloc` unui pointer nou (temporar) sau să verificați de `NULL`, deoarece `realloc` poate eșua și returna `NULL`, lăsând pointerul original intact.
-  </AdmonitionType>
-</div>
-
----
-transition: slide-left
-layout: cover
-color: blue-light
----
-
-# Sarcini de Practică
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 1 (Ușor)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care:
-
-<div class="ns-c-tight">
-
-1.  Declară o variabilă `int x` și o variabilă `double y`.
-2.  Declară un pointer `int *p_x` și un pointer `double *p_y`.
-3.  Atribuie adresele variabilelor pointerilor corespunzători.
-4.  Afișează valorile lui `x` și `y` folosind variabilele.
-5.  Afișează valorile lui `x` și `y` folosind pointerii (prin dereferențiere).
-6.  Afișează adresele lui `x` și `y` (folosind `%p`).
-
-</div>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 2 (Mediu)
-
-:: content ::
-
-### Cerință:
-Scrieți o funcție numită `findMax` care primește ca parametri un tablou de întregi (ca pointer) și dimensiunea acestuia.
-
-<div class="ns-c-tight">
-
-1.  Funcția trebuie să returneze un **pointer** către cel mai mare element din tablou.
-2.  Dacă tabloul este gol sau pointerul este `NULL`, funcția trebuie să returneze `NULL`.
-3.  În `main`, apelați această funcție și, dacă rezultatul nu este `NULL`, afișați valoarea maximă (folosind dereferențierea pointerului returnat).
-
-</div>
-<br/>
-
-<AdmonitionType type="tip">
-
-Semnătura funcției va fi: `int* findMax(int *arr, int size)`
-În interiorul funcției, iterați prin tablou și păstrați un pointer (`int *max_ptr`) către elementul maxim găsit până acum.
-
-</AdmonitionType>
-
----
-layout: top-title
-align: c
-color: blue-light
----
-:: title ::
-
-# Sarcina 3 (Avansat)
-
-:: content ::
-
-### Cerință:
-Scrieți un program care creează un "tablou dinamic" pentru notele studenților.
-
-<div class="ns-c-tight">
-
-1.  Întrebați utilizatorul câți studenți (`N`) sunt în grupă.
-2.  Alocați dinamic (`malloc` sau `calloc`) un tablou de `float` de dimensiune `N`.
-3.  Verificați dacă alocarea a reușit (dacă pointerul nu e `NULL`).
-4.  Cereți utilizatorului să introducă cele `N` note și stocați-le în tabloul alocat.
-5.  Calculați și afișați media notelor.
-6.  Eliberați memoria folosind `free()`.
-
-</div>
-
----
-layout: top-title
-color: blue-light
-align: c
----
-
-:: title ::
-
-# Mai departe
-
-:: content ::
-
-<div class="mt-12">
 
 <DeckNav />
-
-</div>

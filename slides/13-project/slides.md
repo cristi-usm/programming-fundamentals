@@ -47,23 +47,68 @@ align: c
 
 :: title ::
 
-# Ce construim
+# Un Catalog în Linia de Comandă
 
 :: content ::
 
-Un program care ține notele studenților într-un fișier și răspunde la comenzi.
+Programul nu întreabă nimic cu `scanf`. Comanda se scrie direct în terminal, pe
+aceeași linie cu numele programului.
 
 ```bash
-$ ./catalog adauga Ana 9
-$ ./catalog adauga Mihai 7
+$ ./catalog adauga "Ana Popescu" 9
+Adaugat: Ana Popescu (9)
+$ ./catalog adauga "Mihai Ionescu" 7
+Adaugat: Mihai Ionescu (7)
+$ ./catalog adauga "Ioana Rusu" 10
+Adaugat: Ioana Rusu (10)
 $ ./catalog lista
-Ana     9
-Mihai   7
+ 1. Ana Popescu           9
+ 2. Mihai Ionescu         7
+ 3. Ioana Rusu           10
 $ ./catalog media
-Media: 8.00
+Media: 8.67 (3 studenti)
 ```
 
-> **Schelet**: de completat.
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Datele Rămân Între Rulări
+
+:: left ::
+
+Fiecare comandă pornește programul de la zero. Studenții adăugați mai devreme se
+găsesc tot acolo.
+
+```bash
+$ ./catalog top
+ 1. Ioana Rusu           10
+ 2. Ana Popescu           9
+ 3. Mihai Ionescu         7
+$ ./catalog sterge 2
+Sters: Mihai Ionescu
+$ cat catalog.txt
+9 Ana Popescu
+10 Ioana Rusu
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Programul rulează câteva milisecunde, apoi se termină. Memoria lui dispare
+  odată cu el.
+- Ce trebuie păstrat ajunge în fișierul `catalog.txt`. Următoarea rulare îl
+  citește din nou.
+- `top` ordonează după notă. `sterge 2` folosește numărul afișat de `lista`.
+- `cat` afișează în terminal conținutul unui fișier text.
+
+</div>
 
 ---
 layout: top-title
@@ -73,21 +118,110 @@ align: c
 
 :: title ::
 
-# Ce folosim din fiecare lecție
+# Construit din Tot Ce Știm
 
 :: content ::
 
-| Bucată din program | Ce am învățat |
+Aproape fiecare parte a programului folosește un instrument pe care îl avem deja.
+Unul singur este nou.
+
+<div class="ns-c-table text-base mt-4">
+
+| partea programului | instrumentul |
 |---|---|
-| un student | `struct` și `typedef` |
-| comenzile | `enum` și `switch` |
-| numele și comenzile | string-uri și `strcmp` |
+| un student | `struct`, `typedef` |
 | lista de studenți | array alocat cu `malloc`, mărit cu `realloc` |
-| media, căutarea | bucle și funcții |
-| salvarea | fișiere: `fopen`, `fprintf`, `fscanf` |
-| organizarea | header-e: `catalog.h`, `catalog.c`, `main.c` |
+| numele și comenzile | string-uri, `strcmp`, `strcpy` |
+| validarea și calculele | `if`, bucle, funcții |
+| comanda aleasă, erorile | `enum`, `switch` |
+| datele păstrate între rulări | fișiere text: `fopen`, `fgets`, `fprintf` |
+| organizarea codului | header-e, compilare separată, linker |
+| cuvintele de după `./catalog` | `argc` și `argv`: **acesta este nou** |
 
-> **Schelet**: de completat.
+</div>
+
+---
+layout: top-title
+align: c
+color: blue-light
+---
+
+:: title ::
+
+# Argumentele Liniei de Comandă
+
+:: content ::
+
+<div class="max-w-4xl mx-auto mt-6">
+
+<Definition term="Argumentele liniei de comandă" source="Pe scurt" emphasis>
+
+Cuvintele scrise în terminal după numele programului. Sistemul de operare le dă
+lui `main` ca **string-uri**, când programul pornește.
+
+</Definition>
+
+</div>
+
+<div class="grid grid-cols-2 gap-4 mt-8 text-sm">
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-text-color)]">int argc</div>
+    <div class="mt-1"><em>argument count</em>: câte cuvinte sunt, cu tot cu numele programului.</div>
+  </div>
+  <div class="p-4 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-text-color)]">char *argv[]</div>
+    <div class="mt-1"><em>argument vector</em>: un array de string-uri, câte unul pentru fiecare cuvânt.</div>
+  </div>
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Forma Completă a lui `main`
+
+:: left ::
+
+`main` poate primi doi parametri. Îi completează sistemul de operare, înainte de
+prima instrucțiune.
+
+```c
+int main(int argc, char *argv[]) {
+    printf("argc = %d\n", argc);
+    for (int i = 0; i < argc; i++) {
+        printf("argv[%d] = %s\n", i, argv[i]);
+    }
+    return 0;
+}
+```
+
+```bash
+$ ./args adauga "Ana Popescu" 9
+argc = 4
+argv[0] = ./args
+argv[1] = adauga
+argv[2] = Ana Popescu
+argv[3] = 9
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `argc` este un `int`. `argv` este un array de pointeri la `char`, adică un
+  array de string-uri.
+- Numele `argc` și `argv` sunt doar o convenție. Contează tipurile și ordinea
+  lor.
+- Ca parametru, `char *argv[]` înseamnă același lucru cu `char **argv`. Ambele
+  forme apar în cod.
+- `argv[0]` este numele programului, așa cum a fost scris în terminal.
+
+</div>
 
 ---
 layout: top-title
@@ -97,13 +231,145 @@ align: c
 
 :: title ::
 
-# argc și argv
+# Cum Arată `argv` în Memorie
 
 :: content ::
 
-`main` poate primi cuvintele scrise după numele programului: `./catalog adauga Ana 9`.
+Fiecare element din `argv` este un pointer spre un string terminat cu `'\0'`.
+După ultimul argument vine un pointer `NULL`.
 
-> **Schelet**: de completat.
+<ArgvDrawing class="mt-8" :args="['./catalog', 'adauga', 'Ana Popescu', '9']" :highlight="2" />
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ghilimelele Țin Cuvintele Împreună
+
+:: left ::
+
+Terminalul, nu programul, împarte linia în cuvinte, la fiecare spațiu.
+
+```bash
+$ ./args adauga "Ana Popescu" 9
+argc = 4
+argv[0] = ./args
+argv[1] = adauga
+argv[2] = Ana Popescu
+argv[3] = 9
+$ ./args adauga Ana Popescu 9
+argc = 5
+argv[0] = ./args
+argv[1] = adauga
+argv[2] = Ana
+argv[3] = Popescu
+argv[4] = 9
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Fără ghilimele, `Ana` și `Popescu` devin două argumente, iar `argc` crește la
+  5.
+- Terminalul scoate ghilimelele înainte să pornească programul. În `argv[2]`
+  nu există niciun `"`.
+- Catalogul refuză a doua formă: `Eroare: numar gresit de argumente`. O
+  verificare a lui `argc` prinde greșeala.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `argc` Se Verifică Primul
+
+:: left ::
+
+`argv[1]` există doar dacă `argc` este cel puțin 2. Fără argumente, programul
+explică cum se folosește.
+
+```c
+static void utilizare(const char *program) {
+    fprintf(stderr, "Utilizare:\n");
+    fprintf(stderr, "  %s adauga NUME NOTA\n", program);
+    fprintf(stderr, "  %s lista | top | media\n", program);
+    fprintf(stderr, "  %s sterge NUMAR\n", program);
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 2) { utilizare(argv[0]); return 1; }
+    // ...
+```
+
+```bash
+$ ./catalog
+Utilizare:
+  ./catalog adauga NUME NOTA
+  ./catalog lista | top | media
+  ./catalog sterge NUMAR
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `argv[argc]` este întotdeauna `NULL`. Fără verificare, `strcmp(argv[1], ...)`
+  primește `NULL`: comportament nedefinit, de obicei `Segmentation fault`.
+- `argv[0]` face mesajul corect oricum s-ar numi programul.
+- `static` în fața unei funcții o face vizibilă doar în fișierul ei.
+- `fprintf(stderr, ...)` scrie mesajul pe ieșirea pentru erori. Vom vedea mai
+  târziu de ce.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Argumentele Sunt Text
+
+:: left ::
+
+Nota `9` ajunge în program ca string-ul `"9"`: două caractere, `'9'` și `'\0'`.
+
+```c
+// ./catalog adauga Ana 9
+int nota = argv[3];              // eroare de compilare
+
+printf("%s\n", argv[3]);         // 9
+printf("%c\n", argv[3][0]);      // 9
+printf("%d\n", argv[3][0]);      // 57, codul ASCII al lui '9'
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Prima linie nu se compilează: `initialization of 'int' from 'char *' makes
+  integer from pointer without a cast`.
+- `argv[3][0]` este un `char`, deci un număr mic: codul ASCII al cifrei, nu
+  valoarea ei.
+- Ne trebuie o funcție care transformă textul `"9"` în numărul 9 și spune când
+  textul nu este un număr.
+
+</div>
 
 ---
 layout: top-title
@@ -113,13 +379,228 @@ align: c
 
 :: title ::
 
-# Datele: un student, o listă
+# `atoi` Nu Semnalează Greșelile
 
 :: content ::
 
-`typedef struct { char nume[50]; int nota; } Student;` și un array dinamic de `Student`.
+`atoi` (*ASCII to integer*), din `<stdlib.h>`, transformă textul în `int`. Din
+rezultat nu aflăm dacă textul era corect: `"0"` și `"abc"` dau același 0.
 
-> **Schelet**: de completat.
+<div class="ns-c-table text-base mt-6 max-w-2xl mx-auto">
+
+| textul | `atoi(text)` | este un număr? |
+|---|---|---|
+| `"9"` | 9 | da |
+| `"-3"` | -3 | da |
+| `"0"` | 0 | da |
+| `"9x"` | 9 | nu |
+| `"abc"` | 0 | nu |
+| `""` | 0 | nu |
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `strtol` Arată Unde S-a Oprit
+
+:: left ::
+
+`strtol` (*string to long*) citește cât poate și ne spune unde s-a oprit. De
+acolo aflăm dacă textul era un număr întreg.
+
+```c
+// "12" -> 12; "12abc", "abc" si "" sunt respinse
+static int text_in_intreg(const char *text, int *rez) {
+    char *sfarsit;
+    long v = strtol(text, &sfarsit, 10);
+    if (sfarsit == text || *sfarsit != '\0') { return 0; }
+    if (v < INT_MIN || v > INT_MAX) { return 0; }
+    *rez = (int)v;
+    return 1;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `strtol(text, &sfarsit, 10)` citește în baza 10 și pune în `sfarsit` adresa
+  primului caracter pe care nu l-a folosit.
+- `sfarsit == text`: nu s-a citit nicio cifră. `*sfarsit != '\0'`: după număr a
+  rămas ceva, ca în `"9x"`.
+- Rezultatul este un `long`. Înainte să-l punem într-un `int`, verificăm cu
+  `INT_MIN` și `INT_MAX` din `<limits.h>` că încape.
+- Funcția întoarce 1 sau 0. Numărul ajunge la apelant prin pointerul `rez`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Conversia, pe Câteva Exemple
+
+:: content ::
+
+Aceeași funcție, fără verificarea intervalului. Rulați, apoi adăugați propriile
+texte în `probe`.
+
+```c {monaco-run} {autorun:false, height:'330px'}
+#include <stdio.h>
+#include <stdlib.h>
+
+int text_in_intreg(const char *text, int *rez) {
+    char *sfarsit;
+    long v = strtol(text, &sfarsit, 10);
+    if (sfarsit == text || *sfarsit != '\0') { return 0; }
+    *rez = (int)v;
+    return 1;
+}
+
+int main() {
+    const char *probe[] = {"9", "9x", "abc", "", "-3"};
+    for (int i = 0; i < 5; i++) {
+        int x = 0;
+        int ok = text_in_intreg(probe[i], &x);
+        printf("\"%s\": %s %d\n", probe[i], ok ? "acceptat" : "respins", x);
+    }
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Student Este o Structură
+
+:: left ::
+
+Un student are un nume și o notă. Le ținem împreună, într-un `struct` cu un nume
+dat prin `typedef`.
+
+```c
+#define NUME_MAX 40
+
+typedef struct {
+    char nume[NUME_MAX];
+    int nota;
+} Student;
+
+Student s = {"Ana Popescu", 9};
+printf("%s: %d\n", s.nume, s.nota);   // Ana Popescu: 9
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Numele stă într-un array fix: cel mult 39 de caractere, plus `'\0'`.
+- Un nume mai lung este refuzat, nu tăiat. Un nume tăiat în tăcere ar fi o
+  greșeală greu de observat.
+- Datorită lui `typedef` scriem `Student`, nu `struct Student`.
+- Câmpurile se citesc cu `.`, iar printr-un pointer, cu `->`: `p->nota`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-5
+---
+
+:: title ::
+
+# Catalogul: un Array Care Crește
+
+:: left ::
+
+Nu știm câți studenți vor fi. Catalogul ține un array alocat dinamic și două
+numere despre el.
+
+```c
+typedef struct {
+    Student *date;   // array alocat dinamic
+    int n;           // cati studenti sunt
+    int cap;         // pentru cati este loc
+} Catalog;
+```
+
+<div class="text-base mt-4">
+
+- `n` crește la fiecare student adăugat. `cap` crește doar când locul s-a
+  terminat.
+- Elementele `date[0]` până la `date[n - 1]` sunt studenți. Restul, până la
+  `cap`, este loc rezervat.
+
+</div>
+
+:: right ::
+
+<MemoryCells class="mt-10" :size="62" label="date" :continues="false" :axis="false"
+  :cells="[
+    { value: 'Ana', addr: '[0]' }, { value: 'Mihai', addr: '[1]' }, { value: 'Ioana', addr: '[2]' },
+    { value: 'Dan', addr: '[3]' }, { value: 'Elena', addr: '[4]' },
+    { value: '?', addr: '[5]' }, { value: '?', addr: '[6]' }, { value: '?', addr: '[7]' },
+  ]"
+  :vars="[
+    { start: 0, len: 5, name: 'n = 5', type: 'studenți', highlight: true },
+    { start: 5, len: 3, name: 'liber', type: '' },
+  ]"
+  caption="cap = 8: blocul alocat are loc pentru 8 studenți" />
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# O Linie pentru Fiecare Student
+
+:: left ::
+
+Fișierul `catalog.txt` este un fișier text obișnuit. Fiecare linie conține nota,
+un spațiu și numele.
+
+```text {*}{lines:false}
+9 Ana Popescu
+7 Mihai Ionescu
+10 Ioana Rusu
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Nota stă **prima**. Numele poate conține spații, deci îl citim până la
+  sfârșitul liniei.
+- Fișierul se poate citi și corecta cu orice editor de text.
+- Tocmai de aceea poate fi și stricat de mână. Programul verifică fiecare linie
+  pe care o încarcă.
+- Ordinea liniilor este ordinea din `lista`.
+
+</div>
 
 ---
 layout: top-title
@@ -129,13 +610,24 @@ align: c
 
 :: title ::
 
-# Programul, împărțit pe fișiere
+# Cinci Comenzi
 
 :: content ::
 
-`catalog.h` declară funcțiile, `catalog.c` le definește, `main.c` citește comanda și le apelează.
+O rulare face un singur lucru: încarcă fișierul, execută comanda și, dacă a
+modificat ceva, salvează.
 
-> **Schelet**: de completat.
+<div class="ns-c-table text-base mt-6">
+
+| comanda | argumente | ce face | scrie în fișier |
+|---|---|---|---|
+| `adauga` | `NUME NOTA` | adaugă un student la sfârșit | da |
+| `lista` | | afișează studenții, numerotați de la 1 | nu |
+| `top` | | afișează studenții ordonați după notă | nu |
+| `media` | | afișează media notelor | nu |
+| `sterge` | `NUMAR` | șterge studentul cu numărul din `lista` | da |
+
+</div>
 
 ---
 layout: top-title
@@ -145,13 +637,1178 @@ align: c
 
 :: title ::
 
-# Încărcare și salvare
+# Trei Module
 
 :: content ::
 
-La pornire citim fișierul în memorie; după o modificare îl scriem înapoi.
+Programul se împarte după ce știe fiecare parte. `student` și `catalog` au
+fiecare un header, care spune ce oferă, și un fișier `.c`, care face treaba.
 
-> **Schelet**: de completat.
+<div class="grid grid-cols-3 gap-5 mt-10 text-left">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">student.h / student.c</div>
+    <div class="text-sm mt-2">Ce este un student. Cum devine o linie din fișier un student, și invers.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">catalog.h / catalog.c</div>
+    <div class="text-sm mt-2">Lista din memorie: adăugare, ștergere, ordonare, medie, încărcare și salvare.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">main.c</div>
+    <div class="text-sm mt-2">Argumentele, alegerea comenzii și mesajele pentru utilizator.</div>
+  </div>
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Cine Pe Cine Include
+
+:: left ::
+
+Fiecare fișier include doar header-ele de care are nevoie. Un modul nu știe
+nimic despre cele care îl folosesc.
+
+```text {*}{lines:false}
+student.h   <stdio.h>
+student.c   "student.h"
+
+catalog.h   "student.h"
+catalog.c   <stdlib.h> <string.h> "catalog.h"
+
+main.c      <stdio.h> <stdlib.h> <string.h>
+            <limits.h> "catalog.h"
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `main.c` ajunge la `student.h` prin `catalog.h`, deci îl primește de două ori
+  dacă îl include și direct. Include guard-ul face a doua includere inofensivă.
+- `student.c` nu știe că există un catalog. `catalog.c` nu știe că există
+  `argv`.
+- Ghilimelele caută header-ul întâi lângă fișierul sursă. Parantezele unghiulare
+  caută în bibliotecile sistemului.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Compilare Separată
+
+:: left ::
+
+Fiecare fișier `.c` se compilează singur într-un fișier obiect. Linker-ul le
+leagă apoi într-un program.
+
+```bash
+$ gcc -std=c2x -Wall -Wextra -c student.c
+$ gcc -std=c2x -Wall -Wextra -c catalog.c
+$ gcc -std=c2x -Wall -Wextra -c main.c
+$ gcc student.o catalog.o main.o -o catalog
+```
+
+```bash
+$ gcc -std=c2x -Wall -Wextra *.c -o catalog
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `-c` oprește gcc după compilare: rezultă `student.o`, fără linker.
+- După o schimbare în `main.c`, doar `main.c` se recompilează. Celelalte `.o`
+  rămân valabile.
+- O schimbare într-un header cere recompilarea fiecărui `.c` care îl include.
+- A doua formă face totul într-o singură comandă: `*.c` înseamnă toate fișierele
+  `.c` din director. Pentru trei fișiere ajunge.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Erorile Au Nume
+
+:: left ::
+
+Funcțiile catalogului nu afișează nimic când ceva nu merge. Întorc un cod de
+eroare, dintr-un `enum`.
+
+```c
+typedef enum {
+    OK = 0,
+    ERR_MEMORIE,
+    ERR_FISIER,
+    ERR_FORMAT,
+    ERR_ARGUMENTE,
+    ERR_NOTA,
+    ERR_NUME,
+    ERR_INDEX,
+    ERR_GOL
+} Eroare;
+
+const char *eroare_mesaj(Eroare e);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Doar `main` hotărăște ce mesaj apare și unde. Modulul catalog poate fi folosit
+  și într-un program fără terminal.
+- `OK` este 0, ca valoarea întoarsă de `main` la succes.
+- `eroare_mesaj` transformă codul în text, cu un `switch`:
+  `ERR_NOTA` devine `"nota trebuie sa fie intre 1 si 10"`.
+- Un `if (e != OK)` după fiecare apel nu lasă nicio eroare să treacă neobservată.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Header-ul unui Modul
+
+:: left ::
+
+`student.h` conține tot ce trebuie să știe cine folosește un student, și nimic
+în plus.
+
+```c
+#ifndef STUDENT_H
+#define STUDENT_H
+
+#include <stdio.h>
+
+#define NUME_MAX 40
+
+typedef struct {
+    char nume[NUME_MAX];
+    int nota;
+} Student;
+
+int student_din_linie(const char *linie, Student *s);
+void student_scrie(FILE *f, const Student *s);
+
+#endif
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `#ifndef` / `#define` / `#endif` formează include guard-ul. A doua includere
+  în același fișier sursă nu mai adaugă nimic.
+- `<stdio.h>` este inclus aici pentru că prototipul lui `student_scrie` folosește
+  `FILE`.
+- Structura stă în header, nu în `.c`. Cine creează un `Student` trebuie să-i
+  știe câmpurile și mărimea.
+- Header-ul are doar **declarații**. Corpurile funcțiilor sunt în `student.c`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# O Linie Devine un Student
+
+:: left ::
+
+`sscanf` funcționează ca `scanf`, dar citește dintr-un string în loc de
+tastatură.
+
+```c
+#include "student.h"
+
+// o linie din fisier: "9 Ana Popescu"
+int student_din_linie(const char *linie, Student *s) {
+    return sscanf(linie, "%d %39[^\n]", &s->nota, s->nume) == 2;
+}
+
+void student_scrie(FILE *f, const Student *s) {
+    fprintf(f, "%d %s\n", s->nota, s->nume);
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `%39[^\n]` citește orice caracter în afară de `'\n'`, deci și spațiile. Se
+  oprește după cel mult 39, cât încape în `nume` lângă `'\0'`.
+- `sscanf` întoarce câte valori a citit. Doar 2 înseamnă o linie bună.
+- `student_scrie` scrie exact formatul pe care îl citește `student_din_linie`.
+  Cele două se schimbă mereu împreună.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Parserul, pe Câteva Linii
+
+:: content ::
+
+Două linii bune și două stricate. Rulați, apoi încercați o linie a voastră.
+
+```c {monaco-run} {autorun:false, height:'314px'}
+#include <stdio.h>
+typedef struct { char nume[40]; int nota; } Student;
+
+int student_din_linie(const char *linie, Student *s) {
+    return sscanf(linie, "%d %39[^\n]", &s->nota, s->nume) == 2;
+}
+
+int main() {
+    const char *linii[] = {"9 Ana Popescu\n", "10 Ioana Rusu\n", "Ana 9\n", "7\n"};
+    for (int i = 0; i < 4; i++) {
+        Student s;
+        if (student_din_linie(linii[i], &s)) {
+            printf("nota %d, nume [%s]\n", s.nota, s.nume);
+        } else {
+            printf("linie invalida: %s", linii[i]);
+        }
+    }
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Ce Promite Modulul Catalog
+
+:: left ::
+
+`catalog.h` declară tot ce poate face un catalog. Citit de sus în jos, este
+lista operațiilor programului.
+
+```c
+#ifndef CATALOG_H
+#define CATALOG_H
+#include "student.h"
+// aici: Catalog si Eroare, ca mai sus
+void catalog_init(Catalog *c);
+void catalog_elibereaza(Catalog *c);
+Eroare catalog_adauga(Catalog *c, const char *nume, int nota);
+Eroare catalog_sterge(Catalog *c, int poz);
+Eroare catalog_incarca(Catalog *c, const char *cale);
+Eroare catalog_salveaza(const Catalog *c, const char *cale);
+double catalog_media(const Catalog *c);
+void catalog_sorteaza(Catalog *c);
+void catalog_afiseaza(const Catalog *c);
+const char *eroare_mesaj(Eroare e);
+#endif
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Fiecare funcție primește catalogul printr-un pointer. Altfel ar lucra pe o
+  copie a structurii.
+- `const Catalog *` promite că funcția doar citește: `catalog_salveaza`,
+  `catalog_media`, `catalog_afiseaza`.
+- C nu are spații de nume. Prefixul `catalog_` arată din ce modul vine fiecare
+  funcție.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Începutul și Sfârșitul unui Catalog
+
+:: left ::
+
+Un catalog gol nu are nevoie de memorie alocată. Un pointer `NULL` și două
+zerouri ajung.
+
+```c
+void catalog_init(Catalog *c) {
+    c->date = NULL;
+    c->n = 0;
+    c->cap = 0;
+}
+
+void catalog_elibereaza(Catalog *c) {
+    free(c->date);
+    catalog_init(c);
+}
+```
+
+```c
+Catalog c;
+catalog_init(&c);
+// ... incarcare, comanda, salvare
+catalog_elibereaza(&c);
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `free(NULL)` nu face nimic, deci un catalog gol se eliberează fără o
+  verificare separată.
+- După `free`, `catalog_init` pune `date` înapoi pe `NULL`. Nu rămâne niciun
+  pointer spre memorie eliberată.
+- Fiecare `catalog_init` are perechea lui `catalog_elibereaza`, pe orice drum
+  prin program.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Adăugarea, Pas cu Pas
+
+:: left ::
+
+Întâi verificăm datele, apoi facem loc, apoi copiem studentul.
+
+```c
+Eroare catalog_adauga(Catalog *c, const char *nume, int nota) {
+    size_t lung = strlen(nume);
+    if (nota < 1 || nota > 10) { return ERR_NOTA; }
+    if (lung == 0 || lung >= NUME_MAX) { return ERR_NUME; }
+    if (c->n == c->cap) {
+        int cap_noua = (c->cap == 0) ? 4 : c->cap * 2;
+        Student *nou = realloc(c->date, cap_noua * sizeof(Student));
+        if (nou == NULL) { return ERR_MEMORIE; }
+        c->date = nou;
+        c->cap = cap_noua;
+    }
+    strcpy(c->date[c->n].nume, nume);
+    c->date[c->n].nota = nota;
+    c->n++;
+    return OK;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Validarea stă **în** modul. Orice drum spre catalog trece pe aici, inclusiv
+  liniile citite din fișier.
+- Verificarea `lung >= NUME_MAX` face `strcpy` sigur: numele încape sigur în
+  `nume`, cu tot cu `'\0'`.
+- Noul student intră pe poziția `n`, prima liberă. Abia apoi `n` crește.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Capacitatea Se Dublează
+
+:: left ::
+
+Când locul s-a terminat, cerem un bloc de două ori mai mare, nu cu un singur
+element mai mare.
+
+```c
+if (c->n == c->cap) {
+    int cap_noua = (c->cap == 0) ? 4 : c->cap * 2;
+    Student *nou = realloc(c->date, cap_noua * sizeof(Student));
+    if (nou == NULL) { return ERR_MEMORIE; }
+    c->date = nou;
+    c->cap = cap_noua;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `realloc(NULL, ...)` se comportă ca `malloc`. Primul student nu cere un caz
+  separat.
+- Capacitatea trece prin 4, 8, 16, 32... Pentru 1000 de studenți sunt 9 apeluri
+  `realloc`, nu 1000.
+- Rezultatul merge întâi în `nou`. Dacă `realloc` eșuează, întoarce `NULL`, iar
+  blocul vechi rămâne valid în `c->date`.
+- `realloc` poate muta blocul în altă parte. Orice pointer păstrat spre vechiul
+  bloc devine invalid.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Catalogul Crește în Memorie
+
+:: content ::
+
+Nouă studenți adăugați unul câte unul. Programul afișează doar momentele în care
+blocul se mărește.
+
+```c {monaco-run} {autorun:false, height:'346px'}
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct { char nume[40]; int nota; } Student;
+
+int main() {
+    Student *date = NULL;
+    int n = 0, cap = 0;
+    for (int i = 0; i < 9; i++) {
+        if (n == cap) {
+            int cap_noua = (cap == 0) ? 4 : cap * 2;
+            Student *nou = realloc(date, cap_noua * sizeof(Student));
+            if (nou == NULL) { free(date); return 1; }
+            printf("n = %d: cap %d -> %d\n", n, cap, cap_noua);
+            date = nou;
+            cap = cap_noua;
+        }
+        date[n].nota = 10;
+        n++;
+    }
+    free(date);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ștergerea Mută Restul la Stânga
+
+:: left ::
+
+Un array nu are găuri. După ștergere, fiecare student de după poziția ștearsă se
+mută cu un loc mai în față.
+
+```c
+Eroare catalog_sterge(Catalog *c, int poz) {
+    if (poz < 0 || poz >= c->n) { return ERR_INDEX; }
+    for (int i = poz; i < c->n - 1; i++) {
+        c->date[i] = c->date[i + 1];
+    }
+    c->n--;
+    return OK;
+}
+```
+
+<div class="text-base mt-4">
+
+Bucla se oprește la `n - 1`: ultimul pas copiază `date[n - 1]` în `date[n - 2]`.
+Cu `i < n`, ultimul pas ar citi `date[n]`, dincolo de studenți.
+
+</div>
+
+:: right ::
+
+<div class="text-sm text-center font-mono mb-2 mt-4">înainte: n = 4, ștergem poz = 1</div>
+
+<MemoryCells :size="62" label="" :continues="false" :axis="false"
+  :cells="[{ value: 'Ana', addr: '[0]' }, { value: 'Mihai', addr: '[1]', highlight: true }, { value: 'Ioana', addr: '[2]' }, { value: 'Dan', addr: '[3]' }]" />
+
+<div class="text-sm text-center font-mono mb-2 mt-8">după: n = 3</div>
+
+<MemoryCells :size="62" label="" :continues="false" :axis="false"
+  :cells="[{ value: 'Ana', addr: '[0]' }, { value: 'Ioana', addr: '[1]', highlight: true }, { value: 'Dan', addr: '[2]', highlight: true }, { value: 'Dan', addr: '[3]' }]" />
+
+<div class="text-xs mt-2 text-center opacity-75">[3] mai conține o copie a lui Dan, dar nu mai contează: n este 3</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Încărcarea din Fișier
+
+:: left ::
+
+Citim fișierul linie cu linie. Fiecare linie bună trece prin `catalog_adauga`, cu
+aceeași validare ca o comandă.
+
+```c
+Eroare catalog_incarca(Catalog *c, const char *cale) {
+    FILE *f = fopen(cale, "r");
+    if (f == NULL) { return OK; }    // prima rulare
+    char linie[100];
+    Eroare e = OK;
+    while (e == OK && fgets(linie, sizeof linie, f) != NULL) {
+        Student s;
+        if (!student_din_linie(linie, &s)) {
+            e = ERR_FORMAT;
+        } else {
+            e = catalog_adauga(c, s.nume, s.nota);
+        }
+    }
+    fclose(f);
+    return e;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- La prima rulare fișierul nu există încă. Nu e o eroare: catalogul începe gol.
+- `fgets` citește o linie întreagă, cu tot cu spații. `sscanf` o desface apoi.
+- Bucla se oprește la prima eroare. Fișierul se închide pe orice drum, pentru că
+  există un singur `fclose`, după buclă.
+- Nota 11 scrisă de mână în fișier este respinsă la încărcare, cu `ERR_NOTA`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Salvarea în Fișier
+
+:: left ::
+
+Salvarea rescrie tot fișierul, din memorie. Fiecare student devine o linie.
+
+```c
+Eroare catalog_salveaza(const Catalog *c, const char *cale) {
+    FILE *f = fopen(cale, "w");
+    if (f == NULL) { return ERR_FISIER; }
+    for (int i = 0; i < c->n; i++) {
+        student_scrie(f, &c->date[i]);
+    }
+    if (fclose(f) != 0) { return ERR_FISIER; }
+    return OK;
+}
+```
+
+```bash
+$ chmod 444 catalog.txt
+$ ./catalog adauga Dan 8
+Eroare: fisierul nu poate fi scris
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Modul `"w"` golește fișierul chiar la deschidere. De aceea salvăm doar după
+  ce totul este încărcat în memorie.
+- `fprintf` scrie întâi într-un buffer. Datele ajung pe disc cel târziu la
+  `fclose`, deci și `fclose` poate eșua, de exemplu pe un disc plin.
+- `chmod 444` face fișierul doar de citit. `fopen` întoarce `NULL`, iar
+  mesajul spune exact ce s-a întâmplat.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Scriere și Citire, Dus-Întors
+
+:: content ::
+
+Programul scrie două linii în `catalog.txt`, apoi le citește înapoi. Rulați și
+comparați cu formatul ales.
+
+```c {monaco-run} {autorun:false, height:'330px'}
+#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("catalog.txt", "w");
+    if (f == NULL) { return 1; }
+    fprintf(f, "%d %s\n", 9, "Ana Popescu");
+    fprintf(f, "%d %s\n", 10, "Ioana Rusu");
+    fclose(f);
+
+    f = fopen("catalog.txt", "r");
+    if (f == NULL) { return 1; }
+    char linie[100];
+    int nr = 0;
+    while (fgets(linie, sizeof linie, f) != NULL) {
+        nr++;
+        printf("linia %d: %s", nr, linie);
+    }
+    fclose(f);
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Media și Lista
+
+:: left ::
+
+Două parcurgeri simple ale array-ului: una adună, cealaltă afișează.
+
+```c
+double catalog_media(const Catalog *c) {
+    int suma = 0;
+    for (int i = 0; i < c->n; i++) {
+        suma += c->date[i].nota;
+    }
+    return (double)suma / c->n;
+}
+
+void catalog_afiseaza(const Catalog *c) {
+    for (int i = 0; i < c->n; i++) {
+        const Student *s = &c->date[i];
+        printf("%2d. %-20s %2d\n", i + 1, s->nume, s->nota);
+    }
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Pentru `n == 0`, media ar împărți la zero. Funcția nu verifică: cine o apelează
+  trebuie să se asigure că `n > 0`.
+- `%-20s` aliniază numele la stânga, pe 20 de coloane. `%2d` aliniază numărul la
+  dreapta, pe 2.
+- Utilizatorul numără de la 1, programul de la 0. Conversia `i + 1` se face doar
+  la afișare.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Ordonarea: Cel Mai Bun, Adus în Față
+
+:: left ::
+
+Pentru fiecare poziție, căutăm cel mai bun student dintre cei rămași și îl
+aducem acolo.
+
+```c
+// a inaintea lui b: nota mai mare, apoi alfabetic
+static int vine_inainte(const Student *a, const Student *b) {
+    if (a->nota != b->nota) { return a->nota > b->nota; }
+    return strcmp(a->nume, b->nume) < 0;
+}
+
+void catalog_sorteaza(Catalog *c) {
+    for (int i = 0; i < c->n - 1; i++) {
+        int best = i;
+        for (int j = i + 1; j < c->n; j++) {
+            if (vine_inainte(&c->date[j], &c->date[best])) {
+                best = j;
+            }
+        }
+        Student tmp = c->date[i];
+        c->date[i] = c->date[best];
+        c->date[best] = tmp;
+    }
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Bucla interioară este căutarea maximului, pe care o știm deja. Doar regula de
+  comparație e alta.
+- Regula stă într-o funcție separată. Altă ordine cere schimbarea unei singure
+  funcții.
+- O atribuire între structuri copiază tot, inclusiv array-ul `nume`.
+- `top` ordonează doar în memorie și nu salvează. Ordinea din fișier nu se
+  schimbă.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# Ordonarea, pe Patru Studenți
+
+:: content ::
+
+Ana și Dan au aceeași notă, deci decide numele. Rulați, apoi schimbați regula din
+`vine_inainte`.
+
+```c {monaco-run} {autorun:false, height:'330px'}
+#include <stdio.h>
+#include <string.h>
+typedef struct { char nume[40]; int nota; } Student;
+int vine_inainte(const Student *a, const Student *b) {
+    if (a->nota != b->nota) { return a->nota > b->nota; }
+    return strcmp(a->nume, b->nume) < 0;
+}
+int main() {
+    Student v[] = {{"Mihai", 7}, {"Ioana", 10}, {"Dan", 9}, {"Ana", 9}};
+    int n = 4;
+    for (int i = 0; i < n - 1; i++) {
+        int best = i;
+        for (int j = i + 1; j < n; j++) {
+            if (vine_inainte(&v[j], &v[best])) { best = j; }
+        }
+        Student tmp = v[i]; v[i] = v[best]; v[best] = tmp;
+    }
+    for (int i = 0; i < n; i++) { printf("%-6s %2d\n", v[i].nume, v[i].nota); }
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Comanda Devine un `enum`
+
+:: left ::
+
+Textul din `argv[1]` se compară o singură dată. Mai departe, programul lucrează
+cu o valoare din `enum`.
+
+```c
+typedef enum {
+    CMD_ADAUGA,
+    CMD_LISTA,
+    CMD_TOP,
+    CMD_MEDIA,
+    CMD_STERGE,
+    CMD_NECUNOSCUTA
+} Comanda;
+
+static Comanda comanda_din_text(const char *text) {
+    if (strcmp(text, "adauga") == 0) { return CMD_ADAUGA; }
+    if (strcmp(text, "lista") == 0)  { return CMD_LISTA; }
+    if (strcmp(text, "top") == 0)    { return CMD_TOP; }
+    if (strcmp(text, "media") == 0)  { return CMD_MEDIA; }
+    if (strcmp(text, "sterge") == 0) { return CMD_STERGE; }
+    return CMD_NECUNOSCUTA;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `strcmp` întoarce 0 când string-urile sunt egale.
+- `argv[1] == "lista"` compară **adrese**, nu texte, și în practică nu este
+  adevărat niciodată. gcc avertizează: `comparison with string literal results in unspecified
+  behavior`.
+- Comparația ține cont de litere mari și mici: `Lista` este o comandă
+  necunoscută.
+- Un `switch` pe `Comanda` este mai ușor de citit decât un șir de `strcmp`.
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+margin: tight
+---
+
+:: title ::
+
+# De la Cuvânt la Comandă
+
+:: content ::
+
+Fiecare cuvânt devine o valoare din `enum`. Rulați și urmăriți ce primește
+`Lista`, cu L mare.
+
+```c {monaco-run} {autorun:false, height:'298px'}
+#include <stdio.h>
+#include <string.h>
+typedef enum { CMD_ADAUGA, CMD_LISTA, CMD_MEDIA, CMD_NECUNOSCUTA } Comanda;
+
+Comanda comanda_din_text(const char *text) {
+    if (strcmp(text, "adauga") == 0) { return CMD_ADAUGA; }
+    if (strcmp(text, "lista") == 0)  { return CMD_LISTA; }
+    if (strcmp(text, "media") == 0)  { return CMD_MEDIA; }
+    return CMD_NECUNOSCUTA;
+}
+
+int main() {
+    const char *cuvinte[] = {"adauga", "media", "Lista", "sortare"};
+    for (int i = 0; i < 4; i++) {
+        printf("%-8s -> %d\n", cuvinte[i], comanda_din_text(cuvinte[i]));
+    }
+    return 0;
+}
+```
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# O Funcție pentru Fiecare Comandă
+
+:: left ::
+
+Fiecare comandă își verifică argumentele, modifică catalogul, salvează și abia
+la sfârșit confirmă.
+
+```c
+static Eroare cmd_adauga(Catalog *c, int argc, char *argv[]) {
+    int nota;
+    if (argc != 4) { return ERR_ARGUMENTE; }
+    if (!text_in_intreg(argv[3], &nota)) { return ERR_NOTA; }
+    Eroare e = catalog_adauga(c, argv[2], nota);
+    if (e == OK) { e = catalog_salveaza(c, FISIER); }
+    if (e == OK) { printf("Adaugat: %s (%d)\n", argv[2], nota); }
+    return e;
+}
+
+static Eroare cmd_media(const Catalog *c) {
+    if (c->n == 0) { return ERR_GOL; }
+    printf("Media: %.2f (%d studenti)\n", catalog_media(c), c->n);
+    return OK;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `argc != 4`: exact patru cuvinte, `./catalog adauga NUME NOTA`.
+- Fiecare pas rulează doar dacă cel dinainte a reușit. Prima eroare trece peste
+  restul și ajunge la `return e`.
+- Mesajul `Adaugat` apare doar după o salvare reușită. Altfel, utilizatorul ar
+  crede că nota a fost păstrată.
+- `cmd_media` verifică `n == 0` înainte de împărțire. `FISIER` este
+  `"catalog.txt"`, dintr-un `#define`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# Ștergerea Ține Minte Numele
+
+:: left ::
+
+Numele celui șters trebuie afișat după ștergere, când pe poziția lui stă deja
+altcineva.
+
+```c
+static Eroare cmd_sterge(Catalog *c, int argc, char *argv[]) {
+    int nr;
+    if (argc != 3) { return ERR_ARGUMENTE; }
+    if (!text_in_intreg(argv[2], &nr) || nr < 1 || nr > c->n) {
+        return ERR_INDEX;
+    }
+    Student sters = c->date[nr - 1];
+    catalog_sterge(c, nr - 1);
+    Eroare e = catalog_salveaza(c, FISIER);
+    if (e == OK) { printf("Sters: %s\n", sters.nume); }
+    return e;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `sters` este o **copie** a studentului, făcută înainte ca ștergerea să mute
+  restul la stânga.
+- Utilizatorul scrie numărul din `lista`, de la 1. Catalogul primește poziția
+  de la 0: `nr - 1`.
+- `||` se oprește la prima condiție adevărată. Pentru `"abc"`, `nr` nu mai este
+  comparat deloc.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# `switch` Alege Comanda
+
+:: left ::
+
+Cu comanda transformată în `enum`, alegerea ei este un `switch`, cu un `case`
+pentru fiecare valoare.
+
+```c
+static Eroare executa(Catalog *c, Comanda cmd,
+                      int argc, char *argv[]) {
+    switch (cmd) {
+    case CMD_ADAUGA: return cmd_adauga(c, argc, argv);
+    case CMD_STERGE: return cmd_sterge(c, argc, argv);
+    case CMD_MEDIA:  return cmd_media(c);
+    case CMD_LISTA:
+        catalog_afiseaza(c);
+        return OK;
+    case CMD_TOP:
+        catalog_sorteaza(c);
+        catalog_afiseaza(c);
+        return OK;
+    case CMD_NECUNOSCUTA: break;
+    }
+    return ERR_ARGUMENTE;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Fiecare `case` se încheie cu `return`, deci nu e nevoie de `break`.
+- Prima linie a funcției este prea lungă, așa că parametrii continuă pe al
+  doilea rând.
+- Când lipsește un `case` pentru o valoare din `enum`, `-Wall` avertizează:
+  `enumeration value 'CMD_TOP' not handled in switch`.
+- De aceea nu există `default`. O comandă nouă adăugată în `enum` și uitată aici
+  este semnalată la compilare.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# `main` Leagă Totul
+
+:: left ::
+
+`main` se citește ca o descriere a programului: comanda, încărcarea, execuția,
+eliberarea, mesajul.
+
+```c
+int main(int argc, char *argv[]) {
+    if (argc < 2) { utilizare(argv[0]); return 1; }
+    Comanda cmd = comanda_din_text(argv[1]);
+    if (cmd == CMD_NECUNOSCUTA) {
+        fprintf(stderr, "Comanda necunoscuta: %s\n", argv[1]);
+        utilizare(argv[0]);
+        return 1;
+    }
+    Catalog c;
+    catalog_init(&c);
+    Eroare e = catalog_incarca(&c, FISIER);
+    if (e == OK) { e = executa(&c, cmd, argc, argv); }
+    catalog_elibereaza(&c);
+    if (e != OK) {
+        fprintf(stderr, "Eroare: %s\n", eroare_mesaj(e));
+        return 1;
+    }
+    return 0;
+}
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Comanda se verifică înainte de încărcare. O comandă greșită nu atinge
+  fișierul.
+- Indiferent de eroare, execuția trece prin `catalog_elibereaza`. Memoria se
+  eliberează o singură dată, într-un singur loc.
+- Toate mesajele de eroare se scriu aici, într-un singur format.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Erorile Merg pe `stderr`
+
+:: left ::
+
+Un program are două ieșiri: `stdout` pentru rezultate și `stderr` pentru erori.
+Pe ecran arată la fel.
+
+```bash
+$ ./catalog lista > lista.txt
+$ cat lista.txt
+ 1. Ana Popescu           9
+ 2. Ioana Rusu           10
+$ ./catalog adauga Ana 11 > rezultat.txt
+Eroare: nota trebuie sa fie intre 1 si 10
+$ cat rezultat.txt
+$
+```
+
+:: right ::
+
+<div class="text-base">
+
+- `>` trimite `stdout` într-un fișier în loc de ecran. `stderr` rămâne pe ecran.
+- Rezultatele salvate astfel nu se amestecă cu mesajele de eroare.
+- O eroare nu dispare într-un fișier pe care nu îl citește nimeni.
+- `printf(...)` este de fapt `fprintf(stdout, ...)`.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Codul de Ieșire Spune Dacă A Mers
+
+:: left ::
+
+`return 1` din `main` ajunge la terminal. Alte programe și scripturi îl pot
+verifica.
+
+```bash
+$ ./catalog adauga Ana 11
+Eroare: nota trebuie sa fie intre 1 si 10
+$ echo $?
+1
+$ ./catalog adauga Ana 11 && ./catalog lista
+Eroare: nota trebuie sa fie intre 1 si 10
+$ ./catalog adauga "Dan Pop" 8 && ./catalog lista
+Adaugat: Dan Pop (8)
+ 1. Ana Popescu           9
+ 2. Ioana Rusu           10
+ 3. Dan Pop               8
+```
+
+:: right ::
+
+<div class="text-base">
+
+- Am văzut deja: `echo $?` afișează codul de ieșire al ultimei comenzi, iar 0
+  înseamnă succes.
+- `&&` rulează `lista` doar dacă `adauga` a reușit.
+- Un program care afișează o eroare, dar întoarce 0, păcălește orice script care
+  îl folosește.
+
+</div>
 
 ---
 layout: top-title
@@ -161,13 +1818,166 @@ align: c
 
 :: title ::
 
-# Comenzile, una câte una
+# Tot Ce Poate Eșua Este Verificat
 
 :: content ::
 
-`adauga`, `lista`, `media`: fiecare este o funcție, iar `main` doar alege pe care o apelează.
+Fiecare apel care poate eșua are un răspuns în program. Niciunul nu oprește
+programul fără mesaj.
 
-> **Schelet**: de completat.
+<div class="ns-c-table text-base mt-6">
+
+| ce poate eșua | când | răspunsul programului |
+|---|---|---|
+| `fopen(cale, "r")` | fișierul nu există încă | catalog gol, prima rulare |
+| `fopen(cale, "w")` | nu avem drept de scriere | `ERR_FISIER` |
+| `fclose` după scriere | discul este plin | `ERR_FISIER` |
+| `realloc` | nu mai este memorie | `ERR_MEMORIE`, blocul vechi rămâne |
+| `sscanf` pe o linie | linia din fișier este stricată | `ERR_FORMAT` |
+| `strtol` | argumentul nu este un număr | `ERR_NOTA` sau `ERR_INDEX` |
+| `argc` | lipsesc cuvinte sau sunt în plus | `ERR_ARGUMENTE` |
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Un Test Este o Listă de Comenzi
+
+:: left ::
+
+Comenzile se pot scrie într-un fișier, `test.sh`, și rula toate odată, cu
+`sh test.sh`.
+
+```bash
+rm -f catalog.txt
+./catalog adauga "Ana Popescu" 9
+./catalog adauga "Mihai Ionescu" 7
+./catalog adauga "Ioana Rusu" 10
+./catalog media
+./catalog sterge 2
+./catalog lista
+./catalog adauga Dan 11 || echo "respins, cum trebuie"
+./catalog sterge 9 || echo "respins, cum trebuie"
+```
+
+:: right ::
+
+```text {*}{lines:false}
+Adaugat: Ana Popescu (9)
+Adaugat: Mihai Ionescu (7)
+Adaugat: Ioana Rusu (10)
+Media: 8.67 (3 studenti)
+Sters: Mihai Ionescu
+ 1. Ana Popescu           9
+ 2. Ioana Rusu           10
+Eroare: nota trebuie sa fie intre 1 si 10
+respins, cum trebuie
+Eroare: nu exista un student cu acest numar
+respins, cum trebuie
+```
+
+<div class="text-base mt-4">
+
+`rm -f` pornește de la un catalog gol, deci rezultatul e același la fiecare
+rulare. `||` rulează `echo` doar dacă eroarea chiar a apărut.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-7
+---
+
+:: title ::
+
+# AddressSanitizer Găsește Memoria Uitată
+
+:: left ::
+
+Cu `-fsanitize=address`, gcc adaugă verificări de memorie în program. Aici am
+șters apelul `catalog_elibereaza(&c);`.
+
+```bash
+$ gcc -std=c2x -Wall -Wextra -g -fsanitize=address \
+      student.c catalog.c main.c -o catalog
+$ ./catalog lista
+ 1. Ana Popescu           9
+ 2. Ioana Rusu           10
+
+=================================================================
+==1752841==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 176 byte(s) in 1 object(s) allocated from:
+    ...
+
+SUMMARY: AddressSanitizer: 176 byte(s) leaked in 1 allocation(s).
+```
+
+:: right ::
+
+<div class="text-base">
+
+- 176 de octeți: `cap` este 4, iar un `Student` ocupă 44 (40 pentru nume, 4
+  pentru notă).
+- Raportul arată și drumul prin funcții până la alocare. Cu `-g`, apar numele
+  funcțiilor și liniile din cod.
+- Același instrument prinde citirea dincolo de capăt: `heap-buffer-overflow`.
+- Fără nicio linie în plus la rulare, programul este curat pentru comenzile
+  încercate.
+
+</div>
+
+---
+layout: top-title-two-cols
+color: blue-light
+align: c-lt-lt
+columns: is-6
+---
+
+:: title ::
+
+# Ce E Greșit Aici
+
+:: left ::
+
+Toate trei se compilează. Ce problemă are fiecare?
+
+```c
+// A
+c->date = realloc(c->date, cap_noua * sizeof(Student));
+
+// B
+if (argv[1] == "lista") {
+    catalog_afiseaza(&c);
+}
+
+// C
+for (int i = poz; i < c->n; i++) {
+    c->date[i] = c->date[i + 1];
+}
+```
+
+:: right ::
+
+<div class="text-base" v-click>
+
+- **A**: dacă `realloc` eșuează, `c->date` devine `NULL`. Blocul vechi nu mai
+  poate fi eliberat: memory leak și catalog pierdut.
+- **B**: compară adrese. Condiția este falsă chiar pentru `./catalog lista`, iar
+  gcc avertizează. Se scrie `strcmp(argv[1], "lista") == 0`.
+- **C**: ultimul pas citește `date[n]`. Când `n == cap`, citirea iese din blocul
+  alocat, iar AddressSanitizer raportează `heap-buffer-overflow`.
+
+</div>
 
 ---
 layout: top-title
@@ -177,13 +1987,85 @@ align: c
 
 :: title ::
 
-# Mai departe, pe cont propriu
+# Mai Departe, pe Cont Propriu
 
 :: content ::
 
-Comenzi noi de adăugat acasă: `cauta`, `sterge`, `top` (studenții ordonați după notă).
+Programul este o bază. Fiecare extensie de mai jos folosește doar ce am învățat.
 
-> **Schelet**: de completat.
+<div class="grid grid-cols-2 gap-5 mt-8 text-left">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">./catalog cauta Ana</div>
+    <div class="text-sm mt-2">Afișează studenții al căror nume conține textul dat, cu <code>strstr</code>.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">./catalog grupe</div>
+    <div class="text-sm mt-2">Un câmp <code>grupa</code> în <code>Student</code> și media pe fiecare grupă. Formatul fișierului se schimbă.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">catalog.bin</div>
+    <div class="text-sm mt-2">Salvare cu <code>fwrite</code> și încărcare cu <code>fread</code>, tot array-ul deodată. Comparați mărimea fișierelor.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold font-mono text-[var(--neversink-fg-color)]">./catalog meniu</div>
+    <div class="text-sm mt-2">Un mod interactiv: o buclă care citește comenzi cu <code>fgets</code> și apelează aceleași funcții.</div>
+  </div>
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Unde Intră Fiecare Extensie
+
+:: content ::
+
+Împărțirea pe module arată unde se scrie codul nou. Formatul binar nu schimbă
+nicio comandă, iar modul interactiv nu schimbă catalogul.
+
+<div class="ns-c-table text-base mt-6">
+
+| extensia | `student` | `catalog` | `main.c` |
+|---|---|---|---|
+| `cauta` | | `catalog_cauta` | comanda nouă |
+| grupe | câmpul `grupa`, formatul liniei | `catalog_media_grupa` | comanda nouă |
+| format binar | | `catalog_incarca`, `catalog_salveaza` | |
+| mod interactiv | | | bucla de comenzi |
+
+</div>
+
+---
+layout: top-title
+color: blue-light
+align: c
+---
+
+:: title ::
+
+# Ce Am Învățat
+
+:: content ::
+
+Un semestru de C, în trei întrebări la care acum știm să răspundem.
+
+<div class="grid grid-cols-3 gap-5 mt-10 text-left">
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Cum decide și repetă un program?</div>
+    <div class="text-sm mt-2">Tipuri de date, citire și afișare, <code>if</code> și <code>switch</code>, bucle, funcții și recursivitate.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-admon-bg-color)] border border-[var(--neversink-admon-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Unde stau datele?</div>
+    <div class="text-sm mt-2">Array-uri, string-uri, pointeri, memorie alocată dinamic, <code>struct</code> și <code>enum</code>, fișiere.</div>
+  </div>
+  <div class="p-5 rounded-lg neversink-blue-light-scheme bg-[var(--neversink-bg-color)] border-2 border-[var(--neversink-border-color)]">
+    <div class="font-bold text-[var(--neversink-text-color)]">Cum se construiește un program?</div>
+    <div class="text-sm mt-2">Module cu header-e, compilare separată, coduri de eroare, verificarea fiecărei resurse și testare.</div>
+  </div>
+</div>
 
 ---
 layout: center
